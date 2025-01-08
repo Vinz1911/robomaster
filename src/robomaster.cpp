@@ -165,7 +165,7 @@ namespace robomaster {
         }
     }
 
-    bool RoboMaster::is_running() const {
+    bool RoboMaster::is_running() {
         return this->handler_.is_running();
     }
 } // namespace robomaster

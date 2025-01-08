@@ -25,10 +25,7 @@ namespace robomaster {
 
     Message QueueMsg::pop() {
         std::lock_guard lock(this->mutex_);
-        if (this->queue_.empty()) {
-            const auto msg = Message(0, {});
-            return msg;
-        }
+        if (this->queue_.empty()) { const auto msg = Message(0, {}); return msg; }
         const Message msg = queue_.front();
         this->queue_.pop();
         return msg;

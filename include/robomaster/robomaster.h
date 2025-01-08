@@ -223,7 +223,7 @@ namespace robomaster {
          *
          * @return true if the robomaster is successful initialized and is running. false when a can error is appeared.
          */
-        bool is_running() const;
+        bool is_running();
     };
 } // namespace robomaster
 

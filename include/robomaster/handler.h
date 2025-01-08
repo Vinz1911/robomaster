@@ -179,7 +179,7 @@ namespace robomaster {
          * @return true If the Handler is running and ready to receive and send messages.
          * @return false If the handler was stopped due to error.
          */
-        bool is_running() const;
+        bool is_running();
     };
 } // namespace robomaster
 

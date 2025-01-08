@@ -26,7 +26,7 @@ namespace robomaster {
     }
 
     void CanSocket::set_timeout(const double seconds) {
-        if (seconds < 0.0) {
+        if (seconds > 0.0) {
             const auto seconds_t = static_cast<size_t>(std::floor(seconds));
             const auto microseconds_t = static_cast<size_t>((seconds - std::floor(seconds)) * 1e6);
             this->set_timeout(seconds_t, microseconds_t);

@@ -15,11 +15,9 @@
 
 namespace robomaster {
     static constexpr size_t STD_MAX_ERROR_COUNT = 3;
-    static constexpr auto STD_HEARTBEAT_TIME =  std::chrono::milliseconds(10);
+    static constexpr auto STD_HEARTBEAT_TIME = std::chrono::milliseconds(10);
 
-    Handler::Handler()
-        : flag_initialised_(false),
-          flag_stop_(false) { }
+    Handler::Handler(): flag_initialised_(false), flag_stop_(false) { }
 
     void Handler::notify_all() {
         this->cv_handler_.notify_all();
@@ -53,7 +51,7 @@ namespace robomaster {
         std::printf("[Handler]: Handler initialization failure\n"); return false;
     }
 
-    bool Handler::is_running() const {
+    bool Handler::is_running() {
         return this->flag_initialised_ && !this->flag_stop_;
     }
 
