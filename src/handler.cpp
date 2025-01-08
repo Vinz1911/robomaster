@@ -4,14 +4,14 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/handler.h"
-#include "robomaster/utils.h"
-#include "robomaster/definitions.h"
-
 #include <iostream>
 #include <algorithm>
 #include <map>
 #include <utility>
+
+#include "robomaster/handler.h"
+#include "robomaster/utils.h"
+#include "robomaster/definitions.h"
 
 namespace robomaster {
     static constexpr size_t STD_MAX_ERROR_COUNT = 3;

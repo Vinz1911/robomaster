@@ -8,7 +8,6 @@
 #define ROBOMASTER_DEFINITIONS_H_
 
 #include <cstdint>
-#include <memory>
 
 namespace robomaster {
     // definition for the device can id.

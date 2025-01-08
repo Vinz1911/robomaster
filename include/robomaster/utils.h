@@ -8,7 +8,6 @@
 #define ROBOMASTER_UTILS_H_
 
 #include <algorithm>
-#include <arpa/inet.h>
 #include <sstream>
 #include <vector>
 

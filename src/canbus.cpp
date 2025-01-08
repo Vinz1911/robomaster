@@ -4,9 +4,14 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/canbus.h"
 #include <cstring>
 #include <cmath>
+#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include "robomaster/canbus.h"
 
 namespace robomaster {
     CANBus::CANBus(): socket_(0), ifr_{}, addr_{} {

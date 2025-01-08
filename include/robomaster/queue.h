@@ -9,6 +9,7 @@
 
 #include <mutex>
 #include <queue>
+
 #include "message.h"
 
 namespace robomaster {

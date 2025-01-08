@@ -4,8 +4,9 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/utils.h"
 #include <iomanip>
+
+#include "robomaster/utils.h"
 
 namespace robomaster {
     const uint8_t TABLE_CRC8[] = {

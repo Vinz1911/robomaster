@@ -4,8 +4,9 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/data.h"
 #include <iostream>
+
+#include "robomaster/data.h"
 
 namespace robomaster {
     DataPosition decode_data_position(const size_t index, const Message &msg) {

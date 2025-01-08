@@ -4,12 +4,12 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/message.h"
-#include "robomaster/utils.h"
-
 #include <cassert>
 #include <iomanip>
 #include <utility>
+
+#include "robomaster/message.h"
+#include "robomaster/utils.h"
 
 namespace robomaster {
     Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data): is_valid_(false), device_id_(device_id), sequence_(0), type_(0) {

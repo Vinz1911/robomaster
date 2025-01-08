@@ -7,15 +7,14 @@
 #ifndef ROBOMASTER_HANDLER_H_
 #define ROBOMASTER_HANDLER_H_
 
-#include "canbus.h"
-#include "message.h"
-#include "queue.h"
-
- 
 #include <thread>
 #include <condition_variable>
 #include <functional>
 #include <atomic>
+
+#include "canbus.h"
+#include "message.h"
+#include "queue.h"
 
 namespace robomaster {
     /**
