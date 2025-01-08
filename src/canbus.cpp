@@ -45,8 +45,7 @@ namespace robomaster {
             std::printf("[CAN]: failed to request interface %s\n", can_interface.c_str()); close(this->socket_); return false;
         }
 
-        if(ioctl(this->socket_, SIOCGIFFLAGS, &this->ifr_) < 0 || !(this->ifr_.ifr_flags & IFF_UP)) {
-            std::printf("[CAN]: interface %s is down or error fetching flags\n", can_interface.c_str());
+        if (!(this->ifr_.ifr_flags & IFF_UP)) { std::printf("[CAN]: interface %s is down\n", can_interface.c_str());
             close(this->socket_); return false;
         }
 

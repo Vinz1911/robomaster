@@ -10,21 +10,38 @@
 #include <cstdint>
 
 namespace robomaster {
-    // definition for the device can id.
-    static constexpr uint16_t DEVICE_ID_INTELLI_CONTROLLER = 0x201;
-    static constexpr uint16_t DEVICE_ID_MOTION_CONTROLLER = 0x202;
-    static constexpr uint16_t DEVICE_ID_GIMBAL = 0x203;
-    static constexpr uint16_t DEVICE_ID_HIT_DETECTOR_1 = 0x211;
-    static constexpr uint16_t DEVICE_ID_HIT_DETECTOR_2 = 0x212;
-    static constexpr uint16_t DEVICE_ID_HIT_DETECTOR_3 = 0x213;
-    static constexpr uint16_t DEVICE_ID_HIT_DETECTOR_4 = 0x214;
+    enum BlasterMode {
+        INFRARED,
+        GELBEADS
+    };
 
-    // mask of the LED which can be combined with | symbol.
-    static constexpr uint16_t LED_MASK_ALL   = 0x000f;
-    static constexpr uint16_t LED_MASK_BACK  = 0x0001;
-    static constexpr uint16_t LED_MASK_FRONT = 0x0002;
-    static constexpr uint16_t LED_MASK_LEFT  = 0x0004;
-    static constexpr uint16_t LED_MASK_RIGHT = 0x0008;
+    enum LEDMode: uint8_t {
+        STATIC = 0x71,
+        BREATHE = 0x72,
+        FLASH = 0x73
+    };
+
+    enum DeviceID: uint16_t {
+        DEVICE_ID_INTELLI_CONTROLLER = 0x201,
+        DEVICE_ID_MOTION_CONTROLLER = 0x202,
+        DEVICE_ID_GIMBAL = 0x203,
+        DEVICE_ID_HIT_DETECTOR_1 = 0x211,
+        DEVICE_ID_HIT_DETECTOR_2 = 0x212,
+        DEVICE_ID_HIT_DETECTOR_3 = 0x213,
+        DEVICE_ID_HIT_DETECTOR_4 = 0x214
+    };
+
+    enum LEDMask: uint16_t {
+        LED_MASK_ALL = 0x3f,
+        LED_MASK_BOTTOM_ALL = 0xf,
+        LED_MASK_BOTTOM_BACK = 0x1,
+        LED_MASK_BOTTOM_FRONT = 0x2,
+        LED_MASK_BOTTOM_LEFT = 0x4,
+        LED_MASK_BOTTOM_RIGHT = 0x8,
+        LED_MASK_TOP_LEFT = 0x10,
+        LED_MASK_TOP_RIGHT = 0x20,
+        LED_MASK_TOP_ALL = 0x30
+    };
 } // namespace robomaster
 
 #endif // ROBOMASTER_DEFINITIONS_H_
