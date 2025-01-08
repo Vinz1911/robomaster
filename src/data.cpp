@@ -10,20 +10,17 @@
 namespace robomaster {
     DataPosition decode_data_position(const size_t index, const Message &msg) {
         DataPosition data;
-        // Check the length of the index and then fill the data.
         if (index + 12 <= msg.get_payload().size()) {
             data.x  = msg.get_value_float(index);
             data.y  = msg.get_value_float(index + 4);
             data.z  = msg.get_value_float(index + 8);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     DataEsc decode_data_esc(const size_t index, const Message &msg) {
         DataEsc data;
 
-        // Check the length of the index and then fill the data.
         if (index + 36 <= msg.get_payload().size()) {
             data.speed[0]      = msg.get_value_int16(index);
             data.speed[1]      = msg.get_value_int16(index + 2);
@@ -42,14 +39,12 @@ namespace robomaster {
             data.state[2]      = msg.get_value_uint8(index + 34);
             data.state[3]      = msg.get_value_uint8(index + 35);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     DataImu decode_data_imu(const size_t index, const Message &msg) {
         DataImu data;
 
-        // Check the length of the index and then fill the data.
         if (index + 24 <= msg.get_payload().size()) {
             data.acc_x  = msg.get_value_float(index);
             data.acc_y  = msg.get_value_float(index + 4);
@@ -58,27 +53,23 @@ namespace robomaster {
             data.gyro_y = msg.get_value_float(index + 16);
             data.gyro_z = msg.get_value_float(index + 20);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     DataAttitude decode_data_attitude(const size_t index, const Message &msg) {
         DataAttitude data;
 
-        // Check the length of the index and then fill the data.
         if (index + 12 <= msg.get_payload().size()) {
             data.yaw   = msg.get_value_float(index);
             data.pitch = msg.get_value_float(index + 4);
             data.roll  = msg.get_value_float(index + 8);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     DataBattery decode_data_battery(const size_t index, const Message &msg) {
         DataBattery data;
 
-        // Check the length of the index and then fill the data.
         if (index + 10 <= msg.get_payload().size()) {
             data.adc_value   = msg.get_value_uint16(index);;
             data.temperature = msg.get_value_uint16(index + 2);
@@ -86,14 +77,12 @@ namespace robomaster {
             data.percent     = msg.get_value_uint8(index + 8);
             data.recv        = msg.get_value_uint8(index + 9);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     DataVelocity decode_data_velocity(const size_t index, const Message &msg) {
         DataVelocity data;
 
-        // Check the length of the index and then fill the data.
         if (index + 24 <= msg.get_payload().size()) {
             data.vgx = msg.get_value_float(index);
             data.vgy = msg.get_value_float(index + 4);
@@ -102,8 +91,7 @@ namespace robomaster {
             data.vby = msg.get_value_float(index + 16);
             data.vbz = msg.get_value_float(index + 20);
             data.has_data = true;
-        }
-        return data;
+        } return data;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataEsc &data) {
@@ -115,8 +103,7 @@ namespace robomaster {
                << ", \"state\": [" << static_cast<uint16_t>(data.state[0]) << ", " << static_cast<uint16_t>(data.state[1]) << ", "
                << static_cast<uint16_t>(data.state[2]) << ", " << static_cast<uint16_t>(data.state[3]) << "]";
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataImu &data) {
@@ -125,8 +112,7 @@ namespace robomaster {
             os << "\"accel\": [" << data.acc_x << ", " << data.acc_y << ", " << data.acc_z << "]"
                << ", \"gyro\": [" << data.gyro_x << ", " << data.gyro_y << ", " << data.gyro_z << "]";
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataAttitude &data) {
@@ -134,8 +120,7 @@ namespace robomaster {
         if (data.has_data) {
             os << "\"roll\": " << data.roll << ", \"pitch\": " << data.pitch << ", \"yaw\": " << data.yaw;
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataBattery &data) {
@@ -144,8 +129,7 @@ namespace robomaster {
             os << "\"adc\": " << data.adc_value << ", \"temp\": " << data.temperature
                << ", \"current\": " << data.current << ", \"percent\": " << static_cast<uint16_t>(data.percent);
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataVelocity &data) {
@@ -154,8 +138,7 @@ namespace robomaster {
             os << "\"global\": [" << data.vgx << ", " << data.vgy << ", " << data.vgz << "]"
                << ", \"body\": [" << data.vbx << ", " << data.vby << ", " << data.vbz << "]";
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataPosition &data) {
@@ -163,8 +146,7 @@ namespace robomaster {
         if (data.has_data) {
             os << "\"x\": " << data.x << ", \"y\": " << data.y << ", \"z\": " << data.z;
         }
-        os << "}";
-        return os;
+        os << "}"; return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const DataRoboMasterState &data) {
@@ -175,7 +157,6 @@ namespace robomaster {
            << "\"velocity\":" << data.velocity << ","
            << "\"position\":" << data.position << ","
            << "\"attitude\":" << data.attitude
-           << "}}";
-        return os;
+           << "}}"; return os;
     }
 } // namespace robomaster

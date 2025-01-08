@@ -11,9 +11,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    RoboMaster::RoboMaster():counter_drive_(0), counter_led_(0), counter_gimbal_(0), counter_blaster_(0) {
-        this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { decode_state(std::forward<T0>(PH1)); });
-    }
+    RoboMaster::RoboMaster():counter_drive_(0), counter_led_(0), counter_gimbal_(0), counter_blaster_(0) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { decode_state(std::forward<T0>(PH1)); }); }
 
     RoboMaster::~RoboMaster() = default;
 
@@ -98,7 +96,7 @@ namespace robomaster {
 
     void RoboMaster::set_led_on(const uint16_t mask, const uint8_t r, const uint8_t g, const uint8_t b) {
         Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x1809, this->counter_led_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_uint16(3, 0x71); // effect mode on
+        msg.set_value_uint16(3, 0x71);
         msg.set_value_uint8(6, r);
         msg.set_value_uint8(7, g);
         msg.set_value_uint8(8, b);
@@ -108,7 +106,7 @@ namespace robomaster {
 
     void RoboMaster::set_led_breath(const uint16_t mask, const uint8_t r, const uint8_t g, const uint8_t b, const uint16_t t_rise, const uint16_t t_down) {
         Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x1809, this->counter_led_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_uint16(3, 0x72); // effect mode breath
+        msg.set_value_uint16(3, 0x72);
         msg.set_value_uint8(6, r);
         msg.set_value_uint8(7, g);
         msg.set_value_uint8(8, b);

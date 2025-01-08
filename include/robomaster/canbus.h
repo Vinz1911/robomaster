@@ -21,7 +21,7 @@ namespace robomaster {
     /**
      * @brief This class manage the io of the can bus.
      */
-    class CanSocket {
+    class CANBus {
         /**
          * @brief The Socket for the CanBus.
          */
@@ -41,12 +41,12 @@ namespace robomaster {
         /**
          * @brief Construct the CanSocket object.
          */
-        CanSocket(/* args */);
+        CANBus(/* args */);
 
         /**
          * @brief Destroy the Can Socket object and close socket.
          */
-        ~CanSocket();
+        ~CANBus();
 
         /**
          * @brief Set the timeout for reading the can socket.

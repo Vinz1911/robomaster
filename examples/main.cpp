@@ -51,7 +51,7 @@ int main() {
     RoboMaster robomaster;
 
     // Try to init
-    if (!robomaster.init()) { std::printf("[Example]: Robomaster initialization failed"); return 1; }
+    if (!robomaster.init("can0")) { std::printf("[Example]: robomaster initialization failed"); return 1; }
 
     // bind the callback function to print state of the robomaster like wheel position, imu data, etc.
     robomaster.set_callback(callback);

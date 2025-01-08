@@ -7,14 +7,15 @@
 #ifndef ROBOMASTER_HANDLER_H_
 #define ROBOMASTER_HANDLER_H_
 
-#include "can_socket.h"
+#include "canbus.h"
 #include "message.h"
-#include "queue_msg.h"
+#include "queue.h"
 
  
 #include <thread>
 #include <condition_variable>
 #include <functional>
+#include <atomic>
 
 namespace robomaster {
     /**
@@ -25,7 +26,7 @@ namespace robomaster {
         /**
          * @brief CanSocket class for the can bus io.
          */
-        CanSocket can_socket_;
+        CANBus can_socket_;
 
         /**
          * @brief Thread for reading on the can socket and put valid messages in the receiver queue.
@@ -45,12 +46,12 @@ namespace robomaster {
         /**
          * @brief Receiver queue for received messages.
          */
-        QueueMsg queue_receiver_;
+        Queue queue_receiver_;
 
         /**
          * @brief Sender queue for sending messages.
          */
-        QueueMsg queue_sender_;
+        Queue queue_sender_;
 
         /**
          * @brief conditional variable for the handler thread, when new messages put in the receiver queue.
@@ -85,22 +86,22 @@ namespace robomaster {
         /**
          * @brief Flag then the threads are running to prevent multiply starts.
          */
-        bool flag_stop_;
+        std::atomic<bool> flag_stop_;
 
         /**
          * @brief Run function of the sender thread.
          */
-        void start_sender_thread();
+        void sender_thread();
 
         /**
          * @brief Run function of the receiver thread.
          */
-        void start_receiver_thread();
+        void receiver_thread();
 
         /**
          * @brief Run function of the handler thread.
          */
-        void start_handler_thread();
+        void handler_thread();
 
         /**
          * @brief Notify all conditional variable eg. stopping the threads.

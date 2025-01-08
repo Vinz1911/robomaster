@@ -5,7 +5,7 @@ option(BUILD_RUN_TESTS "Build with gtest for testing" OFF)
 find_package(Threads REQUIRED)
 
 # Source files
-set(SRC_LIST src/can_socket.cpp src/handler.cpp src/utils.cpp src/queue_msg.cpp src/robomaster.cpp src/data.cpp src/message.cpp)
+set(SRC_LIST src/canbus.cpp src/handler.cpp src/utils.cpp src/queue.cpp src/robomaster.cpp src/data.cpp src/message.cpp)
 
 # Build shared library
 add_library(${PROJECT_NAME} SHARED ${SRC_LIST})

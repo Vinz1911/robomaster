@@ -25,34 +25,34 @@ namespace robomaster {
     }
 
     void Handler::join_all() {
-        this->thread_receiver_.join();
-        this->thread_sender_.join();
-        this->thread_handler_.join();
+        if (this->thread_receiver_.joinable()) { this->thread_receiver_.join(); }
+        if (this->thread_sender_.joinable()) { this->thread_sender_.join(); }
+        if (this->thread_handler_.joinable()) { this->thread_handler_.join(); }
     }
 
     Handler::~Handler() {
         if (this->flag_initialised_) {
-            this->flag_stop_ = true;
+            this->flag_stop_.store(true, std::memory_order_acquire);
             this->notify_all();
             this->join_all();
         }
     }
 
     bool Handler::init(const std::string &can_interface) {
-        if (this->flag_initialised_) { std::printf("[Handler]: Handler already running\n"); return false; }
+        if (this->flag_initialised_) { std::printf("[Handler]: already running\n"); return false; }
         if(this->can_socket_.init(can_interface)) {
             this->can_socket_.set_timeout(0.1);
             this->flag_initialised_ = true;
-            this->thread_receiver_ = std::thread(&Handler::start_receiver_thread, this);
-            this->thread_sender_ = std::thread(&Handler::start_sender_thread, this);
-            this->thread_handler_ = std::thread(&Handler::start_handler_thread, this);
+            this->thread_receiver_ = std::thread(&Handler::receiver_thread, this);
+            this->thread_sender_ = std::thread(&Handler::sender_thread, this);
+            this->thread_handler_ = std::thread(&Handler::handler_thread, this);
             return true;
         }
-        std::printf("[Handler]: Handler initialization failure\n"); return false;
+        std::printf("[Handler]: initialization failure\n"); return false;
     }
 
     bool Handler::is_running() const {
-        return this->flag_initialised_ && !this->flag_stop_;
+        return this->flag_initialised_ && !this->flag_stop_.load(std::memory_order_acquire);
     }
 
     bool Handler::send_message(const uint32_t id, const std::vector<uint8_t> &data) {
@@ -68,12 +68,12 @@ namespace robomaster {
         return this->send_message(msg.get_device_id(), msg.to_vector());
     }
 
-    void Handler::start_receiver_thread() {
+    void Handler::receiver_thread() {
         struct msg_robomaster{ std::vector<uint8_t> buffer; size_t length = 0; };
         std::map<uint32_t, msg_robomaster> map_msg_robomaster { { DEVICE_ID_MOTION_CONTROLLER, msg_robomaster() } };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
 
-        while(error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_) {
+        while(error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(std::memory_order_acquire)) {
             if(!can_socket_.read_frame(frame_id, frame_buffer, frame_length)) { error_counter++; continue; }
             auto slice = map_msg_robomaster.find(frame_id);
 
@@ -96,27 +96,25 @@ namespace robomaster {
                 buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
         }
-        if(error_counter != 0) { this->flag_stop_ = true; std::printf("[Handler]: Receiver frame failure\n"); }
+        if(error_counter != 0) { this->flag_stop_.store(true, std::memory_order_acquire); std::printf("[Handler]: receiver frame failure\n"); }
     }
 
-    void Handler::start_sender_thread() {
+    void Handler::sender_thread() {
         uint16_t heartbeat_10ms_counter = 0; size_t error_counter = 0; auto heartbeat_10ms_time_point = std::chrono::high_resolution_clock::now();
-        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_) {
+        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(std::memory_order_acquire)) {
             if (heartbeat_10ms_time_point < std::chrono::high_resolution_clock::now()) {
                 if(this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, heartbeat_10ms_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }))) {
                     heartbeat_10ms_time_point += STD_HEARTBEAT_TIME; error_counter = 0;
                 } else { error_counter++; }
             } else if(!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
-            } else {
-                std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_10ms_time_point);
-            }
+            } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_10ms_time_point); }
         }
-        if(error_counter != 0) { this->flag_stop_ = true; std::printf("[Handler]: Transmitter frame failure\n"); }
+        if(error_counter != 0) { this->flag_stop_.store(true, std::memory_order_acquire); std::printf("[Handler]: transmitter frame failure\n"); }
     }
 
-    void Handler::start_handler_thread() {
-        while (!this->flag_stop_) {
+    void Handler::handler_thread() {
+        while (!this->flag_stop_.load(std::memory_order_acquire)) {
             if (!this->queue_receiver_.empty()) {
                 if (const Message msg = this->queue_receiver_.pop(); msg.is_valid()) { this->process_message(msg); }
             } else { std::unique_lock lock(this->cv_handler_mutex_); this->cv_handler_.wait(lock); }

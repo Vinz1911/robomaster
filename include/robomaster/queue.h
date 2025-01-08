@@ -15,7 +15,7 @@ namespace robomaster {
     /**
      * @brief This class is queue for RoboMaster messages which is protected by a mutex.
      */
-    class QueueMsg {
+    class Queue {
         /**
          * @brief The message queue.
          *
@@ -31,7 +31,7 @@ namespace robomaster {
         /**
          * @brief Construct a new Queue Msg object.
          */
-        QueueMsg();
+        Queue();
 
         /**
          * @brief Push a Message into the queue. If the maximal queue size is reached the front message will be pop.

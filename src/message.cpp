@@ -12,14 +12,8 @@
 #include <utility>
 
 namespace robomaster {
-    Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data)
-        : is_valid_(false),
-          device_id_(device_id),
-          sequence_(0),
-          type_(0)
-
-    {
-        if(10 < msg_data.size()) {
+    Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data): is_valid_(false), device_id_(device_id), sequence_(0), type_(0) {
+        if(msg_data.size() > 10) {
             this->type_ = little_endian_to_uint16(msg_data[4], msg_data[5]);
             this->sequence_ = little_endian_to_uint16(msg_data[6], msg_data[7]);
             this->payload_.clear();
@@ -28,13 +22,7 @@ namespace robomaster {
         }
     }
 
-    Message::Message(const uint32_t device_id, const uint16_t type, const uint16_t sequence, std::vector<uint8_t> payload)
-        : is_valid_(true),
-          device_id_(device_id),
-          sequence_(sequence),
-          type_(type),
-          payload_(std::move(payload))
-    { }
+    Message::Message(const uint32_t device_id, const uint16_t type, const uint16_t sequence, std::vector<uint8_t> payload): is_valid_(true), device_id_(device_id), sequence_(sequence), type_(type), payload_(std::move(payload)) { }
 
     uint32_t Message::get_device_id() const {
         return this->device_id_;
@@ -164,7 +152,6 @@ namespace robomaster {
     std::vector<uint8_t> Message::to_vector() const {
         std::vector<uint8_t> vector;
         if (this->is_valid_) {
-            // header, crc usw + payload
             vector.resize(10 + this->payload_.size());
             vector[0] = 0x55;
             vector[1] = static_cast<uint8_t>(vector.size());
@@ -184,7 +171,7 @@ namespace robomaster {
     }
 
     std::ostream& operator<<(std::ostream& os, const Message& msg) {
-        os << "Message( 0x"
+        os << "Message(0x"
            << std::setfill('0') << std::setw(4) << std::hex << msg.get_device_id() << ", 0x"
            << std::setfill('0') << std::setw(4) << std::hex << msg.get_type() << ", "
            << std::setfill(' ') << std::setw(5) << std::dec << msg.get_sequence() << ", { ";
