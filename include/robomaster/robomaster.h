@@ -64,7 +64,7 @@ namespace robomaster {
          *
          * @param msg The RoboMasterState message.
          */
-        void decode_state(const Message &msg);
+        void decode_state(const Message &msg) const;
 
     public:
         /**
@@ -223,7 +223,7 @@ namespace robomaster {
          *
          * @return true if the robomaster is successful initialized and is running. false when a can error is appeared.
          */
-        bool is_running();
+        bool is_running() const;
     };
 } // namespace robomaster
 

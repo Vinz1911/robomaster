@@ -19,9 +19,7 @@ namespace robomaster {
     }
 
     void CanSocket::set_timeout(const size_t seconds, const size_t microseconds) {
-        timeval t{};
-        t.tv_sec = static_cast<long>(seconds);
-        t.tv_usec = static_cast<long>(microseconds);
+        timeval t{}; t.tv_sec = static_cast<long>(seconds); t.tv_usec = static_cast<long>(microseconds);
         setsockopt(this->socket_, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof(t));
     }
 
@@ -38,12 +36,13 @@ namespace robomaster {
         if(this->socket_ < 0) { std::printf("[CAN]: Failed to open Socket\n"); return false; }
 
         memcpy(this->ifr_.ifr_name, can_interface.c_str(), can_interface.size());
-        if(ioctl(this->socket_, SIOGIFINDEX, &this->ifr_) < 0) { std::printf("[CAN]: Failed to request interface %s\n", can_interface.c_str()); return false; }
-        this->addr_.can_ifindex = this->ifr_.ifr_ifindex; this->addr_.can_family= PF_CAN;
-        if(bind(this->socket_, reinterpret_cast<sockaddr *>(&this->addr_), sizeof(this->addr_)) < 0) { std::printf("[CAN]: Failed to bind the address\n"); return false; } return true;
+        if(ioctl(this->socket_, SIOGIFINDEX, &this->ifr_) < 0) { std::printf("[CAN]: Failed to request interface %s\n", can_interface.c_str()); close(this->socket_); return false; }
+
+        this->addr_.can_ifindex = this->ifr_.ifr_ifindex; this->addr_.can_family = PF_CAN;
+        if(bind(this->socket_, reinterpret_cast<sockaddr *>(&this->addr_), sizeof(this->addr_)) < 0) { std::printf("[CAN]: Failed to bind the address\n"); close(this->socket_); return false; } return true;
     }
 
-    bool CanSocket::send_frame(const uint32_t id, const uint8_t data[8], const size_t length) {
+    bool CanSocket::send_frame(const uint32_t id, const uint8_t data[8], const size_t length) const {
         if (length <= 8) {
             can_frame frame; memset(&frame, 0, sizeof(frame));
             frame.can_id = static_cast<int>(id); frame.can_dlc = length; memcpy(static_cast<uint8_t *>(frame.data), data, length);
@@ -51,7 +50,7 @@ namespace robomaster {
         } else { std::printf("[CAN]: Failed to send frame\n"); return false; } return true;
     }
 
-    bool CanSocket::read_frame(uint32_t &id, uint8_t data[8], size_t &length) {
+    bool CanSocket::read_frame(uint32_t &id, uint8_t data[8], size_t &length) const {
         can_frame frame; memset(&frame, 0, sizeof(frame));
         if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[CAN]: Failed to read frame\n"); return false; }
         id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;

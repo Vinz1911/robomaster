@@ -51,7 +51,7 @@ namespace robomaster {
         std::printf("[Handler]: Handler initialization failure\n"); return false;
     }
 
-    bool Handler::is_running() {
+    bool Handler::is_running() const {
         return this->flag_initialised_ && !this->flag_stop_;
     }
 
@@ -100,10 +100,7 @@ namespace robomaster {
     }
 
     void Handler::start_sender_thread() {
-        uint16_t heartbeat_10ms_counter = 0;
-        std::chrono::high_resolution_clock::time_point heartbeat_10ms_time_point = std::chrono::high_resolution_clock::now();
-        size_t error_counter = 0;
-
+        uint16_t heartbeat_10ms_counter = 0; size_t error_counter = 0; auto heartbeat_10ms_time_point = std::chrono::high_resolution_clock::now();
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_) {
             if (heartbeat_10ms_time_point < std::chrono::high_resolution_clock::now()) {
                 if(this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, heartbeat_10ms_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }))) {
@@ -138,7 +135,7 @@ namespace robomaster {
     void Handler::process_message(const Message &msg) {
         if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) {
             switch (msg.get_type()) {
-            case 0x0903: if(4 < msg.get_payload().size() && msg.get_payload()[0] == 0x20 && msg.get_payload()[1] == 0x48 && msg.get_payload()[2] == 0x08 && msg.get_payload()[3] == 0x00 && this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_(msg); }
+            case 0x0903: if (4 < msg.get_payload().size() && msg.get_payload()[0] == 0x20 && msg.get_payload()[1] == 0x48 && msg.get_payload()[2] == 0x08 && msg.get_payload()[3] == 0x00 && this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_(msg); break; }
             default: break; }
         }
     }

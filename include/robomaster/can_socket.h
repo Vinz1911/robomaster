@@ -81,7 +81,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false, when failed.
          */
-        bool send_frame(uint32_t id, const uint8_t data[8], size_t length);
+        bool send_frame(uint32_t id, const uint8_t data[8], size_t length) const;
 
         /**
          * @brief Read the next incoming can frame from the can socket. This function is blocking until the timeout is reached.
@@ -92,7 +92,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false  when failed.
          */
-        bool read_frame(uint32_t &id, uint8_t data[8], size_t &length);
+        bool read_frame(uint32_t &id, uint8_t data[8], size_t &length) const;
     };
 } // namespace robomaster
 

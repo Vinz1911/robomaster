@@ -152,7 +152,7 @@ namespace robomaster {
         this->set_led_flash(mask, r, g, b, freq, freq);
     }
 
-    void RoboMaster::decode_state(const Message &msg) {
+    void RoboMaster::decode_state(const Message &msg) const {
         if (this->callback_data_robomaster_state_) {
             DataRoboMasterState data;
             data.velocity   = decode_data_velocity(27, msg);
@@ -165,7 +165,7 @@ namespace robomaster {
         }
     }
 
-    bool RoboMaster::is_running() {
+    bool RoboMaster::is_running() const {
         return this->handler_.is_running();
     }
 } // namespace robomaster
