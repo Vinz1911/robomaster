@@ -12,13 +12,11 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    RoboMaster::RoboMaster():counter_drive_(0), counter_led_(0), counter_gimbal_(0), counter_blaster_(0) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { decode_state(std::forward<T0>(PH1)); }); }
+    RoboMaster::RoboMaster():counter_drive_(0), counter_led_(0), counter_gimbal_(0), counter_blaster_(0) {
+        this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); });
+    }
 
     RoboMaster::~RoboMaster() = default;
-
-    void RoboMaster::set_callback(std::function<void(const DataRoboMasterState&)> func) {
-        this->callback_data_robomaster_state_ = std::move(func);
-    }
 
     void RoboMaster::boot_sequence() {
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x0309, 0, { 0x40, 0x48, 0x04, 0x00, 0x09, 0x00 }));
@@ -99,17 +97,19 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    void RoboMaster::decode_state(const Message &msg) const {
-        if (this->callback_data_robomaster_state_) {
-            DataRoboMasterState data;
-            data.velocity = decode_data_velocity(27, msg);
-            data.battery = decode_data_battery(51, msg);
-            data.esc = decode_data_esc(61, msg);
-            data.imu = decode_data_imu(97, msg);
-            data.attitude = decode_data_attitude(121, msg);
-            data.position = decode_data_position(133, msg);
-            this->callback_data_robomaster_state_(data);
-        }
+    RoboMasterState RoboMaster::get_state() const {
+        return this->state_.load(std::memory_order::relaxed);
+    }
+
+    RoboMasterState RoboMaster::decode_state(const Message &msg) {
+        auto data = RoboMasterState();
+        data.velocity = decode_data_velocity(27, msg);
+        data.battery = decode_data_battery(51, msg);
+        data.esc = decode_data_esc(61, msg);
+        data.imu = decode_data_imu(97, msg);
+        data.attitude = decode_data_attitude(121, msg);
+        data.position = decode_data_position(133, msg);
+        return data;
     }
 
     bool RoboMaster::is_running() const {

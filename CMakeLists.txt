@@ -15,7 +15,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # Example
 add_executable(${PROJECT_NAME}_demo examples/main.cpp)
-target_link_libraries(${PROJECT_NAME}_demo PRIVATE ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME}_demo PRIVATE ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} atomic)
 
 # Installation directories
 set(INSTALL_LIB_DIR lib)

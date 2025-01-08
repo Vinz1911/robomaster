@@ -8,6 +8,7 @@
 #define ROBOMASTER_ROBOMASTER_H_
 
 #include <optional>
+#include <atomic>
 
 #include "handler.h"
 #include "data.h"
@@ -23,11 +24,6 @@ namespace robomaster {
          * @brief Handler class for the RoboMaster message io and thread management.
          */
         Handler handler_;
-
-        /**
-         * @brief Callback function to trigger when new RoboMasterState data arte received.
-         */
-        std::function<void(const DataRoboMasterState &)> callback_data_robomaster_state_;
 
         /**
          * @brief Counter for the message sequence of the drive messages.
@@ -50,6 +46,11 @@ namespace robomaster {
         uint16_t counter_blaster_;
 
         /**
+         * @brief Store for the data state
+         */
+        std::atomic<RoboMasterState> state_;
+
+        /**
          * @brief The boot sequence to configure the RoboMasterState messages.
          */
         void boot_sequence();
@@ -58,8 +59,9 @@ namespace robomaster {
          * @brief Decode the RoboMasterState message and trigger the callback function.
          *
          * @param msg The RoboMasterState message.
+         * @return the current data state
          */
-        void decode_state(const Message &msg) const;
+        static RoboMasterState decode_state(const Message &msg);
 
     public:
         /**
@@ -70,6 +72,12 @@ namespace robomaster {
          * @brief Destructor of the RoboMaster class.
          */
         ~RoboMaster();
+
+        /**
+         * @brief get the current state from DataRoboMasterState
+         * @return the collected state data
+         */
+        RoboMasterState get_state() const;
 
         /**
          * @brief Enable or Disable the torque of the RoboMaster chassis.
@@ -125,13 +133,6 @@ namespace robomaster {
          * @param down_time The falling time of the LED in seconds.
          */
         void set_led(LEDMode mode, uint16_t mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
-
-        /**
-         * @brief Bind a function to the callback which get triggered when a new RoboMasterState message is received.
-         *
-         * @param func Function to bind as callback.
-         */
-        void set_callback(std::function<void(const DataRoboMasterState&)> func);
 
         /**
          * @brief Init the RoboMaster can socket to communicate with the motion controller.

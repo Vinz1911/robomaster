@@ -127,14 +127,13 @@ namespace robomaster {
     }
 
     void Handler::bind_callback(std::function<void(const Message&)> func) {
-        this->callback_data_robomaster_state_ = std::move(func);
+        if (this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_ = std::move(func); }
     }
 
     void Handler::process_message(const Message &msg) {
-        if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) {
-            switch (msg.get_type()) {
-            case 0x0903: if (4 < msg.get_payload().size() && msg.get_payload()[0] == 0x20 && msg.get_payload()[1] == 0x48 && msg.get_payload()[2] == 0x08 && msg.get_payload()[3] == 0x00 && this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_(msg); break; }
-            default: break; }
-        }
+        const auto &payload = msg.get_payload();
+        if (msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER) { return; }
+        if (msg.get_type() != 0x0903) { return; }
+        if (payload.size() > 4 && payload[0] == 0x20 && payload[1] == 0x48 && payload[2] == 0x08 && payload[3] == 0x00) { this->callback_data_robomaster_state_(msg); }
     }
 } // namespace robomaster

@@ -9,13 +9,6 @@
 #include <robomaster/definitions.h>
 
 /**
- * @brief Callback to print the state of the RoboMaster.
- */
-void callback(const robomaster::DataRoboMasterState &state) {
-    std::cout << state << std::endl;
-}
-
-/**
  * @brief Get the color value for a rainbow scale for a given position.
  * 
  * @param position The position of the rainbow scale.
@@ -53,9 +46,6 @@ int main() {
 
     // Try to init
     if (!robomaster.init("can0")) { std::printf("[Example]: robomaster initialization failed"); return 1; }
-
-    // bind the callback function to print state of the robomaster like wheel position, imu data, etc.
-    robomaster.set_callback(callback);
 
     // Enable the robomaster to execute drive commands.
     robomaster.set_torque(true);

@@ -17,7 +17,7 @@ namespace robomaster {
     /**
      * @brief Struct for the data of the ESC from the RoboMaster. The data array is ordered in front right, front left, rear left and rear right.
      */
-    struct DataEsc {
+    struct StateESC {
         /**
          * @brief True when the ESC data are successfully parsed.
          */
@@ -47,7 +47,7 @@ namespace robomaster {
     /**
      * @brief Struct for the imu data from the RoboMaster.
      */
-    struct DataImu {
+    struct StateIMU {
         /**
          * @brief True when the Imu data are successfully parsed.
          */
@@ -87,7 +87,7 @@ namespace robomaster {
     /**
      * @brief Struct for the attitude data from the RoboMaster.
      */
-    struct DataAttitude {
+    struct StateAttitude {
         /**
          * @brief True when the attitude data are successfully parsed.
          */
@@ -112,7 +112,7 @@ namespace robomaster {
     /**
      * @brief Struct for the battery data from the RoboMaster.
      */
-    struct DataBattery {
+    struct StateBattery {
         /**
          * @brief True when the battery data are successfully parsed.
          */
@@ -147,7 +147,7 @@ namespace robomaster {
     /**
      * @brief Struct for the velocity data from the RoboMaster.
      */
-    struct DataVelocity {
+    struct StateVelocity {
         /**
          * @brief True when the velocity data are successfully parsed.
          */
@@ -187,7 +187,7 @@ namespace robomaster {
     /**
      * @brief Struct for the position data from the RoboMaster.
      */
-    struct DataPosition {
+    struct StatePosition {
         /**
          * @brief True when the position data are successfully parsed.
          */
@@ -212,36 +212,36 @@ namespace robomaster {
     /**
      * @brief Collection of all data struct from the RoboMaster.
      */
-    struct DataRoboMasterState {
+    struct RoboMasterState {
         /**
          * @brief Battery data.
          */
-        DataBattery battery;
+        StateBattery battery;
 
         /**
          * @brief Esc data.
          */
-        DataEsc esc;
+        StateESC esc;
 
         /**
          * @brief Imu data.
          */
-        DataImu imu;
+        StateIMU imu;
 
         /**
          * @brief Velocity data.
          */
-        DataVelocity velocity;
+        StateVelocity velocity;
 
         /**
          * @brief Position data.
          */
-        DataPosition position;
+        StatePosition position;
 
         /**
          * @brief Attitude data.
          */
-        DataAttitude attitude;
+        StateAttitude attitude;
     };
 
     /**
@@ -251,7 +251,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataEsc. has_data is true, by successful decoding.
      */
-    DataEsc decode_data_esc(size_t index, const Message &msg);
+    StateESC decode_data_esc(size_t index, const Message &msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -260,7 +260,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataImu. has_data is true, by successful decoding.
      */
-    DataImu decode_data_imu(size_t index, const Message &msg);
+    StateIMU decode_data_imu(size_t index, const Message &msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -269,7 +269,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataAttitude. has_data is true, by successful decoding.
      */
-    DataAttitude decode_data_attitude(size_t index, const Message &msg);
+    StateAttitude decode_data_attitude(size_t index, const Message &msg);
 
     /**
      * @brief Decode the message payload at the given index for battery data.
@@ -278,7 +278,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataBattery. has_data is true, by successful decoding.
      */
-    DataBattery decode_data_battery(size_t index, const Message &msg);
+    StateBattery decode_data_battery(size_t index, const Message &msg);
 
     /**
      * @brief Decode the message payload at the given index for velocity data.
@@ -287,7 +287,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataVelocity. has_data is true, by successful decoding.
      */
-    DataVelocity decode_data_velocity(size_t index, const Message &msg);
+    StateVelocity decode_data_velocity(size_t index, const Message &msg);
 
     /**
      * @brief Decode the message payload at the given index for position data.
@@ -296,15 +296,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataPosition. has_data is true, by successful decoding.
      */
-    DataPosition decode_data_position(size_t index, const Message &msg);
-
-    std::ostream& operator<<(std::ostream& os, const DataEsc &data);
-    std::ostream& operator<<(std::ostream& os, const DataImu &data);
-    std::ostream& operator<<(std::ostream& os, const DataAttitude &data);
-    std::ostream& operator<<(std::ostream& os, const DataBattery &data);
-    std::ostream& operator<<(std::ostream& os, const DataVelocity &data);
-    std::ostream& operator<<(std::ostream& os, const DataPosition &data);
-    std::ostream& operator<<(std::ostream& os, const DataRoboMasterState &data);
+    StatePosition decode_data_position(size_t index, const Message &msg);
 } // namespace robomaster
 
 #endif // ROBOMASTER_DATA_H_
