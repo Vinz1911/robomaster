@@ -4,13 +4,13 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include "robomaster/queue_msg.h"
+#include "robomaster/queue.h"
 #include "robomaster/definitions.h"
 #include "gtest/gtest.h"
 
 namespace robomaster {
     TEST(QueueTest, PushAndPop) {
-        QueueMsg queue;
+        Queue queue;
 
         queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 0, std::vector<uint8_t>{static_cast<uint8_t>(10)}));
         queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 1, std::vector<uint8_t>{static_cast<uint8_t>(11)}));
@@ -38,7 +38,7 @@ namespace robomaster {
     }
 
     TEST(QueueTest, Overflow) {
-        QueueMsg queue;
+        Queue queue;
 
         for (size_t i = 0; i < queue.max_queue_size() + 1; i++) { queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, i, std::vector<uint8_t>{static_cast<uint8_t>(i)})); }
 
@@ -58,7 +58,7 @@ namespace robomaster {
     }
 
     TEST(QueueTest, Clear) {
-        QueueMsg queue;
+        Queue queue;
 
         queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 0, std::vector<uint8_t>{static_cast<uint8_t>(10)}));
         queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 1, std::vector<uint8_t>{static_cast<uint8_t>(11)}));

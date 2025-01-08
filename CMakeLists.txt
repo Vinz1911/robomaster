@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(robomaster)
 
-option(BUILD_RUN_TESTS "Build with gtest for testing" OFF)
+option(BUILD_RUN_TESTS "build with testing" OFF)
 find_package(Threads REQUIRED)
 
 # Source files
