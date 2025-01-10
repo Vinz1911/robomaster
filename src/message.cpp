@@ -11,14 +11,13 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data): is_valid_(false), device_id_(device_id), sequence_(0), type_(0) {
-        if(msg_data.size() > 10) {
-            this->type_ = little_endian_to_uint16(msg_data[4], msg_data[5]);
-            this->sequence_ = little_endian_to_uint16(msg_data[6], msg_data[7]);
-            this->payload_.clear();
-            this->payload_.insert(std::begin(this->payload_), std::cbegin(msg_data) + 8, std::cend(msg_data) - 2);
-            this->is_valid_ = true;
-        }
+    Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
+        if (msg_data.size() <= 10) { return; }
+        this->type_ = little_endian_to_uint16(msg_data[4], msg_data[5]);
+        this->sequence_ = little_endian_to_uint16(msg_data[6], msg_data[7]);
+        this->payload_.clear();
+        this->payload_.insert(std::begin(this->payload_), std::cbegin(msg_data) + 8, std::cend(msg_data) - 2);
+        this->is_valid_ = true;
     }
 
     Message::Message(const uint32_t device_id, const uint16_t type, const uint16_t sequence, std::vector<uint8_t> payload): is_valid_(true), device_id_(device_id), sequence_(sequence), type_(type), payload_(std::move(payload)) { }
@@ -150,22 +149,21 @@ namespace robomaster {
 
     std::vector<uint8_t> Message::to_vector() const {
         std::vector<uint8_t> vector;
-        if (this->is_valid_) {
-            vector.resize(10 + this->payload_.size());
-            vector[0] = 0x55;
-            vector[1] = static_cast<uint8_t>(vector.size());
-            vector[2] = 0x04;
-            vector[3] = calculate_crc8(vector.data(), 3);
-            vector[4] = static_cast<uint8_t>(this->type_);
-            vector[5] = static_cast<uint8_t>(this->type_ >> 8);
-            vector[6] = static_cast<uint8_t>(this->sequence_);
-            vector[7] = static_cast<uint8_t>(this->sequence_ >> 8);
+        if (!this->is_valid_) { return vector; }
+        vector.resize(10 + this->payload_.size());
+        vector[0] = 0x55;
+        vector[1] = static_cast<uint8_t>(vector.size());
+        vector[2] = 0x04;
+        vector[3] = calculate_crc8(vector.data(), 3);
+        vector[4] = static_cast<uint8_t>(this->type_);
+        vector[5] = static_cast<uint8_t>(this->type_ >> 8);
+        vector[6] = static_cast<uint8_t>(this->sequence_);
+        vector[7] = static_cast<uint8_t>(this->sequence_ >> 8);
 
-            for (size_t i = 0; i < this->payload_.size(); i++) { vector[8 + i] = this->payload_[i]; }
-            const uint16_t crc16 = calculate_crc16(vector.data(), vector.size() - 2);
+        for (size_t i = 0; i < this->payload_.size(); i++) { vector[8 + i] = this->payload_[i]; }
+        const uint16_t crc16 = calculate_crc16(vector.data(), vector.size() - 2);
 
-            vector[vector.size() - 2] = static_cast<uint8_t>(crc16);
-            vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8);
-        } return vector;
+        vector[vector.size() - 2] = static_cast<uint8_t>(crc16);
+        vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8); return vector;
     }
 } // namespace robomaster

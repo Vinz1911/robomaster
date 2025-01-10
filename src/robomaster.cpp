@@ -82,9 +82,8 @@ namespace robomaster {
     }
 
     bool RoboMaster::init(const std::string &can_interface) {
-        if (this->handler_.init(can_interface)) {
-            this->boot_sequence(); return true;
-        } return false;
+        if (!this->handler_.init(can_interface)) { return false;}
+        this->boot_sequence(); return true;
     }
 
     void RoboMaster::set_led(const LEDMode mode, const uint16_t mask, const uint8_t red, const uint8_t green, const uint8_t blue, const std::optional<uint16_t> up_time, const std::optional<uint16_t> down_time) {

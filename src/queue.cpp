@@ -13,13 +13,13 @@ namespace robomaster {
 
     void Queue::push(const Message &msg) {
         std::lock_guard lock(this->mutex_);
-        if(STD_MAX_QUEUE_SIZE <= this->queue_.size()) { this->queue_.pop(); }
+        if (STD_MAX_QUEUE_SIZE <= this->queue_.size()) { this->queue_.pop(); }
         this->queue_.push(msg);
     }
 
     void Queue::push(Message && msg) {
         std::lock_guard lock(this->mutex_);
-        if(STD_MAX_QUEUE_SIZE <= this->queue_.size()) { this->queue_.pop(); }
+        if (STD_MAX_QUEUE_SIZE <= this->queue_.size()) { this->queue_.pop(); }
         this->queue_.emplace(std::move(msg));
     }
 
