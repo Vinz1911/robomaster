@@ -56,14 +56,14 @@ The class RoboMaster provides simple access to control the chassis, the gimbal a
 ## Struct RoboMasterState
 Information of the state of the RoboMaster.
 
-| struct (C++)                    | Description                                                                     |
-|---------------------------------|---------------------------------------------------------------------------------|
-| `struct StateBattery battery`   | Contains the state of the RoboMaster battery.                                   |
-| `struct StateESC esc`           | Contains the states of the wheels.                                              |
-| `struct StateIMU imu`           | Contains the sensor data of the IMU in the motion controller.                   |
-| `struct StateIMU velocity`      | Contains the estimated velocities of the RoboMaster from the motion controller. |
-| `struct StatePosition position` | Contains the odometry data of the motion controller.                            |
-| `struct StateAttitude attitude` | Contains the attitude of the RoboMaster estimated from the motion controller.   |
+| struct (C++)             | Description                                                                     |
+|--------------------------|---------------------------------------------------------------------------------|
+| `StateBattery battery`   | Contains the state of the RoboMaster battery.                                   |
+| `StateESC esc`           | Contains the states of the wheels.                                              |
+| `StateIMU imu`           | Contains the sensor data of the IMU in the motion controller.                   |
+| `StateVelocity velocity` | Contains the estimated velocities of the RoboMaster from the motion controller. |
+| `StatePosition position` | Contains the odometry data of the motion controller.                            |
+| `StateAttitude attitude` | Contains the attitude of the RoboMaster estimated from the motion controller.   |
 
 ## Struct StateBattery
 Information of the RoboMaster battery.
