@@ -77,7 +77,7 @@ namespace robomaster {
          * @brief get the current state from DataRoboMasterState
          * @return the collected state data
          */
-        RoboMasterState get_state() const;
+        [[nodiscard]] RoboMasterState get_state() const;
 
         /**
          * @brief Enable or Disable the torque of the RoboMaster chassis.
@@ -148,7 +148,7 @@ namespace robomaster {
          *
          * @return true if the robomaster is successful initialized and is running. false when a can error is appeared.
          */
-        bool is_running() const;
+        [[nodiscard]] bool is_running() const;
     };
 } // namespace robomaster
 

@@ -7,8 +7,6 @@
 #ifndef ROBOMASTER_UTILS_H_
 #define ROBOMASTER_UTILS_H_
 
-#include <algorithm>
-#include <sstream>
 #include <vector>
 
 namespace robomaster {

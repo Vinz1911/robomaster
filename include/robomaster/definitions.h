@@ -7,8 +7,6 @@
 #ifndef ROBOMASTER_DEFINITIONS_H_
 #define ROBOMASTER_DEFINITIONS_H_
 
-#include <cstdint>
-
 namespace robomaster {
     enum BlasterMode {
         INFRARED,

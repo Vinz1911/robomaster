@@ -67,7 +67,7 @@ namespace robomaster {
          *
          * @return size_t as maximal queue size.
          */
-        size_t max_queue_size();
+        static size_t max_queue_size() ;
 
         /**
          * @brief True when the queue is empty.

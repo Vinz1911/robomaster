@@ -8,7 +8,8 @@
 #define ROBOMASTER_MESSAGE_H_
 
 #include <vector>
-#include <ostream>
+#include <cstdint>
+#include <cstddef>
 
 namespace robomaster {
     /**
@@ -26,7 +27,7 @@ namespace robomaster {
 
         uint32_t device_id_;
         /**
-         * @brief The sqeuence or counter for the message.
+         * @brief The sequence or counter for the message.
          */
 
         uint16_t sequence_;
@@ -64,28 +65,28 @@ namespace robomaster {
          *
          * @return uint32_t as device id.
          */
-        uint32_t get_device_id() const;
+        [[nodiscard]] uint32_t get_device_id() const;
 
         /**
          * @brief Get the sequence.
          *
          * @return uint16_t as sequence.
          */
-        uint16_t get_sequence() const;
+        [[nodiscard]] uint16_t get_sequence() const;
 
         /**
          * @brief Get the message type.
          *
          * @return uint16_t as type.
          */
-        uint16_t get_type() const;
+        [[nodiscard]] uint16_t get_type() const;
 
         /**
          * @brief Get the payload from the message.
          *
          * @return std::vector<uint8_t> as payload.
          */
-        std::vector<uint8_t> get_payload() const;
+        [[nodiscard]] std::vector<uint8_t> get_payload() const;
 
         /**
          * @brief Retuns true for a valid message, when message length and crc is correct.
@@ -93,14 +94,14 @@ namespace robomaster {
          * @return true
          * @return false
          */
-        bool is_valid() const;
+        [[nodiscard]] bool is_valid() const;
 
         /**
          * @brief Get the complett length from the message including header, crc and payload.
          *
          * @return size_t as length.
          */
-        size_t get_length() const;
+        [[nodiscard]] size_t get_length() const;
 
         /**
          * @brief Set the uint8 value into the payload at given index.
@@ -164,7 +165,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint8_t as value.
          */
-        uint8_t get_value_uint8(size_t index) const;
+        [[nodiscard]] uint8_t get_value_uint8(size_t index) const;
 
         /**
          * @brief Get the int8 value form the palyoad at given index.
@@ -172,7 +173,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return int8_t as value.
          */
-        int8_t get_value_int8(size_t index) const;
+        [[nodiscard]] int8_t get_value_int8(size_t index) const;
 
         /**
          * @brief Get the uint16 value form the palyoad at given index.
@@ -180,7 +181,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint16_t as value.
          */
-        uint16_t get_value_uint16(size_t index) const;
+        [[nodiscard]] uint16_t get_value_uint16(size_t index) const;
 
         /**
          * @brief Get the int16 value form the palyoad at given index.
@@ -188,7 +189,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint16_t as value.
          */
-        int16_t get_value_int16(size_t index) const;
+        [[nodiscard]] int16_t get_value_int16(size_t index) const;
 
         /**
          * @brief Get the uint32 value form the palyoad at given index.
@@ -196,7 +197,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint32_t as value.
          */
-        uint32_t get_value_uint32(size_t index) const;
+        [[nodiscard]] uint32_t get_value_uint32(size_t index) const;
 
         /**
          * @brief Get the int32 value form the palyoad at given index.
@@ -204,7 +205,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return int32_t as value.
          */
-        int32_t get_value_int32(size_t index) const;
+        [[nodiscard]] int32_t get_value_int32(size_t index) const;
 
         /**
          * @brief Get the float value form the palyoad at given index.
@@ -212,7 +213,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return float as value.
          */
-        float get_value_float(size_t index) const;
+        [[nodiscard]] float get_value_float(size_t index) const;
 
         /**
          * @brief Increment the sequence by one.
@@ -231,9 +232,7 @@ namespace robomaster {
          *
          * @return std::vector<uint8_t> as raw data message.
          */
-        std::vector<uint8_t> to_vector() const;
-
-        friend std::ostream& operator<<(std::ostream& os, const Message &msg);
+        [[nodiscard]] std::vector<uint8_t> to_vector() const;
     };
 } // namespace robomaster
 

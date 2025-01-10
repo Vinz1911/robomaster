@@ -12,7 +12,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    RoboMaster::RoboMaster():counter_drive_(0), counter_led_(0), counter_gimbal_(0), counter_blaster_(0) {
+    RoboMaster::RoboMaster():counter_drive_(), counter_led_(), counter_gimbal_(), counter_blaster_() {
         this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); });
     }
 

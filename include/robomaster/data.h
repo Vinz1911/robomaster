@@ -7,8 +7,6 @@
 #ifndef ROBOMASTER_DATA_H_
 #define ROBOMASTER_DATA_H_
 
-#include <cstdint>
-#include <ostream>
 #include <array>
 
 #include "message.h"

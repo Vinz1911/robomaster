@@ -5,8 +5,7 @@
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
 #include <cassert>
-#include <iomanip>
-#include <utility>
+#include <string>
 
 #include "robomaster/message.h"
 #include "robomaster/utils.h"
@@ -168,21 +167,5 @@ namespace robomaster {
             vector[vector.size() - 2] = static_cast<uint8_t>(crc16);
             vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8);
         } return vector;
-    }
-
-    std::ostream& operator<<(std::ostream& os, const Message& msg) {
-        os << "Message(0x"
-           << std::setfill('0') << std::setw(4) << std::hex << msg.get_device_id() << ", 0x"
-           << std::setfill('0') << std::setw(4) << std::hex << msg.get_type() << ", "
-           << std::setfill(' ') << std::setw(5) << std::dec << msg.get_sequence() << ", { ";
-
-        if (!msg.get_payload().empty()) {
-            os << "0x";
-            for (size_t i = 0; i < msg.get_payload().size(); i++) {
-                os << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint16_t>(msg.get_payload()[i]);
-                if (i < msg.get_payload().size() - 1) { os << ", 0x"; }
-            }
-        }
-        os << " })" << std::dec; return os;
     }
 } // namespace robomaster
