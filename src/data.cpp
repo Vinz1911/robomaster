@@ -58,7 +58,7 @@ namespace robomaster {
 
     StateBattery decode_data_battery(const size_t index, const Message &msg) {
         StateBattery data; if (index + 10 > msg.get_payload().size()) { return data; }
-        data.adc_value = msg.get_value_uint16(index);;
+        data.adc = msg.get_value_uint16(index);
         data.temperature = msg.get_value_uint16(index + 2);
         data.current = msg.get_value_int32(index + 4);
         data.percent = msg.get_value_uint8(index + 8);

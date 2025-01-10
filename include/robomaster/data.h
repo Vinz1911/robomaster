@@ -119,7 +119,7 @@ namespace robomaster {
         /**
          * @brief ADC value of the battery in milli volt.
          */
-        uint16_t adc_value = 0;
+        uint16_t adc = 0;
 
         /**
          * @brief Temperature in 10*e-1.

@@ -36,11 +36,11 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    void RoboMaster::set_wheel_rpm(const int16_t fr, const int16_t fl, const int16_t rl, const int16_t rr) {
-        const auto w1 = clip<int16_t>(fr, -1000, 1000);
-        const auto w2 = clip<int16_t>(fl, -1000, 1000);
-        const auto w3 = clip<int16_t>(rl, -1000, 1000);
-        const auto w4 = clip<int16_t>(rr, -1000, 1000);
+    void RoboMaster::set_wheel_rpm(const int16_t front_right, const int16_t front_left, const int16_t rear_left, const int16_t rear_right) {
+        const auto w1 = clip<int16_t>(front_right, -1000, 1000);
+        const auto w2 = clip<int16_t>(front_left, -1000, 1000);
+        const auto w3 = clip<int16_t>(rear_left, -1000, 1000);
+        const auto w4 = clip<int16_t>(rear_right, -1000, 1000);
 
         Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_drive_++, { 0x40, 0x3F, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_int16(3, w1);

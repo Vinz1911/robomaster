@@ -96,12 +96,12 @@ namespace robomaster {
         /**
          * @brief Control each individual wheel of the RoboMaster in rpm.
          *
-         * @param fr Front right wheel in rpm.
-         * @param fl Front left wheel in rpm.
-         * @param rl Rear left wheel in rpm.
-         * @param rr Rear right wheel in rpm.
+         * @param front_right wheel in rpm.
+         * @param front_left wheel in rpm.
+         * @param rear_left wheel in rpm.
+         * @param rear_right wheel in rpm.
          */
-        void set_wheel_rpm(int16_t fr, int16_t fl, int16_t rl, int16_t rr);
+        void set_wheel_rpm(int16_t front_right, int16_t front_left, int16_t rear_left, int16_t rear_right);
 
         /**
          * @brief Control the gimbal of the RoboMaster
