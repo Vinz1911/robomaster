@@ -8,7 +8,6 @@
 #define ROBOMASTER_ROBOMASTER_H_
 
 #include <optional>
-#include <atomic>
 
 #include "handler.h"
 #include "data.h"
