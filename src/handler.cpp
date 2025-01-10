@@ -34,7 +34,7 @@ namespace robomaster {
         this->join_all();
     }
 
-    bool Handler::init(const std::string &can_interface) {
+    bool Handler::init(const std::string& can_interface) {
         if (this->flag_initialised_) { std::printf("[Handler]: already running\n"); return false; }
         if (!this->can_socket_.init(can_interface)) { std::printf("[Handler]: initialization failure\n"); return false; }
 
@@ -49,7 +49,7 @@ namespace robomaster {
         return this->flag_initialised_ && !this->flag_stop_.load(std::memory_order::acquire);
     }
 
-    bool Handler::send_message(const uint32_t id, const std::vector<uint8_t> &data) {
+    bool Handler::send_message(const uint32_t id, const std::vector<uint8_t>& data) {
         uint8_t frame_data[8] = {};
         for (size_t i = 0; i < data.size(); i += 8) {
             const size_t frame_length = std::min(static_cast<size_t>(8), data.size() - i);
@@ -58,7 +58,7 @@ namespace robomaster {
         } return true;
     }
 
-    bool Handler::send_message(const Message &msg) {
+    bool Handler::send_message(const Message& msg) {
         return this->send_message(msg.get_device_id(), msg.to_vector());
     }
 
@@ -115,7 +115,7 @@ namespace robomaster {
         }
     }
 
-    void Handler::push_message(const Message &msg) {
+    void Handler::push_message(const Message& msg) {
         this->queue_sender_.push(msg);
         this->cv_sender_.notify_one();
     }
@@ -124,7 +124,7 @@ namespace robomaster {
         this->callback_data_robomaster_state_ = std::move(func);
     }
 
-    void Handler::process_message(const Message &msg) {
+    void Handler::process_message(const Message& msg) {
         const auto &payload = msg.get_payload();
         if (msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER) { return; }
         if (msg.get_type() != 0x0903) { return; }

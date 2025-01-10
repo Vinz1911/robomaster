@@ -64,7 +64,7 @@ namespace robomaster {
          * @return true, when the socket is open successfully.
          * @return false, when this socket failed to open.
          */
-        bool init(const std::string &can_interface);
+        bool init(const std::string& can_interface);
 
         /**
          * @brief Send a can frame over the socket.
@@ -86,7 +86,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false  when failed.
          */
-        bool read_frame(uint32_t &id, uint8_t data[8], size_t &length) const;
+        bool read_frame(uint32_t& id, uint8_t data[8], size_t& length) const;
     };
 } // namespace robomaster
 

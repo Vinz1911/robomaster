@@ -81,7 +81,7 @@ namespace robomaster {
         } return ss.str();
     }
 
-    std::string string_to_hex(const std::vector<uint8_t> &data) {
+    std::string string_to_hex(const std::vector<uint8_t>& data) {
         std::stringstream ss;
         for (size_t i = 0; i < data.size(); i++) {
             ss << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);

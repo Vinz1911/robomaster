@@ -61,7 +61,7 @@ namespace robomaster {
          * @param msg The RoboMasterState message.
          * @return the current data state
          */
-        static RoboMasterState decode_state(const Message &msg);
+        static RoboMasterState decode_state(const Message& msg);
 
     public:
         /**
@@ -141,7 +141,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false, when initialization failed.
          */
-        bool init(const std::string &can_interface="can0");
+        bool init(const std::string& can_interface="can0");
 
         /**
          * @brief True when the robomaster is successful initialized and ready to receive and send messages.

@@ -81,7 +81,7 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    bool RoboMaster::init(const std::string &can_interface) {
+    bool RoboMaster::init(const std::string& can_interface) {
         if (!this->handler_.init(can_interface)) { return false;}
         this->boot_sequence(); return true;
     }
@@ -102,7 +102,7 @@ namespace robomaster {
         return this->state_.load(std::memory_order::relaxed);
     }
 
-    RoboMasterState RoboMaster::decode_state(const Message &msg) {
+    RoboMasterState RoboMaster::decode_state(const Message& msg) {
         auto data = RoboMasterState();
         data.velocity = decode_data_velocity(27, msg);
         data.battery = decode_data_battery(51, msg);

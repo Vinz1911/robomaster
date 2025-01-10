@@ -36,7 +36,7 @@ namespace robomaster {
         this->set_timeout(seconds_t, microseconds_t);
     }
 
-    bool CANBus::init(const std::string &can_interface) {
+    bool CANBus::init(const std::string& can_interface) {
         this->socket_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
         if (this->socket_ < 0) { std::printf("[CAN]: failed to open socket\n"); return false; }
         std::memcpy(this->ifr_.ifr_name, can_interface.c_str(), can_interface.size());
@@ -55,7 +55,7 @@ namespace robomaster {
         if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[CAN]: failed to send frame\n"); return false; } return true;
     }
 
-    bool CANBus::read_frame(uint32_t &id, uint8_t data[8], size_t &length) const {
+    bool CANBus::read_frame(uint32_t& id, uint8_t data[8], size_t& length) const {
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
         if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[CAN]: failed to read frame\n"); return false; }
         id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;

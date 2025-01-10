@@ -48,7 +48,7 @@ namespace robomaster {
          * @param device_id The can device id.
          * @param msg_data The raw data for example can bus to parse into a RoboMaster message.
          */
-        Message(uint32_t device_id, const std::vector<uint8_t> &msg_data);
+        Message(uint32_t device_id, const std::vector<uint8_t>& msg_data);
 
         /**
          * @brief Construct a new Message object.
@@ -208,7 +208,7 @@ namespace robomaster {
         [[nodiscard]] int32_t get_value_int32(size_t index) const;
 
         /**
-         * @brief Get the float value form the palyoad at given index.
+         * @brief Get the float value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return float as value.
@@ -225,7 +225,7 @@ namespace robomaster {
          *
          * @param payload The payload.
          */
-        void set_payload(const std::vector<uint8_t> &payload);
+        void set_payload(const std::vector<uint8_t>& payload);
 
         /**
          * @brief Create a vector as raw data from the message including header, crc and payload.

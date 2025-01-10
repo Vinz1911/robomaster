@@ -120,7 +120,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false, by failing to send the message.
          */
-        bool send_message(uint32_t id, const std::vector<uint8_t> &data);
+        bool send_message(uint32_t id, const std::vector<uint8_t>& data);
 
         /**
          * @brief Send the message to the can socket.
@@ -129,14 +129,14 @@ namespace robomaster {
          * @return true, by success.
          * @return false, by failing to send the message.
          */
-        bool send_message(const Message &msg);
+        bool send_message(const Message& msg);
 
         /**
          * @brief Process the received messages from the message queue and triggers callback functions.
          *
          * @param msg RoboMaster message.
          */
-        void process_message(const Message &msg);
+        void process_message(const Message& msg);
 
     public:
         /**
@@ -157,7 +157,7 @@ namespace robomaster {
          * @return true, when successful initialised.
          * @return false, by failing the initialisation.
          */
-        bool init(const std::string &can_interface="can0");
+        bool init(const std::string& can_interface="can0");
 
         /**
          * @brief Bind the given callback for triggering when the message for the RoboMasterState is received.
@@ -171,7 +171,7 @@ namespace robomaster {
          *
          * @param msg A RoboMaster message.
          */
-        void push_message(const Message &msg);
+        void push_message(const Message& msg);
 
         /**
          * @brief State if the handler is running or not.

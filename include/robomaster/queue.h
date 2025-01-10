@@ -39,14 +39,14 @@ namespace robomaster {
          *
          * @param msg A RoboMaster message.
          */
-        void push(const Message &msg);
+        void push(const Message& msg);
 
         /**
          * @brief Push a Message into the queue. If the maximal queue size is reached the front message will be pop.
          *
          * @param msg A RoboMaster message.
          */
-        void push(Message && msg);
+        void push(Message&& msg);
 
         /**
          * @brief Pop and return the message of the queue. If the queue is empty a empty message is returned.

@@ -7,7 +7,7 @@
 #include "robomaster/data.h"
 
 namespace robomaster {
-    StatePosition decode_data_position(const size_t index, const Message &msg) {
+    StatePosition decode_data_position(const size_t index, const Message& msg) {
         StatePosition data; if (index + 12 > msg.get_payload().size()) { return data; }
         data.x = msg.get_value_float(index);
         data.y = msg.get_value_float(index + 4);
@@ -15,7 +15,7 @@ namespace robomaster {
         data.has_data = true; return data;
     }
 
-    StateESC decode_data_esc(const size_t index, const Message &msg) {
+    StateESC decode_data_esc(const size_t index, const Message& msg) {
         StateESC data; if (index + 36 > msg.get_payload().size()) { return data; }
         data.speed[0] = msg.get_value_int16(index);
         data.speed[1] = msg.get_value_int16(index + 2);
@@ -36,7 +36,7 @@ namespace robomaster {
         data.has_data = true; return data;
     }
 
-    StateIMU decode_data_imu(const size_t index, const Message &msg) {
+    StateIMU decode_data_imu(const size_t index, const Message& msg) {
         StateIMU data; if (index + 24 > msg.get_payload().size()) { return data; }
         data.acc_x = msg.get_value_float(index);
         data.acc_y = msg.get_value_float(index + 4);
@@ -48,7 +48,7 @@ namespace robomaster {
 
     }
 
-    StateAttitude decode_data_attitude(const size_t index, const Message &msg) {
+    StateAttitude decode_data_attitude(const size_t index, const Message& msg) {
         StateAttitude data; if (index + 12 > msg.get_payload().size()) { return data; }
         data.yaw = msg.get_value_float(index);
         data.pitch = msg.get_value_float(index + 4);
@@ -56,7 +56,7 @@ namespace robomaster {
         data.has_data = true; return data;
     }
 
-    StateBattery decode_data_battery(const size_t index, const Message &msg) {
+    StateBattery decode_data_battery(const size_t index, const Message& msg) {
         StateBattery data; if (index + 10 > msg.get_payload().size()) { return data; }
         data.adc = msg.get_value_uint16(index);
         data.temperature = msg.get_value_uint16(index + 2);
@@ -66,7 +66,7 @@ namespace robomaster {
         data.has_data = true; return data;
     }
 
-    StateVelocity decode_data_velocity(const size_t index, const Message &msg) {
+    StateVelocity decode_data_velocity(const size_t index, const Message& msg) {
         StateVelocity data; if (index + 24 > msg.get_payload().size()) { return data; }
         data.vgx = msg.get_value_float(index);
         data.vgy = msg.get_value_float(index + 4);

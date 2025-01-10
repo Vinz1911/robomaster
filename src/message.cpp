@@ -11,7 +11,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    Message::Message(const uint32_t device_id, const std::vector<uint8_t> &msg_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
+    Message::Message(const uint32_t device_id, const std::vector<uint8_t>& msg_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
         if (msg_data.size() <= 10) { return; }
         this->type_ = little_endian_to_uint16(msg_data[4], msg_data[5]);
         this->sequence_ = little_endian_to_uint16(msg_data[6], msg_data[7]);
@@ -143,7 +143,7 @@ namespace robomaster {
         return float_uint32_t_union.f;
     }
 
-    void Message::set_payload(const std::vector<uint8_t> &payload) {
+    void Message::set_payload(const std::vector<uint8_t>& payload) {
         this->payload_ = payload;
     }
 

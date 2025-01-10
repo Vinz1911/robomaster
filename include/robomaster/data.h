@@ -249,7 +249,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataEsc. has_data is true, by successful decoding.
      */
-    StateESC decode_data_esc(size_t index, const Message &msg);
+    StateESC decode_data_esc(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -258,7 +258,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataImu. has_data is true, by successful decoding.
      */
-    StateIMU decode_data_imu(size_t index, const Message &msg);
+    StateIMU decode_data_imu(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -267,7 +267,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataAttitude. has_data is true, by successful decoding.
      */
-    StateAttitude decode_data_attitude(size_t index, const Message &msg);
+    StateAttitude decode_data_attitude(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for battery data.
@@ -276,7 +276,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataBattery. has_data is true, by successful decoding.
      */
-    StateBattery decode_data_battery(size_t index, const Message &msg);
+    StateBattery decode_data_battery(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for velocity data.
@@ -285,7 +285,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataVelocity. has_data is true, by successful decoding.
      */
-    StateVelocity decode_data_velocity(size_t index, const Message &msg);
+    StateVelocity decode_data_velocity(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for position data.
@@ -294,7 +294,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct DataPosition. has_data is true, by successful decoding.
      */
-    StatePosition decode_data_position(size_t index, const Message &msg);
+    StatePosition decode_data_position(size_t index, const Message& msg);
 } // namespace robomaster
 
 #endif // ROBOMASTER_DATA_H_

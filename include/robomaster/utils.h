@@ -58,7 +58,7 @@ namespace robomaster {
      * @param data
      * @return std::string
      */
-    std::string string_to_hex(const std::vector<uint8_t> &data);
+    std::string string_to_hex(const std::vector<uint8_t>& data);
 
     /**
      * @brief Put the two bytes from little endian in the right host platform order.
