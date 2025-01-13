@@ -9,8 +9,8 @@
 
 namespace robomaster {
     enum BlasterMode {
-        INFRARED,
-        GELBEADS
+        IR_BEAM,
+        GEL_BEADS
     };
 
     enum LEDMode: uint8_t {

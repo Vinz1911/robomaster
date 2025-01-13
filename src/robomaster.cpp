@@ -12,7 +12,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    RoboMaster::RoboMaster():counter_drive_(), counter_led_(), counter_gimbal_(), counter_blaster_() {
+    RoboMaster::RoboMaster():message_counter_() {
         this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); });
     }
 
@@ -42,7 +42,7 @@ namespace robomaster {
         const auto w3 = clip<int16_t>(rear_left, -1000, 1000);
         const auto w4 = clip<int16_t>(rear_right, -1000, 1000);
 
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_drive_++, { 0x40, 0x3f, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x40, 0x3f, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_int16(3, w1);
         msg.set_value_int16(5, static_cast<int16_t>(-w2));
         msg.set_value_int16(7, static_cast<int16_t>(-w3));
@@ -55,7 +55,7 @@ namespace robomaster {
         const auto cy = clip<float>(yaw, -3.5f, 3.5f);
         const auto cz = clip<float>(roll, -600.0f, 600.0f);
 
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_drive_++, { 0x00, 0x3f, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x00, 0x3f, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_float(3, cx);
         msg.set_value_float(7, cy);
         msg.set_value_float(11, cz);
@@ -66,7 +66,7 @@ namespace robomaster {
         const auto cx = clip<int16_t>(pitch, -1024, 1024);
         const auto cy = clip<int16_t>(yaw, -1024, 1024);
 
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_gimbal_++, { 0x00, 0x04, 0x69, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00 });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x04, 0x69, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_int16(5, cx);
         msg.set_value_int16(7, cy);
         this->handler_.push_message(msg);
@@ -76,7 +76,7 @@ namespace robomaster {
         const auto cx = clip<int16_t>(pitch, -1024, 1024);
         const auto cy = clip<int16_t>(yaw, -1024, 1024);
 
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_gimbal_++, { 0x00, 0x04, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xcd });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x04, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xcd });
         msg.set_value_int16(3, cy);
         msg.set_value_int16(7, cx);
         this->handler_.push_message(msg);
@@ -85,7 +85,7 @@ namespace robomaster {
     void RoboMaster::set_gimbal_recenter(const int16_t pitch, const int16_t yaw) {
         const auto cx = clip<int16_t>(pitch, 10, 512);
         const auto cy = clip<int16_t>(yaw, 10, 512);
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_gimbal_++, { 0x00, 0x3f, 0xb2, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x3f, 0xb2, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_int16(6, cy);
         msg.set_value_int16(10, cx);
         this->handler_.push_message(msg);
@@ -95,13 +95,13 @@ namespace robomaster {
         const std::vector<uint8_t> ifr_bytes = { 0x00, 0x3f, 0x55, 0x73, 0x00, 0xff, 0x00, 0x01, 0x28, 0x00, 0x00 };
         const std::vector<uint8_t> gel_bytes = { 0x00, 0x3f, 0x51, 0x01 };
 
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->counter_blaster_++);
-        msg.set_payload(mode == INFRARED ? ifr_bytes : gel_bytes);
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->message_counter_++);
+        msg.set_payload(mode == IR_BEAM ? ifr_bytes : gel_bytes);
         this->handler_.push_message(msg);
     }
 
     void RoboMaster::set_led(const LEDMode mode, const uint16_t mask, const uint8_t red, const uint8_t green, const uint8_t blue, const std::optional<uint16_t> up_time, const std::optional<uint16_t> down_time) {
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->counter_led_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->message_counter_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_uint8(3, !up_time.has_value() || !down_time.has_value() ? STATIC : mode);
         msg.set_value_uint8(6, red);
         msg.set_value_uint8(7, green);

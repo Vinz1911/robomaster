@@ -25,24 +25,9 @@ namespace robomaster {
         Handler handler_;
 
         /**
-         * @brief Counter for the message sequence of the drive messages.
+         * @brief Counter for the message sequences.
          */
-        uint16_t counter_drive_;
-
-        /**
-         * @brief Counter for the message sequence of the LED messages.
-         */
-        uint16_t counter_led_;
-
-        /**
-        * @brief Counter for the message sequence of the gimbal messages.
-        */
-        uint16_t counter_gimbal_;
-
-        /**
-        * @brief Counter for the message sequence of the blaster messages.
-        */
-        uint16_t counter_blaster_;
+        uint16_t message_counter_;
 
         /**
          * @brief Store for the data state

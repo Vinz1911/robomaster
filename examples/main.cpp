@@ -28,22 +28,22 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
     // Breath animation and recenter gimbal.
-    robomaster.set_led(BREATHE, LED_MASK_BOTTOM_FRONT, 128, 0, 255, 500, 500);
-    robomaster.set_gimbal_recenter(-100, -100);
+    robomaster.set_led(BREATHE, LED_MASK_ALL, 128, 0, 255, 500, 500);
+    robomaster.set_gimbal_recenter(150, 150);
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
     // Set gimbal to fixed degree, will hold his position.
     robomaster.set_gimbal_velocity(0, 0);
 
     // Let the robomaster drive forward with increasing wheel speed and increase set led brightness.
-    for (size_t i = 0; i < 100; i++) {
+    for (size_t i = 0; i < 50; i++) {
         robomaster.set_led(STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     // Slow the robomaster and decrease the LED light.
-    for (size_t i = 100; i --> 0;) {
+    for (size_t i = 50; i --> 0;) {
         robomaster.set_led(STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
