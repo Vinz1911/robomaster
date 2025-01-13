@@ -9,7 +9,7 @@
 #include <robomaster/definitions.h>
 
 /**
- * Example for the usage of the robomaster_can_controller library.
+ * Example for the usage of the robomaster library.
  */
 int main() {
     // Using namespace for simplicity
