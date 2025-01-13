@@ -22,7 +22,7 @@ int main() {
     if (!robomaster.init("can0")) { std::printf("[Example]: robomaster initialization failed"); return 1; }
 
     // Enable the robomaster to execute drive commands.
-    robomaster.set_work_mode(true);
+    robomaster.set_work_mode(CHASSIS, true);
 
     // CAUTION: Sleep for a short period to not overfill the can bus communication.
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
@@ -61,5 +61,5 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     // Disable the robomaster after finish the example.
-    robomaster.set_work_mode(false); return 0;
+    robomaster.set_work_mode(CHASSIS, true); return 0;
 }

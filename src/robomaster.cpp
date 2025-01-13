@@ -30,9 +30,9 @@ namespace robomaster {
         this->boot_sequence(); return true;
     }
 
-    void RoboMaster::set_work_mode(const bool enable) {
-        Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, 0, { 0x40, 0x3f, 0x19, 0x00 });
-        msg.set_value_uint8(3, enable);
+    void RoboMaster::set_work_mode(const WorkMode mode, const bool enable) {
+        Message msg(DEVICE_ID_INTELLI_CONTROLLER, mode == CHASSIS ? 0xc3c9 : 0x04c9, 0, mode == CHASSIS ? std::vector<uint8_t>{ 0x40, 0x3f, 0x19, 0x00 } : std::vector<uint8_t>{ 0x40, 0x04, 0x4C, 0x2 });
+        msg.set_value_uint8(3, mode == CHASSIS ? enable ? 0x01 : 0x00 : enable ? 0x02 : 0x00);
         this->handler_.push_message(msg);
     }
 
@@ -100,7 +100,7 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    void RoboMaster::set_led(const LEDMode mode, const uint16_t mask, const uint8_t red, const uint8_t green, const uint8_t blue, const std::optional<uint16_t> up_time, const std::optional<uint16_t> down_time) {
+    void RoboMaster::set_led(const LightMode mode, const uint16_t mask, const uint8_t red, const uint8_t green, const uint8_t blue, const std::optional<uint16_t> up_time, const std::optional<uint16_t> down_time) {
         Message msg(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->message_counter_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_uint8(3, !up_time.has_value() || !down_time.has_value() ? STATIC : mode);
         msg.set_value_uint8(6, red);

@@ -64,9 +64,9 @@ namespace robomaster {
         [[nodiscard]] RoboMasterState get_state() const;
 
         /**
-         * @brief Enable or Disable the work mode of the RoboMaster chassis.
+         * @brief Enable or Disable the work mode of the RoboMaster.
          */
-        void set_work_mode(bool enable);
+        void set_work_mode(WorkMode mode, bool enable);
 
         /**
          * @brief Drive the RoboMaster with the given velocities.
@@ -132,7 +132,7 @@ namespace robomaster {
          * @param up_time The rising time of the LED in seconds.
          * @param down_time The falling time of the LED in seconds.
          */
-        void set_led(LEDMode mode, uint16_t mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
+        void set_led(LightMode mode, uint16_t mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
 
         /**
          * @brief Init the RoboMaster can socket to communicate with the motion controller.

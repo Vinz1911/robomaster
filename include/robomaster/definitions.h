@@ -13,10 +13,15 @@ namespace robomaster {
         GEL_BEADS
     };
 
-    enum LEDMode: uint8_t {
+    enum LightMode: uint8_t {
         STATIC = 0x71,
         BREATHE = 0x72,
         FLASH = 0x73
+    };
+
+    enum WorkMode: uint8_t {
+        CHASSIS,
+        GIMBAL
     };
 
     enum DeviceID: uint16_t {
