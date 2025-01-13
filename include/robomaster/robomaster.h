@@ -58,15 +58,37 @@ namespace robomaster {
         ~RoboMaster();
 
         /**
+         * @brief Init the RoboMaster can socket to communicate with the motion controller.
+         *
+         * @param interface can interface name.
+         * @return true, by success.
+         * @return false, when initialization failed.
+         */
+        bool init(const std::string& interface="can0");
+
+        /**
+         * @brief True when the robomaster is successful initialized and ready to receive and send messages.
+         *
+         * @return true if the robomaster is successful initialized and is running. false when a can error is appeared.
+         */
+        [[nodiscard]] bool is_running() const;
+
+        /**
          * @brief get the current state from DataRoboMasterState
+         *
          * @return the collected state data
          */
         [[nodiscard]] RoboMasterState get_state() const;
 
         /**
-         * @brief Enable or Disable the work mode of the RoboMaster.
+         * @brief Set the work mode of the RoboMaster Chassis.
          */
-        void set_work_mode(WorkMode mode, bool enable);
+        void set_chassis_mode(ChassisMode mode);
+
+        /**
+         * @brief Set the work mode of the RoboMaster Gimbal.
+         */
+        void set_gimbal_mode(GimbalMode mode);
 
         /**
          * @brief Drive the RoboMaster with the given velocities.
@@ -113,42 +135,24 @@ namespace robomaster {
 
         /**
          * @brief Fire the blaster of the RoboMaster
+         *
+         * @param mode set the `BlasterMode`
+         * @param count set the count (1-8)
          */
-        void set_blaster(BlasterMode mode);
-
-        /**
-         * @brief Stop the RoboMaster with zero velocities.
-         */
-        void set_brake();
+        void set_blaster(BlasterMode mode, uint8_t count = 1);
 
         /**
          * @brief @brief Set the LED with a breath effect with given mask and timer.
          *
          * @param mode the `LEDMode` (STATIC, BREATHE, FLASH)
-         * @param mask Mask for selecting the LED. LED_MASK_ALL for all Leds or select specific led with LED_MASK_FRONT | LED_MASK_BACK etc.
+         * @param mask the `LEDMask` for selecting the LED. LED_MASK_ALL for all Leds or select specific led with LED_MASK_FRONT | LED_MASK_BACK etc.
          * @param red colour between 0-255.
          * @param green colour between 0-255.
          * @param blue colour between 0-255.
          * @param up_time The rising time of the LED in seconds.
          * @param down_time The falling time of the LED in seconds.
          */
-        void set_led(LightMode mode, uint16_t mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
-
-        /**
-         * @brief Init the RoboMaster can socket to communicate with the motion controller.
-         *
-         * @param can_interface Can interface name.
-         * @return true, by success.
-         * @return false, when initialization failed.
-         */
-        bool init(const std::string& can_interface="can0");
-
-        /**
-         * @brief True when the robomaster is successful initialized and ready to receive and send messages.
-         *
-         * @return true if the robomaster is successful initialized and is running. false when a can error is appeared.
-         */
-        [[nodiscard]] bool is_running() const;
+        void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
     };
 } // namespace robomaster
 

@@ -19,23 +19,23 @@ namespace robomaster {
         /**
          * @brief Flag for a valid message. This includes when the message is long enough with header and the right crc.
          */
-
         bool is_valid_;
+
         /**
          * @brief The can device id for this message.
          */
-
         uint32_t device_id_;
+
         /**
          * @brief The sequence or counter for the message.
          */
-
         uint16_t sequence_;
+
         /**
          * @brief The type of the message. Every message from the intelli controller or motion controller has a fixed value which seems to be a type or command id.
          */
-
         uint16_t type_;
+
         /**
          * @brief The payload of the message which contains the information.
          */
@@ -59,6 +59,19 @@ namespace robomaster {
          * @param payload The payload for the information.
          */
         Message(uint32_t device_id, uint16_t type, uint16_t sequence, std::vector<uint8_t> payload=std::vector<uint8_t>());
+
+        /**
+         * @brief Increment the sequence by one.
+         */
+        void increment_sequence();
+
+        /**
+         * @brief Returns true for a valid message, when message length and crc is correct.
+         *
+         * @return true
+         * @return false
+         */
+        [[nodiscard]] bool is_valid() const;
 
         /**
          * @brief Get the can device id.
@@ -89,19 +102,25 @@ namespace robomaster {
         [[nodiscard]] std::vector<uint8_t> get_payload() const;
 
         /**
-         * @brief Retuns true for a valid message, when message length and crc is correct.
-         *
-         * @return true
-         * @return false
-         */
-        [[nodiscard]] bool is_valid() const;
-
-        /**
-         * @brief Get the complett length from the message including header, crc and payload.
+         * @brief Get the complete length from the message including header, crc and payload.
          *
          * @return size_t as length.
          */
         [[nodiscard]] size_t get_length() const;
+
+        /**
+         * @brief Set the payload.
+         *
+         * @param payload The payload.
+         */
+        void set_payload(const std::vector<uint8_t>& payload);
+
+        /**
+         * @brief Set the type.
+         *
+         * @param type the type data.
+         */
+        void set_type(uint16_t type);
 
         /**
          * @brief Set the uint8 value into the payload at given index.
@@ -214,18 +233,6 @@ namespace robomaster {
          * @return float as value.
          */
         [[nodiscard]] float get_value_float(size_t index) const;
-
-        /**
-         * @brief Increment the sequence by one.
-         */
-        void increment_sequence();
-
-        /**
-         * @brief Set the payload.
-         *
-         * @param payload The payload.
-         */
-        void set_payload(const std::vector<uint8_t>& payload);
 
         /**
          * @brief Create a vector as raw data from the message including header, crc and payload.

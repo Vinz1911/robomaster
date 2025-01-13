@@ -36,13 +36,13 @@ namespace robomaster {
         this->set_timeout(seconds_t, microseconds_t);
     }
 
-    bool CANBus::init(const std::string& can_interface) {
+    bool CANBus::init(const std::string& interface) {
         this->socket_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
         if (this->socket_ < 0) { std::printf("[CAN]: failed to open socket\n"); return false; }
-        std::memcpy(this->ifr_.ifr_name, can_interface.c_str(), can_interface.size());
+        std::memcpy(this->ifr_.ifr_name, interface.c_str(), interface.size());
 
-        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->ifr_) < 0) { std::printf("[CAN]: failed to request interface %s\n", can_interface.c_str()); close(this->socket_); return false; }
-        if (!(this->ifr_.ifr_flags & IFF_UP)) { std::printf("[CAN]: interface %s is down\n", can_interface.c_str()); close(this->socket_); return false; }
+        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->ifr_) < 0) { std::printf("[CAN]: failed to request interface %s\n", interface.c_str()); close(this->socket_); return false; }
+        if (!(this->ifr_.ifr_flags & IFF_UP)) { std::printf("[CAN]: interface %s is down\n", interface.c_str()); close(this->socket_); return false; }
 
         ioctl(this->socket_, SIOGIFINDEX, &this->ifr_); this->addr_.can_ifindex = this->ifr_.ifr_ifindex; this->addr_.can_family = PF_CAN;
         if (bind(this->socket_, reinterpret_cast<sockaddr *>(&this->addr_), sizeof(this->addr_)) < 0) { std::printf("[CAN]: failed to bind address\n"); close(this->socket_); return false; } return true;

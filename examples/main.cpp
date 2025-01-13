@@ -22,13 +22,13 @@ int main() {
     if (!robomaster.init("can0")) { std::printf("[Example]: robomaster initialization failed"); return 1; }
 
     // Enable the robomaster to execute drive commands.
-    robomaster.set_work_mode(CHASSIS, true);
+    robomaster.set_chassis_mode(CHASSIS_MODE_ENABLE);
 
     // CAUTION: Sleep for a short period to not overfill the can bus communication.
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
     // Breath animation and recenter gimbal.
-    robomaster.set_led(BREATHE, LED_MASK_ALL, 128, 0, 255, 500, 500);
+    robomaster.set_led(LED_MODE_BREATHE, LED_MASK_ALL, 128, 0, 255, 500, 500);
     robomaster.set_gimbal_recenter(150, 150);
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
@@ -37,14 +37,14 @@ int main() {
 
     // Let the robomaster drive forward with increasing wheel speed and increase set led brightness.
     for (size_t i = 0; i < 50; i++) {
-        robomaster.set_led(STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
+        robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     // Slow the robomaster and decrease the LED light.
     for (size_t i = 50; i --> 0;) {
-        robomaster.set_led(STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
+        robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
@@ -56,10 +56,10 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Turn of the LED.
-    robomaster.set_led(STATIC, LED_MASK_ALL, 128, 0, 255);
+    robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
     robomaster.set_gimbal_recenter(0, 0);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     // Disable the robomaster after finish the example.
-    robomaster.set_work_mode(CHASSIS, true); return 0;
+    robomaster.set_chassis_mode(CHASSIS_MODE_DISABLE); return 0;
 }

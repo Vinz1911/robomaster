@@ -8,20 +8,37 @@
 #define ROBOMASTER_DEFINITIONS_H_
 
 namespace robomaster {
-    enum BlasterMode {
-        IR_BEAM,
-        GEL_BEADS
+    enum BlasterMode: uint8_t {
+        BLASTER_MODE_GEL = 0x00,
+        BLASTER_MODE_IR = 0x01
     };
 
-    enum LightMode: uint8_t {
-        STATIC = 0x71,
-        BREATHE = 0x72,
-        FLASH = 0x73
+    enum ChassisMode: uint8_t {
+        CHASSIS_MODE_ENABLE = 0x01,
+        CHASSIS_MODE_DISABLE = 0x00
     };
 
-    enum WorkMode: uint8_t {
-        CHASSIS,
-        GIMBAL
+    enum GimbalMode: uint8_t {
+        GIMBAL_MODE_FREE = 0x00,
+        GIMBAL_MODE_FOLLOW = 0x02
+    };
+
+    enum LEDMode: uint8_t {
+        LED_MODE_STATIC = 0x71,
+        LED_MODE_BREATHE = 0x72,
+        LED_MODE_FLASH = 0x73
+    };
+
+    enum LEDMask: uint8_t {
+        LED_MASK_ALL = 0x3f,
+        LED_MASK_BOTTOM_ALL = 0x0f,
+        LED_MASK_BOTTOM_BACK = 0x01,
+        LED_MASK_BOTTOM_FRONT = 0x02,
+        LED_MASK_BOTTOM_LEFT = 0x04,
+        LED_MASK_BOTTOM_RIGHT = 0x08,
+        LED_MASK_TOP_LEFT = 0x10,
+        LED_MASK_TOP_RIGHT = 0x20,
+        LED_MASK_TOP_ALL = 0x30
     };
 
     enum DeviceID: uint16_t {
@@ -32,18 +49,6 @@ namespace robomaster {
         DEVICE_ID_HIT_DETECTOR_2 = 0x212,
         DEVICE_ID_HIT_DETECTOR_3 = 0x213,
         DEVICE_ID_HIT_DETECTOR_4 = 0x214
-    };
-
-    enum LEDMask: uint16_t {
-        LED_MASK_ALL = 0x3f,
-        LED_MASK_BOTTOM_ALL = 0xf,
-        LED_MASK_BOTTOM_BACK = 0x1,
-        LED_MASK_BOTTOM_FRONT = 0x2,
-        LED_MASK_BOTTOM_LEFT = 0x4,
-        LED_MASK_BOTTOM_RIGHT = 0x8,
-        LED_MASK_TOP_LEFT = 0x10,
-        LED_MASK_TOP_RIGHT = 0x20,
-        LED_MASK_TOP_ALL = 0x30
     };
 } // namespace robomaster
 

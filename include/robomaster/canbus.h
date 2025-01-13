@@ -53,18 +53,18 @@ namespace robomaster {
         /**
          * @brief Set the timeout for the reading the can socket.
          *
-         * @param seconds Float in seconds.
+         * @param seconds Double in seconds.
          */
         void set_timeout(double seconds);
 
         /**
          * @brief Open the can socket by the given can interface name.
          *
-         * @param can_interface The name of the can interface.
+         * @param interface The name of the can interface.
          * @return true, when the socket is open successfully.
          * @return false, when this socket failed to open.
          */
-        bool init(const std::string& can_interface);
+        bool init(const std::string& interface);
 
         /**
          * @brief Send a can frame over the socket.

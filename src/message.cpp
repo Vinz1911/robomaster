@@ -22,6 +22,14 @@ namespace robomaster {
 
     Message::Message(const uint32_t device_id, const uint16_t type, const uint16_t sequence, std::vector<uint8_t> payload): is_valid_(true), device_id_(device_id), sequence_(sequence), type_(type), payload_(std::move(payload)) { }
 
+    bool Message::is_valid() const {
+        return this->is_valid_;
+    }
+
+    void Message::increment_sequence() {
+        this->sequence_++;
+    }
+
     uint32_t Message::get_device_id() const {
         return this->device_id_;
     }
@@ -39,59 +47,6 @@ namespace robomaster {
 
     size_t Message::get_length() const {
         return this->payload_.size() + 10;
-    }
-
-    bool Message::is_valid() const {
-        return this->is_valid_;
-    }
-
-    void Message::increment_sequence() {
-        this->sequence_++;
-    }
-
-    void Message::set_value_uint8(const size_t index, const uint8_t value) {
-        assert(index < this->payload_.size());
-        this->payload_[index] = value;
-    }
-
-    void Message::set_value_int8(const size_t index, const int8_t value) {
-        assert(index < this->payload_.size());
-        this->payload_[index] = value;
-    }
-
-    void Message::set_value_uint16(const size_t index, const uint16_t value) {
-        assert(index + 1 < this->payload_.size());
-        this->payload_[index] = static_cast<uint8_t>(value);
-        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
-    }
-
-    void Message::set_value_int16(const size_t index, const int16_t value) {
-        assert(index + 1 < this->payload_.size());
-        this->payload_[index] = static_cast<uint8_t>(value);
-        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
-    }
-
-    void Message::set_value_uint32(const size_t index, const uint32_t value) {
-        assert(index + 3 < this->payload_.size());
-        this->payload_[index] = static_cast<uint8_t>(value);
-        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
-        this->payload_[index + 2] = static_cast<uint8_t>(value >> 16);
-        this->payload_[index + 3] = static_cast<uint8_t>(value >> 24);
-    }
-
-    void Message::set_value_int32(const size_t index, const int32_t value) {
-        assert(index + 3 < this->payload_.size());
-        this->payload_[index] = static_cast<uint8_t>(value);
-        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
-        this->payload_[index + 2] = static_cast<uint8_t>(value >> 16);
-        this->payload_[index + 3] = static_cast<uint8_t>(value >> 24);
-    }
-
-    void Message::set_value_float(const size_t index, const float value) {
-        assert(index + 3 < this->payload_.size());
-        union { uint32_t u; float f; } float_uint32_t_union{};
-        float_uint32_t_union.f = value;
-        this->set_value_uint32(index, float_uint32_t_union.u);
     }
 
     uint8_t Message::get_value_uint8(const size_t index) const {
@@ -143,8 +98,57 @@ namespace robomaster {
         return float_uint32_t_union.f;
     }
 
+    void Message::set_type(const uint16_t type) {
+        this->type_ = type;
+    }
+
     void Message::set_payload(const std::vector<uint8_t>& payload) {
         this->payload_ = payload;
+    }
+
+    void Message::set_value_uint8(const size_t index, const uint8_t value) {
+        assert(index < this->payload_.size());
+        this->payload_[index] = value;
+    }
+
+    void Message::set_value_int8(const size_t index, const int8_t value) {
+        assert(index < this->payload_.size());
+        this->payload_[index] = value;
+    }
+
+    void Message::set_value_uint16(const size_t index, const uint16_t value) {
+        assert(index + 1 < this->payload_.size());
+        this->payload_[index] = static_cast<uint8_t>(value);
+        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
+    }
+
+    void Message::set_value_int16(const size_t index, const int16_t value) {
+        assert(index + 1 < this->payload_.size());
+        this->payload_[index] = static_cast<uint8_t>(value);
+        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
+    }
+
+    void Message::set_value_uint32(const size_t index, const uint32_t value) {
+        assert(index + 3 < this->payload_.size());
+        this->payload_[index] = static_cast<uint8_t>(value);
+        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
+        this->payload_[index + 2] = static_cast<uint8_t>(value >> 16);
+        this->payload_[index + 3] = static_cast<uint8_t>(value >> 24);
+    }
+
+    void Message::set_value_int32(const size_t index, const int32_t value) {
+        assert(index + 3 < this->payload_.size());
+        this->payload_[index] = static_cast<uint8_t>(value);
+        this->payload_[index + 1] = static_cast<uint8_t>(value >> 8);
+        this->payload_[index + 2] = static_cast<uint8_t>(value >> 16);
+        this->payload_[index + 3] = static_cast<uint8_t>(value >> 24);
+    }
+
+    void Message::set_value_float(const size_t index, const float value) {
+        assert(index + 3 < this->payload_.size());
+        union { uint32_t u; float f; } float_uint32_t_union{};
+        float_uint32_t_union.f = value;
+        this->set_value_uint32(index, float_uint32_t_union.u);
     }
 
     std::vector<uint8_t> Message::to_vector() const {
