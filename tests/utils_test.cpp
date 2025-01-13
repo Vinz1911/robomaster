@@ -10,8 +10,8 @@
 #include "gtest/gtest.h"
 
 namespace robomaster {
-    const static Message MSG_ENABLE = Message( DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x01 });
-    const static Message MSG_DISABLE = Message( DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x00 });
+    const static Message MSG_ENABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x01 });
+    const static Message MSG_DISABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x00 });
 
     TEST(UtilTest, Little) {
         uint8_t lsb = 0xAD;

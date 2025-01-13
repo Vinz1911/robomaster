@@ -79,18 +79,18 @@ namespace robomaster {
         [[nodiscard]] RoboMasterState get_state() const;
 
         /**
-         * @brief Enable or Disable the torque of the RoboMaster chassis.
+         * @brief Enable or Disable the work mode of the RoboMaster chassis.
          */
-        void set_torque(bool enable);
+        void set_work_mode(bool enable);
 
         /**
          * @brief Drive the RoboMaster with the given velocities.
          *
-         * @param x Linear x velocity in m/s.
-         * @param y Linear y velocity in m/s.
-         * @param z Angular velocity in radiant/s.
+         * @param pitch Linear x velocity in m/s.
+         * @param yaw Linear y velocity in m/s.
+         * @param roll Angular z velocity in radiant/s.
          */
-        void set_velocity(float x, float y, float z);
+        void set_chassis_velocity(float pitch, float yaw, float roll);
 
         /**
          * @brief Control each individual wheel of the RoboMaster in rpm.
@@ -100,15 +100,31 @@ namespace robomaster {
          * @param rear_left wheel in rpm.
          * @param rear_right wheel in rpm.
          */
-        void set_wheel_rpm(int16_t front_right, int16_t front_left, int16_t rear_left, int16_t rear_right);
+        void set_chassis_rpm(int16_t front_right, int16_t front_left, int16_t rear_left, int16_t rear_right);
 
         /**
-         * @brief Control the gimbal of the RoboMaster
+         * @brief Set the gimbal fixed degree of the RoboMaster
          *
-         * @param y Angular y velocity in radiant/s
-         * @param z  Angular z velocity in radiant/s
+         * @param pitch Linear x (continues) position in degrees
+         * @param yaw  Linear y (continues) position in degrees
          */
-        void set_gimbal(int16_t y, int16_t z);
+        void set_gimbal_degree(int16_t pitch, int16_t yaw);
+
+        /**
+         * @brief Set the gimbal (continues velocity) of the RoboMaster
+         *
+         * @param pitch Linear x velocity in radiant/s
+         * @param yaw  Linear y velocity in radiant/s
+         */
+        void set_gimbal_velocity(int16_t pitch, int16_t yaw);
+
+        /**
+         * @brief Recenter the gimbal of the RoboMaster
+         *
+         * @param pitch Linear x velocity in radiant/s
+         * @param yaw  Linear y velocity in radiant/s
+         */
+        void set_gimbal_recenter(int16_t pitch, int16_t yaw);
 
         /**
          * @brief Fire the blaster of the RoboMaster

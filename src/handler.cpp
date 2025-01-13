@@ -97,7 +97,7 @@ namespace robomaster {
         uint16_t heartbeat_10ms_counter = 0; size_t error_counter = 0; auto heartbeat_10ms_time_point = std::chrono::high_resolution_clock::now();
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(std::memory_order::acquire)) {
             if (heartbeat_10ms_time_point < std::chrono::high_resolution_clock::now()) {
-                if (this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, heartbeat_10ms_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }))) {
+                if (this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, heartbeat_10ms_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }))) {
                     heartbeat_10ms_time_point += STD_HEARTBEAT_TIME; error_counter = 0;
                 } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
