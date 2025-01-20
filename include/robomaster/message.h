@@ -61,6 +61,12 @@ namespace robomaster {
         Message(uint32_t device_id, uint16_t type, uint16_t sequence, std::vector<uint8_t> payload=std::vector<uint8_t>());
 
         /**
+         * @brief Destructor of the Message class.
+         */
+
+        ~Message() = default;
+
+        /**
          * @brief Increment the sequence by one.
          */
         void increment_sequence();

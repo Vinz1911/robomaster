@@ -52,19 +52,21 @@ namespace robomaster {
          * @brief Constructor of the RoboMaster class.
          */
         RoboMaster(/* args */);
+
         /**
          * @brief Destructor of the RoboMaster class.
          */
-        ~RoboMaster();
+        ~RoboMaster() = default;
 
         /**
          * @brief Init the RoboMaster can socket to communicate with the motion controller.
          *
          * @param interface can interface name.
+         * @param state enable or disable reading from can [get_state()]
          * @return true, by success.
-         * @return false, when initialization failed.
+         * @return false, if initialization failed.
          */
-        bool init(const std::string& interface="can0");
+        bool init(const std::string& interface="can0", bool state = true);
 
         /**
          * @brief True when the robomaster is successful initialized and ready to receive and send messages.

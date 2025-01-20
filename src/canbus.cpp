@@ -38,26 +38,26 @@ namespace robomaster {
 
     bool CANBus::init(const std::string& interface) {
         this->socket_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-        if (this->socket_ < 0) { std::printf("[CAN]: failed to open socket\n"); return false; }
+        if (this->socket_ < 0) { std::printf("[Robomaster]: failed to open socket\n"); return false; }
         std::memcpy(this->ifr_.ifr_name, interface.c_str(), interface.size());
 
-        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->ifr_) < 0) { std::printf("[CAN]: failed to request interface %s\n", interface.c_str()); close(this->socket_); return false; }
-        if (!(this->ifr_.ifr_flags & IFF_UP)) { std::printf("[CAN]: interface %s is down\n", interface.c_str()); close(this->socket_); return false; }
+        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->ifr_) < 0) { std::printf("[Robomaster]: failed to request interface %s\n", interface.c_str()); close(this->socket_); return false; }
+        if (!(this->ifr_.ifr_flags & IFF_UP)) { std::printf("[Robomaster]: interface %s is down\n", interface.c_str()); close(this->socket_); return false; }
 
         ioctl(this->socket_, SIOGIFINDEX, &this->ifr_); this->addr_.can_ifindex = this->ifr_.ifr_ifindex; this->addr_.can_family = PF_CAN;
-        if (bind(this->socket_, reinterpret_cast<sockaddr *>(&this->addr_), sizeof(this->addr_)) < 0) { std::printf("[CAN]: failed to bind address\n"); close(this->socket_); return false; } return true;
+        if (bind(this->socket_, reinterpret_cast<sockaddr *>(&this->addr_), sizeof(this->addr_)) < 0) { std::printf("[Robomaster]: failed to bind address\n"); close(this->socket_); return false; } return true;
     }
 
     bool CANBus::send_frame(const uint32_t id, const uint8_t data[8], const size_t length) const {
-        if (length > 8) { std::printf("[CAN]: failed to send frame\n"); return false; }
+        if (length > 8) { std::printf("[Robomaster]: failed to send frame\n"); return false; }
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
         frame.can_id = static_cast<int>(id); frame.can_dlc = length; std::memcpy(static_cast<uint8_t *>(frame.data), data, length);
-        if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[CAN]: failed to send frame\n"); return false; } return true;
+        if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to send frame\n"); return false; } return true;
     }
 
     bool CANBus::read_frame(uint32_t& id, uint8_t data[8], size_t& length) const {
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
-        if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[CAN]: failed to read frame\n"); return false; }
+        if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to read frame\n"); return false; }
         id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
         length = frame.can_dlc; std::memcpy(data, frame.data, length); return true;
     }

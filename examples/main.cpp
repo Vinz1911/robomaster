@@ -19,7 +19,7 @@ int main() {
     RoboMaster robomaster;
 
     // Try to init
-    if (!robomaster.init("can0")) { std::printf("[Example]: robomaster initialization failed"); return 1; }
+    if (!robomaster.init()) { std::printf("[Example]: robomaster initialization failed"); return 1; }
 
     // Enable the robomaster to execute drive commands.
     robomaster.set_chassis_mode(CHASSIS_MODE_ENABLE);

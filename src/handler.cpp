@@ -35,8 +35,8 @@ namespace robomaster {
     }
 
     bool Handler::init(const std::string& can_interface) {
-        if (this->flag_initialised_) { std::printf("[Handler]: already running\n"); return false; }
-        if (!this->can_socket_.init(can_interface)) { std::printf("[Handler]: initialization failure\n"); return false; }
+        if (this->flag_initialised_) { std::printf("[Robomaster]: already running\n"); return false; }
+        if (!this->can_socket_.init(can_interface)) { std::printf("[Robomaster]: initialization failure\n"); return false; }
 
         this->can_socket_.set_timeout(0.1);
         this->flag_initialised_ = true;
@@ -80,7 +80,7 @@ namespace robomaster {
                 while(iterator != buffer.cend()) {
                     iterator = std::find(iterator, std::cend(buffer),0x55); buffer.erase(std::cbegin(buffer), iterator);
                     if(buffer.size() < 4) { break; }
-                    if(buffer[3] == calculate_crc8(buffer.data(), 3)) { length = buffer[1]; break; } iterator++;
+                    if(buffer[3] == calculate_crc8(buffer.data(), 3)) { length = buffer[1]; break; } ++iterator;
                 }
             } else if (length <= buffer.size()) {
                 if (const uint16_t crc16 = little_endian_to_uint16(buffer[length - 2], buffer[length - 1]); crc16 == calculate_crc16(buffer.data(), length - 2)) {
@@ -90,7 +90,7 @@ namespace robomaster {
                 buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
         }
-        if (error_counter != 0) { this->flag_stop_.store(true, std::memory_order::acquire); std::printf("[Handler]: receiver frame failure\n"); }
+        if (error_counter != 0) { this->flag_stop_.store(true, std::memory_order::acquire); std::printf("[Robomaster]: receiver frame failure\n"); }
     }
 
     void Handler::sender_thread() {
@@ -104,7 +104,7 @@ namespace robomaster {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
             } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_10ms_time_point); }
         }
-        if (error_counter != 0) { this->flag_stop_.store(true, std::memory_order::acquire); std::printf("[Handler]: transmitter frame failure\n"); }
+        if (error_counter != 0) { this->flag_stop_.store(true, std::memory_order::acquire); std::printf("[Robomaster]: transmitter frame failure\n"); }
     }
 
     void Handler::handler_thread() {

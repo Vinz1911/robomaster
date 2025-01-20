@@ -12,11 +12,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    RoboMaster::RoboMaster():message_counter_() {
-        this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); });
-    }
-
-    RoboMaster::~RoboMaster() = default;
+    RoboMaster::RoboMaster():message_counter_() { }
 
     void RoboMaster::boot_sequence() {
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x03c9, 0x00, { 0x40, 0x48, 0x04, 0x00, 0x09, 0x00 }));
@@ -25,8 +21,9 @@ namespace robomaster {
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, 0x03, { 0x00, 0x3f, 0x32, 0x01, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
     }
 
-    bool RoboMaster::init(const std::string& interface) {
+    bool RoboMaster::init(const std::string& interface, const bool state) {
         if (!this->handler_.init(interface)) { return false;}
+        if (state) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); }); }
         this->boot_sequence(); return true;
     }
 

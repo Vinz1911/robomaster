@@ -22,8 +22,8 @@ namespace robomaster {
         data.speed[2] = msg.get_value_int16(index + 4);
         data.speed[3] = msg.get_value_int16(index + 6);
         data.angle[0] = msg.get_value_int16(index + 8);
-        data.angle[1] = msg.get_value_int16 (index + 10);
-        data.angle[2] = msg.get_value_int16 (index + 12);
+        data.angle[1] = msg.get_value_int16(index + 10);
+        data.angle[2] = msg.get_value_int16(index + 12);
         data.angle[3] = msg.get_value_int16(index + 14);
         data.time_stamp[0] = msg.get_value_uint32(index + 16);
         data.time_stamp[1] = msg.get_value_uint32(index + 20);
@@ -45,7 +45,6 @@ namespace robomaster {
         data.gyro_y = msg.get_value_float(index + 16);
         data.gyro_z = msg.get_value_float(index + 20);
         data.has_data = true; return data;
-
     }
 
     StateAttitude decode_data_attitude(const size_t index, const Message& msg) {
