@@ -11,7 +11,7 @@
 #include "robomaster/definitions.h"
 
 namespace robomaster {
-    static constexpr size_t STD_MAX_ERROR_COUNT = 3;
+    static constexpr size_t STD_MAX_ERROR_COUNT = 10;
     static constexpr auto STD_HEARTBEAT_TIME = std::chrono::milliseconds(10);
 
     Handler::Handler(): flag_initialised_(false), flag_stop_(false) { }
@@ -38,7 +38,7 @@ namespace robomaster {
         if (this->flag_initialised_) { std::printf("[Robomaster]: already running\n"); return false; }
         if (!this->can_socket_.init(can_interface)) { std::printf("[Robomaster]: initialization failure\n"); return false; }
 
-        this->can_socket_.set_timeout(0.1);
+        this->can_socket_.set_timeout(-1.0);
         this->flag_initialised_ = true;
         this->thread_receiver_ = std::thread(&Handler::receiver_thread, this);
         this->thread_sender_ = std::thread(&Handler::sender_thread, this);
