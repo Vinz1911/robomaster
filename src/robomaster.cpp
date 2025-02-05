@@ -27,6 +27,10 @@ namespace robomaster {
         this->boot_sequence(); return true;
     }
 
+    bool RoboMaster::is_running() const {
+        return this->handler_.is_running();
+    }
+
     RoboMasterState RoboMaster::get_state() const {
         return this->state_;
     }
@@ -122,9 +126,5 @@ namespace robomaster {
         data.attitude = decode_data_attitude(121, msg);
         data.position = decode_data_position(133, msg);
         return data;
-    }
-
-    bool RoboMaster::is_running() const {
-        return this->handler_.is_running();
     }
 } // namespace robomaster
