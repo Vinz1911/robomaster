@@ -32,7 +32,7 @@ namespace robomaster {
         /**
          * @brief Store for the data state
          */
-        std::atomic<RoboMasterState> state_;
+        RoboMasterState state_;
 
         /**
          * @brief The boot sequence to configure the RoboMasterState messages.

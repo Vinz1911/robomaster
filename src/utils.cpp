@@ -74,19 +74,19 @@ namespace robomaster {
     }
 
     std::string string_to_hex(const uint8_t * data, const size_t length) {
-        std::stringstream ss;
+        std::stringstream stream;
         for (size_t i = 0; i < length; i++) {
-            ss << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
-            if (i < length - 1) { ss << ' '; }
-        } return ss.str();
+            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
+            if (i < length - 1) { stream << ' '; }
+        } return stream.str();
     }
 
     std::string string_to_hex(const std::vector<uint8_t>& data) {
-        std::stringstream ss;
+        std::stringstream stream;
         for (size_t i = 0; i < data.size(); i++) {
-            ss << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
-            if (i < data.size() - 1) { ss << ' '; }
-        } return ss.str();
+            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
+            if (i < data.size() - 1) { stream << ' '; }
+        } return stream.str();
     }
 
     uint16_t little_endian_to_uint16(const uint8_t lsb, const uint8_t msb) {
@@ -94,7 +94,7 @@ namespace robomaster {
     }
 
     std::string stringUint16ToHex(const uint16_t value) {
-        std::stringstream ss;
-        ss << std::setfill('0') << std::setw(4) << std::hex << value; return ss.str();
+        std::stringstream stream;
+        stream << std::setfill('0') << std::setw(4) << std::hex << value; return stream.str();
     }
 } // namespace robomaster

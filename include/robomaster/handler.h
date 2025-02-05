@@ -85,7 +85,7 @@ namespace robomaster {
         /**
          * @brief Flag then the threads are running to prevent multiply starts.
          */
-        std::atomic<bool> flag_stop_;
+        bool flag_stop_;
 
         /**
          * @brief Run function of the sender thread.

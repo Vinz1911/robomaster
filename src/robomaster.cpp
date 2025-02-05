@@ -23,12 +23,12 @@ namespace robomaster {
 
     bool RoboMaster::init(const std::string& interface, const bool state) {
         if (!this->handler_.init(interface)) { return false;}
-        if (state) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_.store(decode_state(std::forward<T0>(PH1)), std::memory_order::relaxed); }); }
+        if (state) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_ = decode_state(std::forward<T0>(PH1)); }); }
         this->boot_sequence(); return true;
     }
 
     RoboMasterState RoboMaster::get_state() const {
-        return this->state_.load(std::memory_order::relaxed);
+        return this->state_;
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
