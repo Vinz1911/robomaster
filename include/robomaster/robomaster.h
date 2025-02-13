@@ -63,7 +63,7 @@ namespace robomaster {
          *
          * @param interface can interface name.
          * @param state enable or disable reading from can [get_state()]
-         * @return true, by success.
+         * @return true, on success.
          * @return false, if initialization failed.
          */
         bool init(const std::string& interface="can0", bool state = true);
@@ -84,22 +84,9 @@ namespace robomaster {
 
         /**
          * @brief Set the work mode of the RoboMaster Chassis.
+         * @param mode the chassis work mode.
          */
         void set_chassis_mode(ChassisMode mode);
-
-        /**
-         * @brief Set the work mode of the RoboMaster Gimbal.
-         */
-        void set_gimbal_mode(GimbalMode mode);
-
-        /**
-         * @brief Drive the RoboMaster with the given velocities.
-         *
-         * @param pitch Linear x velocity in m/s.
-         * @param yaw Linear y velocity in m/s.
-         * @param roll Angular z velocity in radiant/s.
-         */
-        void set_chassis_velocity(float pitch, float yaw, float roll);
 
         /**
          * @brief Control each individual wheel of the RoboMaster in rpm.
@@ -112,41 +99,81 @@ namespace robomaster {
         void set_chassis_rpm(int16_t front_right, int16_t front_left, int16_t rear_left, int16_t rear_right);
 
         /**
-         * @brief Set the gimbal fixed degree of the RoboMaster
+         * @brief Drive the RoboMaster with the given velocities.
          *
-         * @param pitch Linear x (continues) position in degrees
-         * @param yaw  Linear y (continues) position in degrees
+         * @param linear_x Linear x velocity in m/s.
+         * @param linear_y Linear y velocity in m/s.
+         * @param angular_z Angular z velocity in radiant/s.
+         */
+        void set_chassis_velocity(float linear_x, float linear_y, float angular_z);
+
+        /**
+         * @brief Move the RoboMaster to the given position.
+         *
+         * @param linear_x Linear x position.
+         * @param linear_y Linear y position.
+         * @param angular_z Angular z position.
+         */
+        void set_chassis_position(int16_t linear_x, int16_t linear_y, int16_t angular_z);
+
+        /**
+         * @brief Set the work mode of the RoboMaster Gimbal.
+         * @param mode the gimbal's work mode.
+         */
+        void set_gimbal_mode(GimbalMode mode);
+
+        /**
+         * @brief Set the state of the RoboMaster Gimbal.
+         * @param state the gimbal's state (suspend or resume).
+         */
+        void set_gimbal_state(GimbalState state);
+
+        /**
+         * @brief Set the gimbal movement of the RoboMaster.
+         *
+         * @param pitch Angular x movement in radiant/s.
+         * @param yaw Angular y movement in radiant/s.
          */
         void set_gimbal_degree(int16_t pitch, int16_t yaw);
 
         /**
-         * @brief Set the gimbal (continues velocity) of the RoboMaster
+         * @brief Set the gimbal velocity of the RoboMaster.
          *
-         * @param pitch Linear x velocity in radiant/s
-         * @param yaw  Linear y velocity in radiant/s
+         * @param pitch Angular x velocity in radiant/s.
+         * @param yaw Angular y velocity in radiant/s.
          */
         void set_gimbal_velocity(int16_t pitch, int16_t yaw);
 
         /**
-         * @brief Recenter the gimbal of the RoboMaster
+         * @brief Set the gimbal position of the RoboMaster.
          *
-         * @param pitch Linear x velocity in radiant/s
-         * @param yaw  Linear y velocity in radiant/s
+         * @param pitch Angular x position in degrees.
+         * @param yaw Angular y position in degrees.
+         * @param pitch_acceleration the acceleration in m/s^2.
+         * @param yaw_acceleration the acceleration in m/s^2.
+         */
+        void set_gimbal_position(int16_t pitch, int16_t yaw, uint16_t pitch_acceleration = 250, uint16_t yaw_acceleration = 250);
+
+        /**
+         * @brief Recenter the gimbal of the RoboMaster.
+         *
+         * @param pitch Angular x velocity in radiant/s.
+         * @param yaw Angular y velocity in radiant/s.
          */
         void set_gimbal_recenter(int16_t pitch, int16_t yaw);
 
         /**
-         * @brief Fire the blaster of the RoboMaster
+         * @brief Fire the blaster of the RoboMaster.
          *
-         * @param mode set the `BlasterMode`
-         * @param count set the count (1-8)
+         * @param mode set the `BlasterMode`.
+         * @param count set the count (1-8).
          */
         void set_blaster(BlasterMode mode, uint8_t count = 1);
 
         /**
          * @brief @brief Set the LED with a breath effect with given mask and timer.
          *
-         * @param mode the `LEDMode` (STATIC, BREATHE, FLASH)
+         * @param mode the `LEDMode` (STATIC, BREATHE, FLASH).
          * @param mask the `LEDMask` for selecting the LED. LED_MASK_ALL for all Leds or select specific led with LED_MASK_FRONT | LED_MASK_BACK etc.
          * @param red colour between 0-255.
          * @param green colour between 0-255.

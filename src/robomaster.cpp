@@ -51,18 +51,35 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    void RoboMaster::set_chassis_velocity(const float pitch, const float yaw, const float roll) {
-        const auto pitch_ = clip<float>(pitch, -3.5f, 3.5f), yaw_ = clip<float>(yaw, -3.5f, 3.5f), roll_ = clip<float>(roll, -600.0f, 600.0f);
+    void RoboMaster::set_chassis_velocity(const float linear_x, const float linear_y, const float angular_z) {
+        const auto linear_x_ = clip<float>(linear_x, -3.5f, 3.5f), linear_y_ = clip<float>(linear_y, -3.5f, 3.5f), angular_z_ = clip<float>(angular_z, -600.0f, 600.0f);
         auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x00, 0x3f, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_float(3, pitch_);
-        msg.set_value_float(7, yaw_);
-        msg.set_value_float(11, roll_);
+        msg.set_value_float(3, linear_x_);
+        msg.set_value_float(7, linear_y_);
+        msg.set_value_float(11, angular_z_);
+        this->handler_.push_message(msg);
+    }
+
+    void RoboMaster::set_chassis_position(const int16_t linear_x, const int16_t linear_y, const int16_t angular_z) {
+        const auto linear_x_ = clip<int16_t>(linear_x, -500, 500), linear_y_ = clip<int16_t>(linear_y, -500, 500), angular_z_ = clip<int16_t>(angular_z, -18000, 18000);
+        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x00, 0x3f, 0x25, 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        msg.set_value_int16(7, linear_x_);
+        msg.set_value_int16(9, linear_y_);
+        msg.set_value_int16(11, angular_z_);
+        msg.set_value_uint8(13, 0x32);
+        msg.set_value_int16(14, 0x12c);
         this->handler_.push_message(msg);
     }
 
     void RoboMaster::set_gimbal_mode(const GimbalMode mode) {
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x40, 0x04, 0x4C, 0x00 });
+        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x40, 0x04, 0x4c, 0x00 });
         msg.set_value_uint8(3, mode);
+        this->handler_.push_message(msg);
+    }
+
+    void RoboMaster::set_gimbal_state(const GimbalState state) {
+        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x20, 0x04, 0x0d, 0x00, 0x00 });
+        msg.set_value_uint16(3, state);
         this->handler_.push_message(msg);
     }
 
@@ -79,6 +96,17 @@ namespace robomaster {
         auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x04, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xcd });
         msg.set_value_int16(3, yaw_);
         msg.set_value_int16(7, pitch_);
+        this->handler_.push_message(msg);
+    }
+
+    void RoboMaster::set_gimbal_position(const int16_t pitch, const int16_t yaw, const uint16_t pitch_acceleration, const uint16_t yaw_acceleration) {
+        const auto pitch_ = clip<int16_t>(pitch, -500, 500), yaw_ = clip<int16_t>(yaw, -2500, 2500);
+        const auto pitch_acceleration_ = clip<uint16_t>(pitch_acceleration, 0, 500), yaw_acceleration_ = clip<uint16_t>(yaw_acceleration, 0, 500);
+        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x3f, 0xB0, 0x03, 0x08, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        msg.set_value_int16(6, yaw_);
+        msg.set_value_int16(10, pitch_);
+        msg.set_value_uint16(14, yaw_acceleration_);
+        msg.set_value_uint16(18, pitch_acceleration_);
         this->handler_.push_message(msg);
     }
 
