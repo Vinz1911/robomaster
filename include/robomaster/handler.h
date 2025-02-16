@@ -32,14 +32,9 @@ namespace robomaster {
         std::thread thread_receiver_;
 
         /**
-         * @brief Thread for sending messages on the can bus. Also triggers the 10 ms heartbeat to keept the RoboMaster alive.
+         * @brief Thread for sending messages on the can bus. Also triggers the 10 ms heartbeat to keep the RoboMaster alive.
          */
         std::thread thread_sender_;
-
-        /**
-         * @brief Receiver queue for received messages.
-         */
-        Queue queue_receiver_;
 
         /**
          * @brief Sender queue for sending messages.
@@ -100,7 +95,7 @@ namespace robomaster {
          *
          * @param msg RoboMaster message.
          */
-        void parse_message(const Message& msg) const;
+        void receive_message(const Message& msg) const;
 
     public:
         /**

@@ -61,7 +61,7 @@ namespace robomaster {
         } return true;
     }
 
-    void Handler::parse_message(const Message& msg) const {
+    void Handler::receive_message(const Message& msg) const {
         const auto &payload = msg.get_payload();
         if (msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER || msg.get_type() != 0x0903) { return; }
         if (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00) { return; }
@@ -98,10 +98,9 @@ namespace robomaster {
                 }
             } else if (length <= buffer.size()) {
                 if (const uint16_t crc16 = little_endian_to_uint16(buffer[length - 2], buffer[length - 1]); crc16 == calculate_crc16(buffer.data(), length - 2)) {
-                    this->queue_receiver_.push(Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))));
+                    auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))); if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
-            if (!this->queue_receiver_.empty()) { if (const Message msg = this->queue_receiver_.pop(); msg.is_valid()) { this->parse_message(msg); } }
         } if (error_counter != 0) { this->flag_stop_ = true; std::printf("[Robomaster]: receiver frame failure\n"); }
     }
 } // namespace robomaster
