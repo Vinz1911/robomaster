@@ -52,11 +52,14 @@ int main() {
     // Stop the wheel of the robomaster.
     robomaster.set_chassis_rpm(0, 0, 0, 0);
 
-    // Use the LED Flash of all LED.
+    // Move gimbal to position
+    robomaster.set_gimbal_position(250, 1000);
+
+    // Turn the LED back to static.
+    robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-    // Turn of the LED.
-    robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
+    // Recenter the gimbal
     robomaster.set_gimbal_recenter(0, 0);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 

@@ -7,8 +7,6 @@
 #ifndef ROBOMASTER_ROBOMASTER_H_
 #define ROBOMASTER_ROBOMASTER_H_
 
-#include <optional>
-
 #include "handler.h"
 #include "data.h"
 #include "definitions.h"
@@ -62,11 +60,10 @@ namespace robomaster {
          * @brief Init the RoboMaster can socket to communicate with the motion controller.
          *
          * @param interface can interface name.
-         * @param state enable or disable reading from can [get_state()]
          * @return true, on success.
          * @return false, if initialization failed.
          */
-        bool init(const std::string& interface="can0", bool state = true);
+        bool init(const std::string& interface="can0");
 
         /**
          * @brief True when the robomaster is successful initialized and ready to receive and send messages.
@@ -181,7 +178,7 @@ namespace robomaster {
          * @param up_time The rising time of the LED in seconds.
          * @param down_time The falling time of the LED in seconds.
          */
-        void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt);
+        void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, uint16_t up_time = 1000, uint16_t down_time = 1000);
     };
 } // namespace robomaster
 

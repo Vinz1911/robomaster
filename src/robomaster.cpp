@@ -5,7 +5,6 @@
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
 #include <utility>
-#include <optional>
 
 #include "robomaster/robomaster.h"
 #include "robomaster/definitions.h"
@@ -22,9 +21,9 @@ namespace robomaster {
         // this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x04, { 0x40, 0x04, 0x1e, 0x05, 0xff })); // Enable attitude push info from gimbal, needs to be decoded!
     }
 
-    bool RoboMaster::init(const std::string& interface, const bool state) {
+    bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
-        if (state) { this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_ = decode_state(std::forward<T0>(PH1)); }); }
+        this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_ = decode_state(std::forward<T0>(PH1)); });
         this->boot_sequence(); return true;
     }
 
@@ -63,11 +62,10 @@ namespace robomaster {
 
     void RoboMaster::set_chassis_position(const int16_t linear_x, const int16_t linear_y, const int16_t angular_z) {
         const auto linear_x_ = clip<int16_t>(linear_x, -500, 500), linear_y_ = clip<int16_t>(linear_y, -500, 500), angular_z_ = clip<int16_t>(angular_z, -18000, 18000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x00, 0x3f, 0x25, 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->message_counter_++, { 0x00, 0x3f, 0x25, 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00 });
         msg.set_value_int16(7, linear_x_);
         msg.set_value_int16(9, linear_y_);
         msg.set_value_int16(11, angular_z_);
-        msg.set_value_uint8(13, 0x32);
         msg.set_value_int16(14, 0x12c);
         this->handler_.push_message(msg);
     }
@@ -122,26 +120,22 @@ namespace robomaster {
     void RoboMaster::set_blaster(const BlasterMode mode, const uint8_t count) {
         const auto count_ = clip<uint8_t>(count, 1, 8); auto msg = std::vector<Message>();
         msg.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->message_counter_++, { 0x00, 0x3f, 0x51, 0x00 }));
-        msg.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->message_counter_++, { 0x00, 0x3f, 0x55, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
+        msg.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->message_counter_++, { 0x00, 0x3f, 0x55, 0x73, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00 }));
         msg[0].set_value_uint8(3, static_cast<uint8_t>((mode << 4 & 0xf0) + (count_ & 0x0f)));
-        msg[1].set_value_uint8(3, 0x73);
-        msg[1].set_value_uint8(4, 0xff);
-        msg[1].set_value_uint8(5, 0xff);
-        msg[1].set_value_uint8(6, 0xff);
-        msg[1].set_value_uint8(7, 0x01);
         msg[1].set_value_uint16(8, static_cast<uint16_t>(count_ * 100));
         msg[1].set_value_uint16(10, static_cast<uint16_t>(count_ * 100));
         for (const auto& msg_ : msg) { this->handler_.push_message(msg_); }
     }
 
-    void RoboMaster::set_led(const LEDMode mode, const LEDMask mask, const uint8_t red, const uint8_t green, const uint8_t blue, const std::optional<uint16_t> up_time, const std::optional<uint16_t> down_time) {
+    void RoboMaster::set_led(const LEDMode mode, const LEDMask mask, const uint8_t red, const uint8_t green, const uint8_t blue, const uint16_t up_time, const uint16_t down_time) {
+        const auto up_time_ = clip<uint16_t>(up_time, 0, 60000), down_time_ = clip<uint16_t>(down_time, 0, 60000);
         auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->message_counter_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_uint8(3, up_time.has_value() && down_time.has_value() ? mode : LED_MODE_STATIC);
+        msg.set_value_uint8(3, mode);
         msg.set_value_uint8(6, red);
         msg.set_value_uint8(7, green);
         msg.set_value_uint8(8, blue);
-        if (up_time.has_value()) { msg.set_value_uint16(10, up_time.value()); }
-        if (down_time.has_value()) { msg.set_value_uint16(12, down_time.value()); }
+        msg.set_value_uint16(10, mode == LED_MODE_STATIC ? 0x00 : up_time_);
+        msg.set_value_uint16(12, mode == LED_MODE_STATIC ? 0x00 : down_time_);
         msg.set_value_uint16(14, mask);
         this->handler_.push_message(msg);
     }

@@ -40,7 +40,7 @@ namespace robomaster {
         /**
          * @brief Thread for processing the messages in receiver queue and trigger the callback function for RoboMaster states.
          */
-        std::thread thread_handler_;
+        std::thread thread_parser_;
 
         /**
          * @brief Receiver queue for received messages.
@@ -100,7 +100,7 @@ namespace robomaster {
         /**
          * @brief Run function of the handler thread.
          */
-        void handler_thread();
+        void parser_thread();
 
         /**
          * @brief Notify all conditional variable eg. stopping the threads.
@@ -120,7 +120,7 @@ namespace robomaster {
          * @return true, by success.
          * @return false, by failing to send the message.
          */
-        bool send_message(uint32_t id, const std::vector<uint8_t>& data);
+        [[nodiscard]] bool send_message(uint32_t id, const std::vector<uint8_t>& data) const;
 
         /**
          * @brief Send the message to the can socket.
@@ -129,14 +129,14 @@ namespace robomaster {
          * @return true, by success.
          * @return false, by failing to send the message.
          */
-        bool send_message(const Message& msg);
+        [[nodiscard]] bool send_message(const Message& msg) const;
 
         /**
          * @brief Process the received messages from the message queue and triggers callback functions.
          *
          * @param msg RoboMaster message.
          */
-        void process_message(const Message& msg);
+        void parse_message(const Message& msg) const;
 
     public:
         /**
@@ -160,11 +160,12 @@ namespace robomaster {
         bool init(const std::string& can_interface="can0");
 
         /**
-         * @brief Bind the given callback for triggering when the message for the RoboMasterState is received.
+         * @brief State if the handler is running or not.
          *
-         * @param func The callback to trigger.
+         * @return true If the Handler is running and ready to receive and send messages.
+         * @return false If the handler was stopped due to error.
          */
-        void bind_callback(std::function<void(const Message&)> func);
+        [[nodiscard]] bool is_running() const;
 
         /**
          * @brief Push a message to the sender queue to send it over the can bus.
@@ -174,12 +175,11 @@ namespace robomaster {
         void push_message(const Message& msg);
 
         /**
-         * @brief State if the handler is running or not.
+         * @brief Bind the given callback for triggering when the message for the RoboMasterState is received.
          *
-         * @return true If the Handler is running and ready to receive and send messages.
-         * @return false If the handler was stopped due to error.
+         * @param func The callback to trigger.
          */
-        bool is_running() const;
+        void bind_callback(std::function<void(const Message&)> func);
     };
 } // namespace robomaster
 
