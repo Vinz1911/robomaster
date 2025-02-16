@@ -10,7 +10,6 @@
 #include <thread>
 #include <condition_variable>
 #include <functional>
-#include <atomic>
 
 #include "canbus.h"
 #include "message.h"
@@ -38,11 +37,6 @@ namespace robomaster {
         std::thread thread_sender_;
 
         /**
-         * @brief Thread for processing the messages in receiver queue and trigger the callback function for RoboMaster states.
-         */
-        std::thread thread_parser_;
-
-        /**
          * @brief Receiver queue for received messages.
          */
         Queue queue_receiver_;
@@ -51,16 +45,6 @@ namespace robomaster {
          * @brief Sender queue for sending messages.
          */
         Queue queue_sender_;
-
-        /**
-         * @brief conditional variable for the handler thread, when new messages put in the receiver queue.
-         */
-        std::condition_variable cv_handler_;
-
-        /**
-         * @brief Mutex of the handler conditional variable.
-         */
-        std::mutex cv_handler_mutex_;
 
         /**
          * @brief Conditional variable for the sender thread, when new messages put into the sender queue.
@@ -98,29 +82,9 @@ namespace robomaster {
         void receiver_thread();
 
         /**
-         * @brief Run function of the handler thread.
-         */
-        void parser_thread();
-
-        /**
-         * @brief Notify all conditional variable eg. stopping the threads.
-         */
-        void notify_all();
-
-        /**
          * @brief Joining all started threads.
          */
         void join_all();
-
-        /**
-         * @brief Send the message to the can socket.
-         *
-         * @param id The can device it.
-         * @param data Data of the hole message.
-         * @return true, by success.
-         * @return false, by failing to send the message.
-         */
-        [[nodiscard]] bool send_message(uint32_t id, const std::vector<uint8_t>& data) const;
 
         /**
          * @brief Send the message to the can socket.

@@ -11,15 +11,29 @@
 /**
  * Example for the usage of the robomaster library.
  */
+void state_data(const robomaster::RoboMaster& robomaster) {
+    while (robomaster.is_running()) {
+        auto state = robomaster.get_state();
+        if (state.battery.has_data) { std::printf("Battery: %u\n", state.battery.percent); }
+        if (state.esc.has_data) {
+            std::printf("ESC_FR: %i\n", state.esc.speed[0]);
+            std::printf("ESC_FL: %i\n", state.esc.speed[1]);
+            std::printf("ESC_RL: %i\n", state.esc.speed[2]);
+            std::printf("ESC_RR: %i\n", state.esc.speed[3]);
+        }
+    }
+}
+
 int main() {
     // Using namespace for simplicity
     using namespace robomaster;
 
     // Create the robomaster interface class.
-    RoboMaster robomaster;
+    auto robomaster = RoboMaster();
 
     // Try to init
     if (!robomaster.init()) { std::printf("[Example]: robomaster initialization failed"); return 1; }
+    std::thread state_thread(state_data, std::ref(robomaster)); state_thread.detach();
 
     // Enable the robomaster to execute drive commands.
     robomaster.set_chassis_mode(CHASSIS_MODE_ENABLE);
@@ -60,7 +74,7 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Recenter the gimbal
-    robomaster.set_gimbal_recenter(0, 0);
+    robomaster.set_gimbal_recenter(150, 150);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     // Disable the robomaster after finish the example.
