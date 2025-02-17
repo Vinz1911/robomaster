@@ -22,7 +22,7 @@ namespace robomaster {
 
     bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
-        this->handler_.bind_callback([this]<typename T0>(T0 && PH1) { this->state_ = decode_state(std::forward<T0>(PH1)); });
+        this->handler_.set_callback([this](const Message& msg) { this->state_ = decode_state(msg); });
         this->boot_sequence(); return true;
     }
 

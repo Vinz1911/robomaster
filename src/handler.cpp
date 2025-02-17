@@ -48,7 +48,7 @@ namespace robomaster {
         this->cv_sender_.notify_one();
     }
 
-    void Handler::bind_callback(std::function<void(const Message&)> func) {
+    void Handler::set_callback(std::function<void(const Message&)> func) {
         this->callback_data_robomaster_state_ = std::move(func);
     }
 

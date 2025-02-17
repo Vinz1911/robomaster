@@ -138,7 +138,7 @@ namespace robomaster {
          *
          * @param func The callback to trigger.
          */
-        void bind_callback(std::function<void(const Message&)> func);
+        void set_callback(std::function<void(const Message&)> func);
     };
 } // namespace robomaster
 
