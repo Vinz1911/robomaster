@@ -4,8 +4,6 @@
 // The original code is licensed under the MIT License by Fraunhofer IML.
 // All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
 
-#include <utility>
-
 #include "robomaster/robomaster.h"
 #include "robomaster/definitions.h"
 #include "robomaster/utils.h"
