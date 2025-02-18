@@ -9,11 +9,10 @@
 #include "robomaster/data.h"
 
 namespace robomaster {
-    StatePosition decode_data_position(const size_t index, const Message& msg) {
-        StatePosition data; if (index + 12 > msg.get_payload().size()) { return data; }
-        data.x = msg.get_value_float(index);
-        data.y = msg.get_value_float(index + 4);
-        data.z = msg.get_value_float(index + 8);
+    StateGimbal decode_data_gimbal(const size_t index, const Message& msg) {
+        StateGimbal data; if (index + 6 > msg.get_payload().size()) { return data; }
+        data.pitch = msg.get_value_int16(index);
+        data.yaw = msg.get_value_int16(index + 2);
         data.has_data = true; return data;
     }
 
@@ -75,6 +74,14 @@ namespace robomaster {
         data.vbx = msg.get_value_float(index + 12);
         data.vby = msg.get_value_float(index + 16);
         data.vbz = msg.get_value_float(index + 20);
+        data.has_data = true; return data;
+    }
+
+    StatePosition decode_data_position(const size_t index, const Message& msg) {
+        StatePosition data; if (index + 12 > msg.get_payload().size()) { return data; }
+        data.x = msg.get_value_float(index);
+        data.y = msg.get_value_float(index + 4);
+        data.z = msg.get_value_float(index + 8);
         data.has_data = true; return data;
     }
 } // namespace robomaster

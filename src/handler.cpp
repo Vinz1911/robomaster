@@ -65,9 +65,12 @@ namespace robomaster {
     }
 
     void Handler::receive_message(const Message& msg) const {
-        const auto &payload = msg.get_payload();
-        if (msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER || msg.get_type() != 0x0903) { return; }
-        if (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00) { return; }
+        const auto& payload = msg.get_payload();
+        const uint16_t msg_type = msg.get_type();
+
+        if ((msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER && msg.get_device_id() != DEVICE_ID_GIMBAL) || (msg_type != 0x0903 && msg_type != 0x0904)) { return; }
+        if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER && (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00)) { return; }
+        if (msg.get_device_id() == DEVICE_ID_GIMBAL && (payload.size() < 3 || payload[0] != 0x00 || payload[1] != 0x3f || payload[2] != 0x76)) { return; }
         if (this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_(msg); }
     }
 
@@ -85,7 +88,7 @@ namespace robomaster {
 
     void Handler::receiver_thread() {
         struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0; };
-        std::map<uint32_t, CANMessage> can_message { { DEVICE_ID_MOTION_CONTROLLER, CANMessage() } };
+        std::map<uint32_t, CANMessage> can_message { { DEVICE_ID_MOTION_CONTROLLER, CANMessage() }, { DEVICE_ID_GIMBAL, CANMessage() } };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(MEMORY_ORDER)) {

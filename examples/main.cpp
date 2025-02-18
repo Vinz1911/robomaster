@@ -1,8 +1,10 @@
-// Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
-//
-// This project contains contributions from multiple authors.
-// The original code is licensed under the MIT License by Fraunhofer IML.
-// All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+/*
+ * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
+ *
+ * This project contains contributions from multiple authors.
+ * The original code is licensed under the MIT License by Fraunhofer IML.
+ * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ */
 
 #include <iostream>
 #include <robomaster/robomaster.h>
@@ -11,16 +13,14 @@
 /**
  * Example for the usage of the robomaster library.
  */
+
 void state_data(const robomaster::RoboMaster& robomaster) {
     while (robomaster.is_running()) {
-        auto state = robomaster.get_state();
-        if (state.battery.has_data) { std::printf("Battery: %u\n", state.battery.percent); }
-        if (state.esc.has_data) {
-            std::printf("ESC_FR: %i\n", state.esc.speed[0]);
-            std::printf("ESC_FL: %i\n", state.esc.speed[1]);
-            std::printf("ESC_RL: %i\n", state.esc.speed[2]);
-            std::printf("ESC_RR: %i\n", state.esc.speed[3]);
-        }
+        const auto motion_state = robomaster.get_motion_state();
+        const auto gimbal_state = robomaster.get_gimbal_state();
+        if (motion_state.battery.has_data) { std::printf("Battery: %u\n", motion_state.battery.percent); }
+        if (gimbal_state.gimbal.has_data) { std::printf("Pitch: %i, Yaw: %i\n", gimbal_state.gimbal.pitch, gimbal_state.gimbal.yaw); }
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
 

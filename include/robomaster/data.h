@@ -15,6 +15,26 @@
 
 namespace robomaster {
     /**
+     * @brief Struct for the data of the Gimbal from the RoboMaster.
+     */
+    struct StateGimbal {
+        /**
+         * @brief True when the Gimbal data are successfully parsed.
+         */
+        bool has_data = false;
+
+        /**
+         * @brief Pitch in degree.
+         */
+        int16_t pitch = 0;
+
+        /**
+         * @brief Yaw in degree.
+         */
+        int16_t yaw = 0;
+    };
+
+    /**
      * @brief Struct for the data of the ESC from the RoboMaster. The data array is ordered in front right, front left, rear left and rear right.
      */
     struct StateESC {
@@ -210,9 +230,19 @@ namespace robomaster {
     };
 
     /**
-     * @brief Collection of all data struct from the RoboMaster.
+     * @brief Collection of all data from the gimbal from the RoboMaster.
      */
-    struct RoboMasterState {
+    struct RoboMasterGimbalState {
+        /**
+         * @brief Gimbal data.
+         */
+        StateGimbal gimbal;
+    };
+
+    /**
+     * @brief Collection of all data from the motion controller from the RoboMaster.
+     */
+    struct RoboMasterMotionState {
         /**
          * @brief Battery data.
          */
@@ -245,11 +275,20 @@ namespace robomaster {
     };
 
     /**
+     * @brief Decode the message payload at the given index for gimbal data.
+     *
+     * @param index Index for the payload.
+     * @param msg Message from the gimbal.
+     * @return struct StateGimbal. has_data is true, by successful decoding.
+     */
+    StateGimbal decode_data_gimbal(size_t index, const Message& msg);
+
+    /**
      * @brief Decode the message payload at the given index for esc data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataEsc. has_data is true, by successful decoding.
+     * @return struct StateESC. has_data is true, by successful decoding.
      */
     StateESC decode_data_esc(size_t index, const Message& msg);
 
@@ -258,7 +297,7 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataImu. has_data is true, by successful decoding.
+     * @return struct StateIMU. has_data is true, by successful decoding.
      */
     StateIMU decode_data_imu(size_t index, const Message& msg);
 
@@ -267,7 +306,7 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataAttitude. has_data is true, by successful decoding.
+     * @return struct StateAttitude. has_data is true, by successful decoding.
      */
     StateAttitude decode_data_attitude(size_t index, const Message& msg);
 
@@ -276,7 +315,7 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataBattery. has_data is true, by successful decoding.
+     * @return struct StateBattery. has_data is true, by successful decoding.
      */
     StateBattery decode_data_battery(size_t index, const Message& msg);
 
@@ -285,7 +324,7 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataVelocity. has_data is true, by successful decoding.
+     * @return struct StateVelocity. has_data is true, by successful decoding.
      */
     StateVelocity decode_data_velocity(size_t index, const Message& msg);
 
@@ -294,7 +333,7 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct DataPosition. has_data is true, by successful decoding.
+     * @return struct StatePosition. has_data is true, by successful decoding.
      */
     StatePosition decode_data_position(size_t index, const Message& msg);
 } // namespace robomaster

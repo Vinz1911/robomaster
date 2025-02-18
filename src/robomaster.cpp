@@ -11,6 +11,8 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
+    static constexpr auto MEMORY_ORDER = std::memory_order::relaxed;
+
     RoboMaster::RoboMaster():message_counter_() { }
 
     void RoboMaster::boot_sequence() {
@@ -18,11 +20,15 @@ namespace robomaster {
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, 0x01, { 0x40, 0x48, 0x01, 0x09, 0x00, 0x00, 0x00, 0x03 }));
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, 0x02, { 0x40, 0x48, 0x03, 0x09, 0x01, 0x03, 0x00, 0x07, 0xa7, 0x02, 0x29, 0x88, 0x03, 0x00, 0x02, 0x00, 0x66, 0x3e, 0x3e, 0x4c, 0x03, 0x00, 0x02, 0x00, 0xfb, 0xdc, 0xf5, 0xd7, 0x03, 0x00, 0x02, 0x00, 0x09, 0xa3, 0x26, 0xe2, 0x03, 0x00, 0x02, 0x00, 0xf4, 0x1d, 0x1c, 0xdc, 0x03, 0x00, 0x02, 0x00, 0x42, 0xee, 0x13, 0x1d, 0x03, 0x00, 0x02, 0x00, 0xb3, 0xf7, 0xe6, 0x47, 0x03, 0x00, 0x02, 0x00, 0x32, 0x00 }));
         this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, 0x03, { 0x00, 0x3f, 0x32, 0x01, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
+        this->handler_.push_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x04, { 0x40, 0x04, 0x1e, 0x05, 0xff }));
     }
 
     bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
-        this->handler_.set_callback([this](const Message& msg) { this->state_.store(decode_state(msg), std::memory_order::relaxed); });
+        this->handler_.set_callback([this](const Message& msg) {
+            if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) { this->motion_state_.store(decode_motion_state(msg), MEMORY_ORDER); }
+            if (msg.get_device_id() == DEVICE_ID_GIMBAL) { this->gimbal_state_.store(decode_gimbal_state(msg), MEMORY_ORDER); }
+        });
         this->boot_sequence(); return true;
     }
 
@@ -30,8 +36,12 @@ namespace robomaster {
         return this->handler_.is_running();
     }
 
-    RoboMasterState RoboMaster::get_state() const {
-        return this->state_.load(std::memory_order::relaxed);
+    RoboMasterMotionState RoboMaster::get_motion_state() const {
+        return this->motion_state_.load(MEMORY_ORDER);
+    }
+
+    RoboMasterGimbalState RoboMaster::get_gimbal_state() const {
+        return this->gimbal_state_.load(MEMORY_ORDER);
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
@@ -99,7 +109,7 @@ namespace robomaster {
 
     void RoboMaster::set_gimbal_position(const int16_t pitch, const int16_t yaw, const uint16_t pitch_acceleration, const uint16_t yaw_acceleration) {
         const auto pitch_ = clip<int16_t>(pitch, -500, 500), yaw_ = clip<int16_t>(yaw, -2500, 2500);
-        const auto pitch_acceleration_ = clip<uint16_t>(pitch_acceleration, 0, 500), yaw_acceleration_ = clip<uint16_t>(yaw_acceleration, 0, 500);
+        const auto pitch_acceleration_ = clip<uint16_t>(pitch_acceleration, 10, 500), yaw_acceleration_ = clip<uint16_t>(yaw_acceleration, 10, 500);
         auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->message_counter_++, { 0x00, 0x3f, 0xb0, 0x03, 0x08, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         msg.set_value_int16(6, yaw_);
         msg.set_value_int16(10, pitch_);
@@ -139,14 +149,20 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    RoboMasterState RoboMaster::decode_state(const Message& msg) {
-        auto data = RoboMasterState();
+    RoboMasterMotionState RoboMaster::decode_motion_state(const Message& msg) {
+        auto data = RoboMasterMotionState();
         data.velocity = decode_data_velocity(27, msg);
         data.battery = decode_data_battery(51, msg);
         data.esc = decode_data_esc(61, msg);
         data.imu = decode_data_imu(97, msg);
         data.attitude = decode_data_attitude(121, msg);
         data.position = decode_data_position(133, msg);
+        return data;
+    }
+
+    RoboMasterGimbalState RoboMaster::decode_gimbal_state(const Message& msg) {
+        auto data = RoboMasterGimbalState();
+        data.gimbal = decode_data_gimbal(5, msg);
         return data;
     }
 } // namespace robomaster
