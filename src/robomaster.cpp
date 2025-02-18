@@ -1,8 +1,10 @@
-// Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
-//
-// This project contains contributions from multiple authors.
-// The original code is licensed under the MIT License by Fraunhofer IML.
-// All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+/*
+ * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
+ *
+ * This project contains contributions from multiple authors.
+ * The original code is licensed under the MIT License by Fraunhofer IML.
+ * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ */
 
 #include "robomaster/robomaster.h"
 #include "robomaster/definitions.h"
@@ -20,7 +22,7 @@ namespace robomaster {
 
     bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
-        this->handler_.set_callback([this](const Message& msg) { this->state_ = decode_state(msg); });
+        this->handler_.set_callback([this](const Message& msg) { this->state_.store(decode_state(msg), std::memory_order::relaxed); });
         this->boot_sequence(); return true;
     }
 
@@ -29,7 +31,7 @@ namespace robomaster {
     }
 
     RoboMasterState RoboMaster::get_state() const {
-        return this->state_;
+        return this->state_.load(std::memory_order::relaxed);
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {

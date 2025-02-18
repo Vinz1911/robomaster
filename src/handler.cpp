@@ -1,8 +1,10 @@
-// Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
-//
-// This project contains contributions from multiple authors.
-// The original code is licensed under the MIT License by Fraunhofer IML.
-// All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+/*
+ * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
+ *
+ * This project contains contributions from multiple authors.
+ * The original code is licensed under the MIT License by Fraunhofer IML.
+ * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ */
 
 #include <map>
 
@@ -13,6 +15,7 @@
 namespace robomaster {
     static constexpr size_t STD_MAX_ERROR_COUNT = 5;
     static constexpr auto STD_HEARTBEAT_TIME = std::chrono::milliseconds(10);
+    static constexpr auto MEMORY_ORDER = std::memory_order::relaxed;
 
     Handler::Handler(): flag_initialised_(false), flag_stop_(false) { }
 
@@ -23,7 +26,7 @@ namespace robomaster {
 
     Handler::~Handler() {
         if (!this->flag_initialised_) { return; }
-        this->flag_stop_ = true;
+        this->flag_stop_.store(true, MEMORY_ORDER);
         this->cv_sender_.notify_all();
         this->join_all();
     }
@@ -40,7 +43,7 @@ namespace robomaster {
     }
 
     bool Handler::is_running() const {
-        return this->flag_initialised_ && !this->flag_stop_;
+        return this->flag_initialised_ && !this->flag_stop_.load(MEMORY_ORDER);
     }
 
     void Handler::push_message(const Message& msg) {
@@ -70,14 +73,14 @@ namespace robomaster {
 
     void Handler::sender_thread() {
         uint16_t heartbeat_counter = 0; size_t error_counter = 0; auto heartbeat_time_point = std::chrono::high_resolution_clock::now();
-        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_) {
+        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
                 const auto is_send = this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, heartbeat_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }));
                 if (is_send) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
             } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_time_point); }
-        } if (error_counter != 0) { this->flag_stop_ = true; std::printf("[Robomaster]: sender frame failure\n"); }
+        } if (error_counter != 0) { this->flag_stop_.store(true, MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
     }
 
     void Handler::receiver_thread() {
@@ -85,7 +88,7 @@ namespace robomaster {
         std::map<uint32_t, CANMessage> can_message { { DEVICE_ID_MOTION_CONTROLLER, CANMessage() } };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
 
-        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_) {
+        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(MEMORY_ORDER)) {
             if (!can_socket_.read_frame(frame_id, frame_buffer, frame_length)) { error_counter++; continue; }
             auto slice = can_message.find(frame_id); if (slice == can_message.end()) { continue; }
             auto&[buffer, length] = slice->second; buffer.insert(std::end(buffer), frame_buffer, frame_buffer + frame_length);
@@ -101,6 +104,6 @@ namespace robomaster {
                     auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))); if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
-        } if (error_counter != 0) { this->flag_stop_ = true; std::printf("[Robomaster]: receiver frame failure\n"); }
+        } if (error_counter != 0) { this->flag_stop_.store(true, MEMORY_ORDER); std::printf("[Robomaster]: receiver frame failure\n"); }
     }
 } // namespace robomaster

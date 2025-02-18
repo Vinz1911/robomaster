@@ -1,8 +1,10 @@
-// Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
-//
-// This project contains contributions from multiple authors.
-// The original code is licensed under the MIT License by Fraunhofer IML.
-// All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+/*
+ * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
+ *
+ * This project contains contributions from multiple authors.
+ * The original code is licensed under the MIT License by Fraunhofer IML.
+ * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ */
 
 #ifndef ROBOMASTER_HANDLER_H_
 #define ROBOMASTER_HANDLER_H_
@@ -10,6 +12,7 @@
 #include <thread>
 #include <condition_variable>
 #include <functional>
+#include <atomic>
 
 #include "canbus.h"
 #include "message.h"
@@ -64,7 +67,7 @@ namespace robomaster {
         /**
          * @brief Flag then the threads are running to prevent multiply starts.
          */
-        bool flag_stop_;
+        std::atomic<bool> flag_stop_;
 
         /**
          * @brief Run function of the sender thread.

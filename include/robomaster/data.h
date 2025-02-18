@@ -1,8 +1,10 @@
-// Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
-//
-// This project contains contributions from multiple authors.
-// The original code is licensed under the MIT License by Fraunhofer IML.
-// All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+/*
+ * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
+ *
+ * This project contains contributions from multiple authors.
+ * The original code is licensed under the MIT License by Fraunhofer IML.
+ * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ */
 
 #ifndef ROBOMASTER_DATA_H_
 #define ROBOMASTER_DATA_H_
