@@ -36,7 +36,7 @@ namespace robomaster {
         return this->handler_.is_running();
     }
 
-    RoboMasterMotionState RoboMaster::get_motion_state() const {
+    RoboMasterChassisState RoboMaster::get_chassis_state() const {
         return this->motion_state_.load(STD_MEMORY_ORDER);
     }
 
@@ -85,9 +85,9 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    void RoboMaster::set_gimbal_state(const GimbalState state) {
+    void RoboMaster::set_gimbal_hibernate(const GimbalHibernate hibernate) {
         auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x20, 0x04, 0x0d, 0x00, 0x00 });
-        msg.set_value_uint16(3, state);
+        msg.set_value_uint16(3, hibernate);
         this->handler_.push_message(msg);
     }
 
@@ -149,8 +149,8 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    RoboMasterMotionState RoboMaster::decode_motion_state(const Message& msg) {
-        auto data = RoboMasterMotionState();
+    RoboMasterChassisState RoboMaster::decode_motion_state(const Message& msg) {
+        auto data = RoboMasterChassisState();
         data.velocity = decode_data_velocity(27, msg);
         data.battery = decode_data_battery(51, msg);
         data.esc = decode_data_esc(61, msg);

@@ -24,7 +24,7 @@ namespace robomaster {
         GIMBAL_MODE_FOLLOW = 0x02
     };
 
-    enum GimbalState: uint16_t {
+    enum GimbalHibernate: uint16_t {
         GIMBAL_STATE_SUSPEND = 0x2ab5,
         GIMBAL_STATE_RESUME = 0x7ef2
     };

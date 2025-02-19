@@ -16,9 +16,9 @@
 
 void state_data(const robomaster::RoboMaster& robomaster) {
     while (robomaster.is_running()) {
-        const auto motion_state = robomaster.get_motion_state();
+        const auto chassis_state = robomaster.get_chassis_state();
         const auto gimbal_state = robomaster.get_gimbal_state();
-        if (motion_state.is_active) { std::printf("Battery: %u\n", motion_state.battery.percent); }
+        if (chassis_state.is_active) { std::printf("Battery: %u\n", chassis_state.battery.percent); }
         if (gimbal_state.is_active) { std::printf("Pitch: %i, Yaw: %i\n", gimbal_state.attitude.pitch, gimbal_state.attitude.yaw); }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }

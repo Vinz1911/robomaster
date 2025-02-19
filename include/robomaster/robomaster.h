@@ -32,7 +32,7 @@ namespace robomaster {
         /**
          * @brief Store for the motion data state
          */
-        std::atomic<RoboMasterMotionState> motion_state_;
+        std::atomic<RoboMasterChassisState> motion_state_;
 
         /**
          * @brief Store for the gimbal data state
@@ -50,7 +50,7 @@ namespace robomaster {
          * @param msg The RoboMasterMotionState message.
          * @return the current data state
          */
-        static RoboMasterMotionState decode_motion_state(const Message& msg);
+        static RoboMasterChassisState decode_motion_state(const Message& msg);
 
         /**
          * @brief Decode the RoboMasterGimbalState message
@@ -92,7 +92,7 @@ namespace robomaster {
          *
          * @return the collected state data
          */
-        [[nodiscard]] RoboMasterMotionState get_motion_state() const;
+        [[nodiscard]] RoboMasterChassisState get_chassis_state() const;
 
         /**
          * @brief get the current state from RoboMasterGimbalState
@@ -142,10 +142,10 @@ namespace robomaster {
         void set_gimbal_mode(GimbalMode mode);
 
         /**
-         * @brief Set the state of the RoboMaster Gimbal.
-         * @param state the gimbal's state (suspend or resume).
+         * @brief Set the hibernate state of the RoboMaster Gimbal.
+         * @param hibernate the gimbal's hibernate state (suspend or resume).
          */
-        void set_gimbal_state(GimbalState state);
+        void set_gimbal_hibernate(GimbalHibernate hibernate);
 
         /**
          * @brief Set the gimbal movement of the RoboMaster.

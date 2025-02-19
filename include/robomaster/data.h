@@ -210,7 +210,7 @@ namespace robomaster {
     /**
      * @brief Collection of all data from the motion controller from the RoboMaster.
      */
-    struct RoboMasterMotionState {
+    struct RoboMasterChassisState {
         /**
          * @brief check if data is applied.
          */
