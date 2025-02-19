@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_QUEUE_MSG_H_
-#define ROBOMASTER_QUEUE_MSG_H_
-
+#pragma once
 #include <mutex>
 #include <queue>
 
@@ -85,5 +83,3 @@ namespace robomaster {
         void clear();
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_QUEUE_MSG_H_

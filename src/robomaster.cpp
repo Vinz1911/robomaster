@@ -11,7 +11,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    static constexpr auto MEMORY_ORDER = std::memory_order::relaxed;
+    static constexpr auto STD_MEMORY_ORDER = std::memory_order::relaxed;
 
     RoboMaster::RoboMaster():message_counter_() { }
 
@@ -26,8 +26,8 @@ namespace robomaster {
     bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
         this->handler_.set_callback([this](const Message& msg) {
-            if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) { this->motion_state_.store(decode_motion_state(msg), MEMORY_ORDER); }
-            if (msg.get_device_id() == DEVICE_ID_GIMBAL) { this->gimbal_state_.store(decode_gimbal_state(msg), MEMORY_ORDER); }
+            if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) { this->motion_state_.store(decode_motion_state(msg), STD_MEMORY_ORDER); }
+            if (msg.get_device_id() == DEVICE_ID_GIMBAL) { this->gimbal_state_.store(decode_gimbal_state(msg), STD_MEMORY_ORDER); }
         });
         this->boot_sequence(); return true;
     }
@@ -37,11 +37,11 @@ namespace robomaster {
     }
 
     RoboMasterMotionState RoboMaster::get_motion_state() const {
-        return this->motion_state_.load(MEMORY_ORDER);
+        return this->motion_state_.load(STD_MEMORY_ORDER);
     }
 
     RoboMasterGimbalState RoboMaster::get_gimbal_state() const {
-        return this->gimbal_state_.load(MEMORY_ORDER);
+        return this->gimbal_state_.load(STD_MEMORY_ORDER);
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
@@ -157,12 +157,12 @@ namespace robomaster {
         data.imu = decode_data_imu(97, msg);
         data.attitude = decode_data_attitude(121, msg);
         data.position = decode_data_position(133, msg);
-        return data;
+        data.is_active = true; return data;
     }
 
     RoboMasterGimbalState RoboMaster::decode_gimbal_state(const Message& msg) {
         auto data = RoboMasterGimbalState();
-        data.gimbal = decode_data_gimbal(5, msg);
-        return data;
+        data.attitude = decode_data_gimbal(5, msg);
+        data.is_active = true; return data;
     }
 } // namespace robomaster

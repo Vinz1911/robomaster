@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_HANDLER_H_
-#define ROBOMASTER_HANDLER_H_
-
+#pragma once
 #include <thread>
 #include <condition_variable>
 #include <functional>
@@ -57,7 +55,7 @@ namespace robomaster {
         /**
          * @brief callback function for the data of the robomaster motion controller.
          */
-        std::function<void(const Message&)> callback_data_robomaster_state_;
+        std::function<void(const Message&)> state_callback_;
 
         /**
          * @brief Flag of the initialisation of the handler class. True when the can socket was successfully initialised.
@@ -144,5 +142,3 @@ namespace robomaster {
         void set_callback(std::function<void(const Message&)> func);
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_HANDLER_H_

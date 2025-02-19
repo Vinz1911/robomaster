@@ -6,18 +6,21 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
+#include <cstdint>
+#include <string>
+
 #include "robomaster/utils.h"
 #include "robomaster/message.h"
 #include "robomaster/definitions.h"
 #include "gtest/gtest.h"
 
 namespace robomaster {
-    const static Message MSG_ENABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x01 });
-    const static Message MSG_DISABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x00 });
+    const static auto MSG_ENABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x01 });
+    const static auto MSG_DISABLE = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc309, 0, { 0x40, 0x3f, 0x19, 0x00 });
 
     TEST(UtilTest, Little) {
-        uint8_t lsb = 0xAD;
-        uint8_t msb = 0xDE;
+        constexpr uint8_t lsb = 0xAD;
+        constexpr uint8_t msb = 0xDE;
         ASSERT_EQ(little_endian_to_uint16(lsb, msb), 0xDEAD);
     }
 

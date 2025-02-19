@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_ROBOMASTER_H_
-#define ROBOMASTER_ROBOMASTER_H_
-
+#pragma once
 #include <atomic>
 
 #include "handler.h"
@@ -205,5 +203,3 @@ namespace robomaster {
         void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, uint16_t up_time = 1000, uint16_t down_time = 1000);
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_ROBOMASTER_H_

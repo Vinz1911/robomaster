@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_MESSAGE_H_
-#define ROBOMASTER_MESSAGE_H_
-
+#pragma once
 #include <vector>
 #include <cstdint>
 #include <cstddef>
@@ -250,5 +248,3 @@ namespace robomaster {
         [[nodiscard]] std::vector<uint8_t> to_vector() const;
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_MESSAGE_H_

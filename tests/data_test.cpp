@@ -10,8 +10,20 @@
 #include "gtest/gtest.h"
 
 namespace robomaster {
-    TEST(DataTest, DecodeDataEsc) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(36, 0));
+    TEST(StateDataTest, StateGimbalAttitude) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
+
+        msg.set_value_int16(0, 1000);
+        msg.set_value_int16(2, 2000);
+
+        StateGimbalAttitude attitude = decode_data_gimbal(0, msg);
+
+        ASSERT_EQ(attitude.pitch, 1000);
+        ASSERT_EQ(attitude.yaw, 2000);
+    }
+
+    TEST(StateDataTest, StateChassisESC) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(36, 0));
 
         msg.set_value_int16(0, 0);
         msg.set_value_int16(2, 1);
@@ -33,9 +45,7 @@ namespace robomaster {
         msg.set_value_uint8(34, 32);
         msg.set_value_uint8(35, 33);
 
-        DataEsc esc = decode_data_esc(0, msg);
-
-        ASSERT_TRUE(esc.has_data);
+        StateChassisESC esc = decode_data_esc(0, msg);
 
         ASSERT_EQ(esc.speed[0], 0);
         ASSERT_EQ(esc.speed[1], 1);
@@ -58,8 +68,8 @@ namespace robomaster {
         ASSERT_EQ(esc.state[3], 33);
     }
 
-    TEST(DataTest, DecodeDataImu) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
+    TEST(StateDataTest, StateChassisIMU) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
 
         msg.set_value_float(0, 0.0f);
         msg.set_value_float(4, 1.0f);
@@ -69,9 +79,7 @@ namespace robomaster {
         msg.set_value_float(16, 11.0f);
         msg.set_value_float(20, 12.0f);
 
-        DataImu imu = decode_data_imu(0, msg);
-
-        ASSERT_TRUE(imu.has_data);
+        StateChassisIMU imu = decode_data_imu(0, msg);
 
         ASSERT_FLOAT_EQ(imu.acc_x, 0.0f);
         ASSERT_FLOAT_EQ(imu.acc_y, 1.0f);
@@ -82,24 +90,22 @@ namespace robomaster {
         ASSERT_FLOAT_EQ(imu.gyro_z, 12.0f);
     }
 
-    TEST(DataTest, DecodeDataAttitude) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
+    TEST(StateDataTest, StateChassisAttitude) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
 
         msg.set_value_float(0, 0.0f);
         msg.set_value_float(4, 1.0f);
         msg.set_value_float(8, 2.0f);
 
-        DataAttitude attitude = decode_data_attitude(0, msg);
-
-        ASSERT_TRUE(attitude.has_data);
+        StateChassisAttitude attitude = decode_data_attitude(0, msg);
 
         ASSERT_FLOAT_EQ(attitude.yaw,  0.0f);
         ASSERT_FLOAT_EQ(attitude.pitch, 1.0f);
         ASSERT_FLOAT_EQ(attitude.roll,   2.0f);
     }
 
-    TEST(DataTest, DecodeDataBattery) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(10, 0));
+    TEST(StateDataTest, StateChassisBattery) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(10, 0));
 
         msg.set_value_int16(0, 0);
         msg.set_value_int16(2, 1);
@@ -107,35 +113,31 @@ namespace robomaster {
         msg.set_value_uint8(8, 3);
         msg.set_value_uint8(9, 4);
 
-        DataBattery battery = decode_data_battery(0, msg);
+        StateChassisBattery battery = decode_data_battery(0, msg);
 
-        ASSERT_TRUE(battery.has_data);
-
-        ASSERT_EQ(battery.adc_value,   0);
+        ASSERT_EQ(battery.adc,   0);
         ASSERT_EQ(battery.temperature, 1);
         ASSERT_EQ(battery.current,     2);
         ASSERT_EQ(battery.percent,     3);
         ASSERT_EQ(battery.recv,        4);
     }
 
-    TEST(DataTest, DecodeDataPosition) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
+    TEST(StateDataTest, StateChassisPosition) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
 
         msg.set_value_float(0, 0.0f);
         msg.set_value_float(4, 1.0f);
         msg.set_value_float(8, 2.0f);
 
-        DataPosition position = decode_data_position(0, msg);
-
-        ASSERT_TRUE(position.has_data);
+        StateChassisPosition position = decode_data_position(0, msg);
 
         ASSERT_FLOAT_EQ(position.x, 0.0f);
         ASSERT_FLOAT_EQ(position.y, 1.0f);
         ASSERT_FLOAT_EQ(position.z, 2.0f);
     }
 
-    TEST(DataTest, DecodeDataVelocity) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
+    TEST(StateDataTest, StateChassisVelocity) {
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
 
         msg.set_value_float(0, 0.0f);
         msg.set_value_float(4, 1.0f);
@@ -145,16 +147,14 @@ namespace robomaster {
         msg.set_value_float(16, 11.0f);
         msg.set_value_float(20, 12.0f);
 
-        DataVelocity velocity = decode_data_velocity(0, msg);
+        StateChassisVelocity velocity = decode_data_velocity(0, msg);
 
-        ASSERT_TRUE(velocity.has_data);
+        ASSERT_FLOAT_EQ(velocity.vg_x, 0.0f);
+        ASSERT_FLOAT_EQ(velocity.vg_y, 1.0f);
+        ASSERT_FLOAT_EQ(velocity.vg_z, 2.0f);
 
-        ASSERT_FLOAT_EQ(velocity.vgx, 0.0f);
-        ASSERT_FLOAT_EQ(velocity.vgy, 1.0f);
-        ASSERT_FLOAT_EQ(velocity.vgz, 2.0f);
-
-        ASSERT_FLOAT_EQ(velocity.vbx, 10.0f);
-        ASSERT_FLOAT_EQ(velocity.vby, 11.0f);
-        ASSERT_FLOAT_EQ(velocity.vbz, 12.0f);
+        ASSERT_FLOAT_EQ(velocity.vb_x, 10.0f);
+        ASSERT_FLOAT_EQ(velocity.vb_y, 11.0f);
+        ASSERT_FLOAT_EQ(velocity.vb_z, 12.0f);
     }
 } // namespace robomaster

@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_UTILS_H_
-#define ROBOMASTER_UTILS_H_
-
+#pragma once
 #include <vector>
 
 namespace robomaster {
@@ -71,5 +69,3 @@ namespace robomaster {
      */
     uint16_t little_endian_to_uint16(uint8_t lsb, uint8_t msb);
 } // namespace robomaster
-
-#endif // ROBOMASTER_UTILS_H_

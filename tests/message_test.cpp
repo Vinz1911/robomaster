@@ -11,7 +11,7 @@
 
 namespace robomaster {
     TEST(MessageTest, ValueUint8) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{1,2});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{1,2});
 
         ASSERT_EQ(msg.get_value_uint8(0), 1);
         ASSERT_EQ(msg.get_value_uint8(1), 2);
@@ -24,7 +24,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, ValueUint16) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
 
         ASSERT_EQ(msg.get_value_uint16(0), 0xADDE);
         ASSERT_EQ(msg.get_value_uint16(2), 0xEFBE);
@@ -39,7 +39,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, ValueUint32) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
 
         ASSERT_EQ(msg.get_value_uint32(0), 0xEFBEADDE);
         ASSERT_EQ(msg.get_value_uint32(4), 0xADFBCADE);
@@ -59,7 +59,7 @@ namespace robomaster {
 
 
     TEST(MessageTest, ValueInt8) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{255,1});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{255,1});
 
         ASSERT_EQ(msg.get_value_int8(0), -1);
         ASSERT_EQ(msg.get_value_int8(1), 1);
@@ -72,7 +72,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, ValueInt16) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
 
         ASSERT_EQ(msg.get_value_int16(0), -21026);
         ASSERT_EQ(msg.get_value_int16(2), -4162);
@@ -87,7 +87,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, ValueInt32) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
 
         ASSERT_EQ(msg.get_value_int32(0), 0xEFBEADDE);
         ASSERT_EQ(msg.get_value_int32(4), 0xADFBCADE);
@@ -106,7 +106,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, ValueFloat32) {
-        Message msg = Message(0, 0, 0, std::vector<uint8_t>{0x00, 0x00, 0x80, 0xBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3F});
+        auto msg = Message(0, 0, 0, std::vector<uint8_t>{0x00, 0x00, 0x80, 0xBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3F});
 
         ASSERT_FLOAT_EQ(msg.get_value_float(0), -1.0f);
         ASSERT_FLOAT_EQ(msg.get_value_float(4),  0.0);
@@ -131,7 +131,7 @@ namespace robomaster {
     }
 
     TEST(MessageTest, Creation) {
-        Message msg = Message(0, 1337, 1, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
+        auto msg = Message(0, 1337, 1, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
 
         ASSERT_EQ(msg.get_device_id(), 0);
         ASSERT_EQ(msg.get_type(), 1337);

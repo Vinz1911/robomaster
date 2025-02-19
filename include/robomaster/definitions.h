@@ -6,8 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_DEFINITIONS_H_
-#define ROBOMASTER_DEFINITIONS_H_
+#pragma once
 
 namespace robomaster {
     enum BlasterMode: uint8_t {
@@ -58,5 +57,3 @@ namespace robomaster {
         DEVICE_ID_HIT_DETECTOR_4 = 0x214
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_DEFINITIONS_H_

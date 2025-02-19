@@ -15,7 +15,7 @@
 namespace robomaster {
     static constexpr size_t STD_MAX_ERROR_COUNT = 5;
     static constexpr auto STD_HEARTBEAT_TIME = std::chrono::milliseconds(10);
-    static constexpr auto MEMORY_ORDER = std::memory_order::relaxed;
+    static constexpr auto STD_MEMORY_ORDER = std::memory_order::relaxed;
 
     Handler::Handler(): flag_initialised_(false), flag_stop_(false) { }
 
@@ -26,7 +26,7 @@ namespace robomaster {
 
     Handler::~Handler() {
         if (!this->flag_initialised_) { return; }
-        this->flag_stop_.store(true, MEMORY_ORDER);
+        this->flag_stop_.store(true, STD_MEMORY_ORDER);
         this->cv_sender_.notify_all();
         this->join_all();
     }
@@ -43,7 +43,7 @@ namespace robomaster {
     }
 
     bool Handler::is_running() const {
-        return this->flag_initialised_ && !this->flag_stop_.load(MEMORY_ORDER);
+        return this->flag_initialised_ && !this->flag_stop_.load(STD_MEMORY_ORDER);
     }
 
     void Handler::push_message(const Message& msg) {
@@ -52,11 +52,12 @@ namespace robomaster {
     }
 
     void Handler::set_callback(std::function<void(const Message&)> func) {
-        this->callback_data_robomaster_state_ = std::move(func);
+        this->state_callback_ = std::move(func);
     }
 
     bool Handler::send_message(const Message& msg) const {
         const auto id = msg.get_device_id(); const auto data = msg.to_vector(); uint8_t frame_data[8] = {};
+
         for (size_t i = 0; i < data.size(); i += 8) {
             const size_t frame_length = std::min(static_cast<size_t>(8), data.size() - i);
             std::copy_n(data.begin() + static_cast<long>(i), frame_length, frame_data);
@@ -65,25 +66,26 @@ namespace robomaster {
     }
 
     void Handler::receive_message(const Message& msg) const {
-        const auto& payload = msg.get_payload();
-        const uint16_t msg_type = msg.get_type();
+        const auto& payload = msg.get_payload(); const auto msg_type = msg.get_type(); const auto device_id = msg.get_device_id();
 
-        if ((msg.get_device_id() != DEVICE_ID_MOTION_CONTROLLER && msg.get_device_id() != DEVICE_ID_GIMBAL) || (msg_type != 0x0903 && msg_type != 0x0904)) { return; }
-        if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER && (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00)) { return; }
-        if (msg.get_device_id() == DEVICE_ID_GIMBAL && (payload.size() < 3 || payload[0] != 0x00 || payload[1] != 0x3f || payload[2] != 0x76)) { return; }
-        if (this->callback_data_robomaster_state_) { this->callback_data_robomaster_state_(msg); }
+        if ((device_id != DEVICE_ID_MOTION_CONTROLLER && device_id != DEVICE_ID_GIMBAL) || (msg_type != 0x0903 && msg_type != 0x0904)) { return; }
+        if (device_id == DEVICE_ID_MOTION_CONTROLLER && (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00)) { return; }
+        if (device_id == DEVICE_ID_GIMBAL && (payload.size() < 3 || payload[0] != 0x00 || payload[1] != 0x3f || payload[2] != 0x76)) { return; }
+        if (this->state_callback_) { this->state_callback_(msg); }
     }
 
     void Handler::sender_thread() {
         uint16_t heartbeat_counter = 0; size_t error_counter = 0; auto heartbeat_time_point = std::chrono::high_resolution_clock::now();
-        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(MEMORY_ORDER)) {
+
+        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
                 const auto is_send = this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, heartbeat_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }));
                 if (is_send) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
             } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_time_point); }
-        } if (error_counter != 0) { this->flag_stop_.store(true, MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
+        }
+        if (error_counter != 0) { this->flag_stop_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
     }
 
     void Handler::receiver_thread() {
@@ -91,7 +93,7 @@ namespace robomaster {
         std::map<uint32_t, CANMessage> can_message { { DEVICE_ID_MOTION_CONTROLLER, CANMessage() }, { DEVICE_ID_GIMBAL, CANMessage() } };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
 
-        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(MEMORY_ORDER)) {
+        while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(STD_MEMORY_ORDER)) {
             if (!can_socket_.read_frame(frame_id, frame_buffer, frame_length)) { error_counter++; continue; }
             auto slice = can_message.find(frame_id); if (slice == can_message.end()) { continue; }
             auto&[buffer, length] = slice->second; buffer.insert(std::end(buffer), frame_buffer, frame_buffer + frame_length);
@@ -107,6 +109,7 @@ namespace robomaster {
                     auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))); if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
-        } if (error_counter != 0) { this->flag_stop_.store(true, MEMORY_ORDER); std::printf("[Robomaster]: receiver frame failure\n"); }
+        }
+        if (error_counter != 0) { this->flag_stop_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: receiver frame failure\n"); }
     }
 } // namespace robomaster

@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_DATA_H_
-#define ROBOMASTER_DATA_H_
-
+#pragma once
 #include <array>
 
 #include "message.h"
@@ -17,12 +15,7 @@ namespace robomaster {
     /**
      * @brief Struct for the data of the Gimbal from the RoboMaster.
      */
-    struct StateGimbal {
-        /**
-         * @brief True when the Gimbal data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateGimbalAttitude {
         /**
          * @brief Pitch in degree.
          */
@@ -37,12 +30,7 @@ namespace robomaster {
     /**
      * @brief Struct for the data of the ESC from the RoboMaster. The data array is ordered in front right, front left, rear left and rear right.
      */
-    struct StateESC {
-        /**
-         * @brief True when the ESC data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisESC {
         /**
          * @brief Speed in RPM -> value range -8192~8191;
          */
@@ -67,12 +55,7 @@ namespace robomaster {
     /**
      * @brief Struct for the imu data from the RoboMaster.
      */
-    struct StateIMU {
-        /**
-         * @brief True when the Imu data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisIMU {
         /**
          * @brief Acceleration on x-axis in 9,81 /m^2 s.
          */
@@ -107,12 +90,7 @@ namespace robomaster {
     /**
      * @brief Struct for the attitude data from the RoboMaster.
      */
-    struct StateAttitude {
-        /**
-         * @brief True when the attitude data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisAttitude {
         /**
          * @brief Roll in degree.
          */
@@ -132,12 +110,7 @@ namespace robomaster {
     /**
      * @brief Struct for the battery data from the RoboMaster.
      */
-    struct StateBattery {
-        /**
-         * @brief True when the battery data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisBattery {
         /**
          * @brief ADC value of the battery in milli volt.
          */
@@ -167,52 +140,42 @@ namespace robomaster {
     /**
      * @brief Struct for the velocity data from the RoboMaster.
      */
-    struct StateVelocity {
-        /**
-         * @brief True when the velocity data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisVelocity {
         /**
          * @brief Velocity m/s on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
-        float vgx = 0.0f;
+        float vg_x = 0.0f;
 
         /**
          * @brief Velocity m/s on the y-axis in the global coordinate system where the RoboMaster is turned on.
          */
-        float vgy = 0.0f;
+        float vg_y = 0.0f;
 
         /**
          * @brief Velocity m/s on the z axis in the global coordinate system where the RoboMaster is turned on.
          */
-        float vgz = 0.0f;
+        float vg_z = 0.0f;
 
         /**
          * @brief Velocity m/s on the x-axis in local coordinate system.
          */
-        float vbx = 0.0f;
+        float vb_x = 0.0f;
 
         /**
          * @brief Velocity m/s on the y-axis in local coordinate system.
          */
-        float vby = 0.0f;
+        float vb_y = 0.0f;
 
         /**
          * @brief Velocity m/s on the z axis in local coordinate system.
          */
-        float vbz = 0.0f;
+        float vb_z = 0.0f;
     };
 
     /**
      * @brief Struct for the position data from the RoboMaster.
      */
-    struct StatePosition {
-        /**
-         * @brief True when the position data are successfully parsed.
-         */
-        bool has_data = false;
-
+    struct StateChassisPosition {
         /**
          * @brief X position on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
@@ -234,9 +197,14 @@ namespace robomaster {
      */
     struct RoboMasterGimbalState {
         /**
+         * @brief check if data is applied.
+         */
+        bool is_active = false;
+
+        /**
          * @brief Gimbal data.
          */
-        StateGimbal gimbal;
+        StateGimbalAttitude attitude;
     };
 
     /**
@@ -244,34 +212,39 @@ namespace robomaster {
      */
     struct RoboMasterMotionState {
         /**
+         * @brief check if data is applied.
+         */
+        bool is_active = false;
+
+        /**
          * @brief Battery data.
          */
-        StateBattery battery;
+        StateChassisBattery battery;
 
         /**
          * @brief Esc data.
          */
-        StateESC esc;
+        StateChassisESC esc;
 
         /**
          * @brief Imu data.
          */
-        StateIMU imu;
+        StateChassisIMU imu;
 
         /**
          * @brief Velocity data.
          */
-        StateVelocity velocity;
+        StateChassisVelocity velocity;
 
         /**
          * @brief Position data.
          */
-        StatePosition position;
+        StateChassisPosition position;
 
         /**
          * @brief Attitude data.
          */
-        StateAttitude attitude;
+        StateChassisAttitude attitude;
     };
 
     /**
@@ -279,63 +252,61 @@ namespace robomaster {
      *
      * @param index Index for the payload.
      * @param msg Message from the gimbal.
-     * @return struct StateGimbal. has_data is true, by successful decoding.
+     * @return struct StateGimbal. by successful decoding.
      */
-    StateGimbal decode_data_gimbal(size_t index, const Message& msg);
+    StateGimbalAttitude decode_data_gimbal(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for esc data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StateESC. has_data is true, by successful decoding.
+     * @return struct StateESC. by successful decoding.
      */
-    StateESC decode_data_esc(size_t index, const Message& msg);
+    StateChassisESC decode_data_esc(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StateIMU. has_data is true, by successful decoding.
+     * @return struct StateIMU. by successful decoding.
      */
-    StateIMU decode_data_imu(size_t index, const Message& msg);
+    StateChassisIMU decode_data_imu(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StateAttitude. has_data is true, by successful decoding.
+     * @return struct StateAttitude. by successful decoding.
      */
-    StateAttitude decode_data_attitude(size_t index, const Message& msg);
+    StateChassisAttitude decode_data_attitude(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for battery data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StateBattery. has_data is true, by successful decoding.
+     * @return struct StateBattery. by successful decoding.
      */
-    StateBattery decode_data_battery(size_t index, const Message& msg);
+    StateChassisBattery decode_data_battery(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for velocity data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StateVelocity. has_data is true, by successful decoding.
+     * @return struct StateVelocity. by successful decoding.
      */
-    StateVelocity decode_data_velocity(size_t index, const Message& msg);
+    StateChassisVelocity decode_data_velocity(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for position data.
      *
      * @param index Index for the payload.
      * @param msg Message from the motion controller.
-     * @return struct StatePosition. has_data is true, by successful decoding.
+     * @return struct StatePosition. by successful decoding.
      */
-    StatePosition decode_data_position(size_t index, const Message& msg);
+    StateChassisPosition decode_data_position(size_t index, const Message& msg);
 } // namespace robomaster
-
-#endif // ROBOMASTER_DATA_H_

@@ -6,9 +6,7 @@
  * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
  */
 
-#ifndef ROBOMASTER_CAN_SOCKET_H_
-#define ROBOMASTER_CAN_SOCKET_H_
-
+#pragma once
 #include <net/if.h>
 #include <linux/can.h>
 #include <string>
@@ -91,5 +89,3 @@ namespace robomaster {
         bool read_frame(uint32_t& id, uint8_t data[8], size_t& length) const;
     };
 } // namespace robomaster
-
-#endif // ROBOMASTER_CAN_SOCKET_H_
