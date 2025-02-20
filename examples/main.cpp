@@ -32,7 +32,7 @@ int main() {
     auto robomaster = RoboMaster();
 
     // Try to init
-    if (!robomaster.init()) { std::printf("[Example]: robomaster initialization failed"); return 1; }
+    if (!robomaster.init()) { std::printf("[Example]: robomaster initialization failed\n"); return 1; }
     std::thread state_thread(state_data, std::ref(robomaster)); state_thread.detach();
 
     // Enable the robomaster to execute drive commands.
