@@ -45,8 +45,7 @@ The class RoboMaster provides simple access to control the chassis, the gimbal, 
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
 | `bool init(std::string& interface)`                                                                                                                                                    | Initialize the RoboMaster by opening the CAN bus by the given can_interface and set CAN receiving. Return true on success.             |
 | `bool is_running()`                                                                                                                                                                    | Return true when the RoboMaster is successfully initialized and running. Switch to false when an error occurs.                         |
-| `RoboMasterChassisState get_chassis_state()`                                                                                                                                           | Return the current `RoboMasterChassisState` this is frequently updated.                                                                |
-| `RoboMasterGimbalState get_gimbal_state()`                                                                                                                                             | Return the current `RoboMasterGimbalState` this is frequently updated.                                                                 |
+| `RoboMasterState get_state()`                                                                                                                                                          | Return the current `RoboMasterState` this is frequently updated.                                                                       |
 | `void set_chassis_mode(ChassisMode mode)`                                                                                                                                              | Set the RoboMaster's `ChassisMode` (`Enable` or `Disable`.                                                                             |
 | `void set_chassis_rpm(int16_t front_right, int16_t front_left, int16_t rear_left, int16_t rear_right)`                                                                                 | Set the wheel speed in rpm in the wheel order front right, front left, rear left and rear right [-1000, 1000].                         |
 | `void set_chassis_velocity(float pitch, float yaw, float roll)`                                                                                                                        | Set the pitch, yaw and angular roll velocity. The velocity and acceleration limits are handled by the config of the motion controller. |
@@ -60,7 +59,7 @@ The class RoboMaster provides simple access to control the chassis, the gimbal, 
 | `void set_blaster(BlasterMode mode, uint8_t count)`                                                                                                                                    | Set the `BlasterMode` and fire the blaster [1, 8] times based on the given count.                                                      |
 | `void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, std::optional<uint16_t> up_time = std::nullopt, std::optional<uint16_t> down_time = std::nullopt)` | Set the `LEDMode` and `LEDMask`, the color for Red, Green and Blue and the up and down time (optional) for some modes.                 |
 
-## Struct RoboMasterChassisState
+## Struct RoboMasterState
 Information of the state of the RoboMaster Chassis.
 
 | struct (C++)             | Description                                                                     |
@@ -71,15 +70,9 @@ Information of the state of the RoboMaster Chassis.
 | `StateVelocity velocity` | Contains the estimated velocities of the RoboMaster from the motion controller. |
 | `StatePosition position` | Contains the odometry data of the motion controller.                            |
 | `StateAttitude attitude` | Contains the attitude of the RoboMaster estimated from the motion controller.   |
+| `StateGimbal gimbal`     | Contains the state of the RoboMaster gimbal.                                    |
 
-## Struct RoboMasterGimbalState
-Information of the state of the RoboMaster Gimbal.
-
-| struct (C++)                   | Description                                  |
-|--------------------------------|----------------------------------------------|
-| `StateGimbalAttitude attitude` | Contains the state of the RoboMaster gimbal. |
-
-## Struct StateChassisBattery
+## Struct StateBattery
 Information of the RoboMaster battery.
 
 | Name          | datatype   | Description                              |
@@ -90,7 +83,7 @@ Information of the RoboMaster battery.
 | `percent`     | `uint8_t`  | Percent of the battery [0, 100].         |
 | `recv`        | `uint8_t`  | N/A                                      |
 
-## Struct StateChassisESC
+## Struct StateESC
 Information of the state of the wheels. The wheel order in the arrays is front left, front right, rear left and rear right
 
 | Name    | datatype      | Description                                             |
@@ -100,7 +93,7 @@ Information of the state of the wheels. The wheel order in the arrays is front l
 | `speed` | `uint32_t[4]` | Timestamp -> units N/A                                  |
 | `speed` | `uint8_t[4]`  | State of the ESC -> units N/A                           |
 
-## Struct StateChassisIMU
+## Struct StateIMU
 Information of the measured sensor data from the IMU in the Motion Controller.
 
 | Name     | datatype | Description                            |
@@ -112,7 +105,7 @@ Information of the measured sensor data from the IMU in the Motion Controller.
 | `gyro_y` | `float`  | Angular velocity on y axis in radiant. |
 | `gyro_z` | `float`  | Angular velocity on z axis in radiant. |
 
-## Struct StateChassisVelocity
+## Struct StateVelocity
 Information of the chassis velocities which are measured from the Motion Controller.
 
 | Name  | datatype | Description                                                                                                  |
@@ -124,7 +117,7 @@ Information of the chassis velocities which are measured from the Motion Control
 | `vby` | `float`  | Velocity m/s on the y axis in local coordinate system.                                                       |
 | `vbz` | `float`  | Velocity m/s on the z axis in local coordinate system.. Is always 0.0.                                       |
 
-## Struct StateChassisPosition
+## Struct StatePosition
 Information of the measured position of the RoboMaster since the RoboMaster is powered on.
 
 | Name | datatype | Description                                                                                                |
@@ -133,7 +126,7 @@ Information of the measured position of the RoboMaster since the RoboMaster is p
 | `y`  | `float`  | Y position on the x axis in the global coordinate system where the RoboMaster is turned on.                |
 | `z`  | `float`  | Z position on the x axis in the global coordinate system where the RoboMaster is turned on. Is always 0.0. |
 
-## Struct StateChassisAttitude
+## Struct StateAttitude
 Information of the Attitude which is measured by the Motion Controller.
 
 | Name    | datatype | Description      |
@@ -142,7 +135,7 @@ Information of the Attitude which is measured by the Motion Controller.
 | `pitch` | `float`  | Pitch in degree. |
 | `yaw`   | `float`  | Yaw in degree.   |
 
-## Struct StateGimbalAttitude
+## Struct StateGimbal
 Information of the Attitude which is measured by the Gimbal.
 
 | Name    | datatype  | Description      |
