@@ -25,10 +25,7 @@ namespace robomaster {
 
     bool RoboMaster::init(const std::string& interface) {
         if (!this->handler_.init(interface)) { return false;}
-        this->handler_.set_callback([this](const Message& msg) {
-            if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) { this->motion_state_.store(decode_motion_state(msg), STD_MEMORY_ORDER); }
-            if (msg.get_device_id() == DEVICE_ID_GIMBAL) { this->gimbal_state_.store(decode_gimbal_state(msg), STD_MEMORY_ORDER); }
-        });
+        this->handler_.set_callback([this](const Message& msg) { this->state_.store(decode_state(msg), STD_MEMORY_ORDER); });
         this->boot_sequence(); return true;
     }
 
@@ -36,12 +33,8 @@ namespace robomaster {
         return this->handler_.is_running();
     }
 
-    RoboMasterChassisState RoboMaster::get_chassis_state() const {
-        return this->motion_state_.load(STD_MEMORY_ORDER);
-    }
-
-    RoboMasterGimbalState RoboMaster::get_gimbal_state() const {
-        return this->gimbal_state_.load(STD_MEMORY_ORDER);
+    RoboMasterState RoboMaster::get_state() const {
+        return this->state_.load(STD_MEMORY_ORDER);
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
@@ -149,20 +142,17 @@ namespace robomaster {
         this->handler_.push_message(msg);
     }
 
-    RoboMasterChassisState RoboMaster::decode_motion_state(const Message& msg) {
-        auto data = RoboMasterChassisState();
-        data.velocity = decode_data_velocity(27, msg);
-        data.battery = decode_data_battery(51, msg);
-        data.esc = decode_data_esc(61, msg);
-        data.imu = decode_data_imu(97, msg);
-        data.attitude = decode_data_attitude(121, msg);
-        data.position = decode_data_position(133, msg);
-        data.is_active = true; return data;
-    }
-
-    RoboMasterGimbalState RoboMaster::decode_gimbal_state(const Message& msg) {
-        auto data = RoboMasterGimbalState();
-        data.attitude = decode_data_gimbal(5, msg);
+    RoboMasterState RoboMaster::decode_state(const Message& msg) {
+        static auto data = RoboMasterState();
+        if (msg.get_device_id() == DEVICE_ID_GIMBAL) { data.gimbal = decode_data_gimbal(5, msg); }
+        if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) {
+            data.velocity = decode_data_velocity(27, msg);
+            data.battery = decode_data_battery(51, msg);
+            data.esc = decode_data_esc(61, msg);
+            data.imu = decode_data_imu(97, msg);
+            data.attitude = decode_data_attitude(121, msg);
+            data.position = decode_data_position(133, msg);
+        }
         data.is_active = true; return data;
     }
 } // namespace robomaster

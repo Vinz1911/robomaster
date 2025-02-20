@@ -11,7 +11,7 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    const uint8_t TABLE_CRC8[] = {
+    const uint8_t CRC8_CHECKSUM[] = {
         0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,
         0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,
         0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,
@@ -30,7 +30,7 @@ namespace robomaster {
         0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,
     };
 
-    const static uint16_t TABLE_CRC16[] = {
+    const static uint16_t CRC16_CHECKSUM[] = {
         0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
         0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
         0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -67,36 +67,35 @@ namespace robomaster {
 
     uint8_t calculate_crc8(const uint8_t *data, const size_t length) {
         uint8_t crc = 0x77;
-        for (size_t i = 0; i < length; i++) { crc = TABLE_CRC8[crc ^ data[i]]; } return crc;
+        for (size_t i = 0; i < length; i++) { crc = CRC8_CHECKSUM[crc ^ data[i]]; }
+        return crc;
     }
 
     uint16_t calculate_crc16(const uint8_t *data, const size_t length) {
         uint16_t crc = 0x3692;
-        for (size_t i = 0; i < length; i++) { crc = ((crc >> 8) & 0xff) ^ TABLE_CRC16[(crc ^ data[i]) & 0xff]; } return crc;
+        for (size_t i = 0; i < length; i++) { crc = crc >> 8 & 0xff ^ CRC16_CHECKSUM[(crc ^ data[i]) & 0xff]; }
+        return crc;
     }
 
     std::string string_to_hex(const uint8_t * data, const size_t length) {
         std::stringstream stream;
-        for (size_t i = 0; i < length; i++) {
-            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
-            if (i < length - 1) { stream << ' '; }
-        } return stream.str();
+        for (size_t i = 0; i < length; i++) { stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]); if (i < length - 1) { stream << ' '; } }
+        return stream.str();
     }
 
     std::string string_to_hex(const std::vector<uint8_t>& data) {
         std::stringstream stream;
-        for (size_t i = 0; i < data.size(); i++) {
-            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]);
-            if (i < data.size() - 1) { stream << ' '; }
-        } return stream.str();
+        for (size_t i = 0; i < data.size(); i++) { stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint32_t>(data[i]); if (i < data.size() - 1) { stream << ' '; } }
+        return stream.str();
     }
 
     uint16_t little_endian_to_uint16(const uint8_t lsb, const uint8_t msb) {
-        return (static_cast<uint16_t>(msb) << 8) | static_cast<uint16_t>(lsb);
+        return static_cast<uint16_t>(msb) << 8 | static_cast<uint16_t>(lsb);
     }
 
     std::string stringUint16ToHex(const uint16_t value) {
         std::stringstream stream;
-        stream << std::setfill('0') << std::setw(4) << std::hex << value; return stream.str();
+        stream << std::setfill('0') << std::setw(4) << std::hex << value;
+        return stream.str();
     }
 } // namespace robomaster

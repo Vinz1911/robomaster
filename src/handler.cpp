@@ -67,10 +67,10 @@ namespace robomaster {
 
     void Handler::receive_message(const Message& msg) const {
         const auto& payload = msg.get_payload(); const auto msg_type = msg.get_type(); const auto device_id = msg.get_device_id();
+        static const std::unordered_map<uint16_t, std::pair<uint16_t, std::vector<uint8_t>>> device_ids = { { DEVICE_ID_MOTION_CONTROLLER, { 0x0903, { 0x20, 0x48, 0x08, 0x00 } } }, { DEVICE_ID_GIMBAL, { 0x0904, { 0x00, 0x3f, 0x76 } } } };
 
-        if ((device_id != DEVICE_ID_MOTION_CONTROLLER && device_id != DEVICE_ID_GIMBAL) || (msg_type != 0x0903 && msg_type != 0x0904)) { return; }
-        if (device_id == DEVICE_ID_MOTION_CONTROLLER && (payload.size() < 4 || payload[0] != 0x20 || payload[1] != 0x48 || payload[2] != 0x08 || payload[3] != 0x00)) { return; }
-        if (device_id == DEVICE_ID_GIMBAL && (payload.size() < 3 || payload[0] != 0x00 || payload[1] != 0x3f || payload[2] != 0x76)) { return; }
+        const auto ids = device_ids.find(device_id); if (ids == device_ids.end() || msg_type != ids->second.first) { return; }
+        const auto& expected_sequence = ids->second.second; if (payload.size() < expected_sequence.size() || !std::equal(expected_sequence.begin(), expected_sequence.end(), payload.begin())) { return; }
         if (this->state_callback_) { this->state_callback_(msg); }
     }
 

@@ -13,13 +13,13 @@
 /**
  * Example for the usage of the robomaster library.
  */
-
 void state_data(const robomaster::RoboMaster& robomaster) {
     while (robomaster.is_running()) {
-        const auto chassis_state = robomaster.get_chassis_state();
-        const auto gimbal_state = robomaster.get_gimbal_state();
-        if (chassis_state.is_active) { std::printf("Battery: %u\n", chassis_state.battery.percent); }
-        if (gimbal_state.is_active) { std::printf("Pitch: %i, Yaw: %i\n", gimbal_state.attitude.pitch, gimbal_state.attitude.yaw); }
+        const auto state = robomaster.get_state();
+        if (state.is_active) {
+            std::printf("Battery: %u\n", state.battery.percent);
+            std::printf("Pitch: %i, Yaw: %i\n", state.gimbal.pitch, state.gimbal.yaw);
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
@@ -68,14 +68,18 @@ int main() {
 
     // Move gimbal to position
     robomaster.set_gimbal_position(250, 1000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     // Turn the LED back to static.
     robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
+
+    // Fire Blaster
+    robomaster.set_blaster(BLASTER_MODE_GEL, 4);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Recenter the gimbal
     robomaster.set_gimbal_recenter(150, 150);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
     // Disable the robomaster after finish the example.
     robomaster.set_chassis_mode(CHASSIS_MODE_DISABLE); return 0;

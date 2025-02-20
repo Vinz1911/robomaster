@@ -9,15 +9,15 @@
 #include "robomaster/data.h"
 
 namespace robomaster {
-    StateGimbalAttitude decode_data_gimbal(const size_t index, const Message& msg) {
-        StateGimbalAttitude data; if (index + 4 > msg.get_payload().size()) { return data; }
+    StateGimbal decode_data_gimbal(const size_t index, const Message& msg) {
+        StateGimbal data; if (index + 4 > msg.get_payload().size()) { return data; }
         data.pitch = msg.get_value_int16(index);
         data.yaw = msg.get_value_int16(index + 2);
         return data;
     }
 
-    StateChassisESC decode_data_esc(const size_t index, const Message& msg) {
-        StateChassisESC data; if (index + 36 > msg.get_payload().size()) { return data; }
+    StateESC decode_data_esc(const size_t index, const Message& msg) {
+        StateESC data; if (index + 36 > msg.get_payload().size()) { return data; }
         data.speed[0] = msg.get_value_int16(index);
         data.speed[1] = msg.get_value_int16(index + 2);
         data.speed[2] = msg.get_value_int16(index + 4);
@@ -40,8 +40,8 @@ namespace robomaster {
         return data;
     }
 
-    StateChassisIMU decode_data_imu(const size_t index, const Message& msg) {
-        StateChassisIMU data; if (index + 24 > msg.get_payload().size()) { return data; }
+    StateIMU decode_data_imu(const size_t index, const Message& msg) {
+        StateIMU data; if (index + 24 > msg.get_payload().size()) { return data; }
         data.acc_x = msg.get_value_float(index);
         data.acc_y = msg.get_value_float(index + 4);
         data.acc_z = msg.get_value_float(index + 8);
@@ -52,16 +52,16 @@ namespace robomaster {
         return data;
     }
 
-    StateChassisAttitude decode_data_attitude(const size_t index, const Message& msg) {
-        StateChassisAttitude data; if (index + 12 > msg.get_payload().size()) { return data; }
+    StateAttitude decode_data_attitude(const size_t index, const Message& msg) {
+        StateAttitude data; if (index + 12 > msg.get_payload().size()) { return data; }
         data.yaw = msg.get_value_float(index);
         data.pitch = msg.get_value_float(index + 4);
         data.roll = msg.get_value_float(index + 8);
         return data;
     }
 
-    StateChassisBattery decode_data_battery(const size_t index, const Message& msg) {
-        StateChassisBattery data; if (index + 10 > msg.get_payload().size()) { return data; }
+    StateBattery decode_data_battery(const size_t index, const Message& msg) {
+        StateBattery data; if (index + 10 > msg.get_payload().size()) { return data; }
         data.adc = msg.get_value_uint16(index);
         data.temperature = msg.get_value_uint16(index + 2);
         data.current = msg.get_value_int32(index + 4);
@@ -70,8 +70,8 @@ namespace robomaster {
         return data;
     }
 
-    StateChassisVelocity decode_data_velocity(const size_t index, const Message& msg) {
-        StateChassisVelocity data; if (index + 24 > msg.get_payload().size()) { return data; }
+    StateVelocity decode_data_velocity(const size_t index, const Message& msg) {
+        StateVelocity data; if (index + 24 > msg.get_payload().size()) { return data; }
         data.vg_x = msg.get_value_float(index);
         data.vg_y = msg.get_value_float(index + 4);
         data.vg_z = msg.get_value_float(index + 8);
@@ -82,8 +82,8 @@ namespace robomaster {
         return data;
     }
 
-    StateChassisPosition decode_data_position(const size_t index, const Message& msg) {
-        StateChassisPosition data; if (index + 12 > msg.get_payload().size()) { return data; }
+    StatePosition decode_data_position(const size_t index, const Message& msg) {
+        StatePosition data; if (index + 12 > msg.get_payload().size()) { return data; }
         data.x = msg.get_value_float(index);
         data.y = msg.get_value_float(index + 4);
         data.z = msg.get_value_float(index + 8);

@@ -15,7 +15,7 @@ namespace robomaster {
     /**
      * @brief Struct for the data of the Gimbal from the RoboMaster.
      */
-    struct StateGimbalAttitude {
+    struct StateGimbal {
         /**
          * @brief Pitch in degree.
          */
@@ -30,7 +30,7 @@ namespace robomaster {
     /**
      * @brief Struct for the data of the ESC from the RoboMaster. The data array is ordered in front right, front left, rear left and rear right.
      */
-    struct StateChassisESC {
+    struct StateESC {
         /**
          * @brief Speed in RPM -> value range -8192~8191;
          */
@@ -55,7 +55,7 @@ namespace robomaster {
     /**
      * @brief Struct for the imu data from the RoboMaster.
      */
-    struct StateChassisIMU {
+    struct StateIMU {
         /**
          * @brief Acceleration on x-axis in 9,81 /m^2 s.
          */
@@ -90,7 +90,7 @@ namespace robomaster {
     /**
      * @brief Struct for the attitude data from the RoboMaster.
      */
-    struct StateChassisAttitude {
+    struct StateAttitude {
         /**
          * @brief Roll in degree.
          */
@@ -110,7 +110,7 @@ namespace robomaster {
     /**
      * @brief Struct for the battery data from the RoboMaster.
      */
-    struct StateChassisBattery {
+    struct StateBattery {
         /**
          * @brief ADC value of the battery in milli volt.
          */
@@ -140,7 +140,7 @@ namespace robomaster {
     /**
      * @brief Struct for the velocity data from the RoboMaster.
      */
-    struct StateChassisVelocity {
+    struct StateVelocity {
         /**
          * @brief Velocity m/s on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
@@ -175,7 +175,7 @@ namespace robomaster {
     /**
      * @brief Struct for the position data from the RoboMaster.
      */
-    struct StateChassisPosition {
+    struct StatePosition {
         /**
          * @brief X position on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
@@ -193,9 +193,9 @@ namespace robomaster {
     };
 
     /**
-     * @brief Collection of all data from the gimbal from the RoboMaster.
+     * @brief Collection of all data from the motion controller from the RoboMaster.
      */
-    struct RoboMasterGimbalState {
+    struct RoboMasterState {
         /**
          * @brief check if data is applied.
          */
@@ -204,47 +204,37 @@ namespace robomaster {
         /**
          * @brief Gimbal data.
          */
-        StateGimbalAttitude attitude;
-    };
-
-    /**
-     * @brief Collection of all data from the motion controller from the RoboMaster.
-     */
-    struct RoboMasterChassisState {
-        /**
-         * @brief check if data is applied.
-         */
-        bool is_active = false;
+        StateGimbal gimbal;
 
         /**
          * @brief Battery data.
          */
-        StateChassisBattery battery;
+        StateBattery battery;
 
         /**
          * @brief Esc data.
          */
-        StateChassisESC esc;
+        StateESC esc;
 
         /**
          * @brief Imu data.
          */
-        StateChassisIMU imu;
+        StateIMU imu;
 
         /**
          * @brief Velocity data.
          */
-        StateChassisVelocity velocity;
+        StateVelocity velocity;
 
         /**
          * @brief Position data.
          */
-        StateChassisPosition position;
+        StatePosition position;
 
         /**
          * @brief Attitude data.
          */
-        StateChassisAttitude attitude;
+        StateAttitude attitude;
     };
 
     /**
@@ -254,7 +244,7 @@ namespace robomaster {
      * @param msg Message from the gimbal.
      * @return struct StateGimbal. by successful decoding.
      */
-    StateGimbalAttitude decode_data_gimbal(size_t index, const Message& msg);
+    StateGimbal decode_data_gimbal(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for esc data.
@@ -263,7 +253,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StateESC. by successful decoding.
      */
-    StateChassisESC decode_data_esc(size_t index, const Message& msg);
+    StateESC decode_data_esc(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -272,7 +262,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StateIMU. by successful decoding.
      */
-    StateChassisIMU decode_data_imu(size_t index, const Message& msg);
+    StateIMU decode_data_imu(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -281,7 +271,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StateAttitude. by successful decoding.
      */
-    StateChassisAttitude decode_data_attitude(size_t index, const Message& msg);
+    StateAttitude decode_data_attitude(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for battery data.
@@ -290,7 +280,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StateBattery. by successful decoding.
      */
-    StateChassisBattery decode_data_battery(size_t index, const Message& msg);
+    StateBattery decode_data_battery(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for velocity data.
@@ -299,7 +289,7 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StateVelocity. by successful decoding.
      */
-    StateChassisVelocity decode_data_velocity(size_t index, const Message& msg);
+    StateVelocity decode_data_velocity(size_t index, const Message& msg);
 
     /**
      * @brief Decode the message payload at the given index for position data.
@@ -308,5 +298,5 @@ namespace robomaster {
      * @param msg Message from the motion controller.
      * @return struct StatePosition. by successful decoding.
      */
-    StateChassisPosition decode_data_position(size_t index, const Message& msg);
+    StatePosition decode_data_position(size_t index, const Message& msg);
 } // namespace robomaster

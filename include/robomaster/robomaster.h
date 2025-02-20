@@ -32,12 +32,7 @@ namespace robomaster {
         /**
          * @brief Store for the motion data state
          */
-        std::atomic<RoboMasterChassisState> motion_state_;
-
-        /**
-         * @brief Store for the gimbal data state
-         */
-        std::atomic<RoboMasterGimbalState> gimbal_state_;
+        std::atomic<RoboMasterState> state_;
 
         /**
          * @brief The boot sequence to configure the RoboMasterState messages.
@@ -50,15 +45,7 @@ namespace robomaster {
          * @param msg The RoboMasterMotionState message.
          * @return the current data state
          */
-        static RoboMasterChassisState decode_motion_state(const Message& msg);
-
-        /**
-         * @brief Decode the RoboMasterGimbalState message
-         *
-         * @param msg The RoboMasterGimbalState message.
-         * @return the current data state
-         */
-        static RoboMasterGimbalState decode_gimbal_state(const Message& msg);
+        static RoboMasterState decode_state(const Message& msg);
 
     public:
         /**
@@ -92,14 +79,7 @@ namespace robomaster {
          *
          * @return the collected state data
          */
-        [[nodiscard]] RoboMasterChassisState get_chassis_state() const;
-
-        /**
-         * @brief get the current state from RoboMasterGimbalState
-         *
-         * @return the collected state data
-         */
-        [[nodiscard]] RoboMasterGimbalState get_gimbal_state() const;
+        [[nodiscard]] RoboMasterState get_state() const;
 
         /**
          * @brief Set the work mode of the RoboMaster Chassis.
