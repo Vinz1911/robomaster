@@ -159,7 +159,7 @@ namespace robomaster {
          * @param pitch Angular x velocity in radiant/s.
          * @param yaw Angular y velocity in radiant/s.
          */
-        void set_gimbal_recenter(int16_t pitch, int16_t yaw);
+        void set_gimbal_recenter(int16_t pitch = 100, int16_t yaw = 100);
 
         /**
          * @brief Fire the blaster of the RoboMaster.
