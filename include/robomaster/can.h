@@ -43,19 +43,11 @@ namespace robomaster {
         ~CANBus();
 
         /**
-         * @brief Set the timeout for reading the can socket.
-         *
-         * @param seconds Timeout in seconds.
-         * @param microseconds Timeouts in microseconds.
-         */
-        void set_timeout(size_t seconds, size_t microseconds);
-
-        /**
          * @brief Set the timeout for the reading the can socket.
          *
          * @param seconds Double in seconds.
          */
-        void set_timeout(double seconds);
+        void set_timeout(double seconds) const;
 
         /**
          * @brief Open the can socket by the given can interface name.

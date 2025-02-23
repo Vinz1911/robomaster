@@ -79,8 +79,8 @@ namespace robomaster {
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->flag_stop_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
-                const auto is_send = this->send_message(Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, heartbeat_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 }));
-                if (is_send) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
+                const auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, heartbeat_counter++, { 0x00, 0x3f, 0x60, 0x00, 0x04, 0x20, 0x00, 0x01, 0x00, 0x40, 0x00, 0x02, 0x10, 0x00, 0x03, 0x00, 0x00 });
+                if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
             } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_time_point); }

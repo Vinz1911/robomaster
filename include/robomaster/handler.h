@@ -12,7 +12,7 @@
 #include <functional>
 #include <atomic>
 
-#include "canbus.h"
+#include "can.h"
 #include "message.h"
 #include "queue.h"
 

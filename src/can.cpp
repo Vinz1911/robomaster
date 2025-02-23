@@ -14,7 +14,7 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 
-#include "robomaster/canbus.h"
+#include "robomaster/can.h"
 
 namespace robomaster {
     CANBus::CANBus(): socket_(), ifr_{}, addr_{} {
@@ -26,16 +26,12 @@ namespace robomaster {
         close(socket_);
     }
 
-    void CANBus::set_timeout(const size_t seconds, const size_t microseconds) {
-        timeval t{}; t.tv_sec = static_cast<long>(seconds); t.tv_usec = static_cast<long>(microseconds);
-        setsockopt(this->socket_, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof(t));
-    }
+    void CANBus::set_timeout(const double seconds) const {
+        const auto max_time = std::max(seconds, 0.0);
+        const auto seconds_t = static_cast<long>(std::floor(max_time)), microseconds_t = static_cast<long>((max_time - std::floor(max_time)) * 1e6);
 
-    void CANBus::set_timeout(const double seconds) {
-        if (seconds < 0.0) { this->set_timeout(0, 0); return; }
-        const auto seconds_t = static_cast<size_t>(std::floor(seconds));
-        const auto microseconds_t = static_cast<size_t>((seconds - std::floor(seconds)) * 1e6);
-        this->set_timeout(seconds_t, microseconds_t);
+        timeval time{}; time.tv_sec = seconds_t; time.tv_usec = microseconds_t;
+        setsockopt(this->socket_, SOL_SOCKET, SO_RCVTIMEO, &time, sizeof(time));
     }
 
     bool CANBus::init(const std::string& interface) {
@@ -53,7 +49,7 @@ namespace robomaster {
     bool CANBus::send_frame(const uint32_t id, const uint8_t data[8], const size_t length) const {
         if (length > 8) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
-        frame.can_id = static_cast<int>(id); frame.can_dlc = length; std::memcpy(static_cast<uint8_t *>(frame.data), data, length);
+        frame.can_id = static_cast<int>(id); frame.can_dlc = length; std::memcpy(frame.data, data, length);
         if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
     }
 

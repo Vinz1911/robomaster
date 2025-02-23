@@ -185,7 +185,7 @@ namespace robomaster {
         void set_value_float(size_t index, float value);
 
         /**
-         * @brief Get the uint8 value form the palyoad at given index.
+         * @brief Get the uint8 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return uint8_t as value.
@@ -193,7 +193,7 @@ namespace robomaster {
         [[nodiscard]] uint8_t get_value_uint8(size_t index) const;
 
         /**
-         * @brief Get the int8 value form the palyoad at given index.
+         * @brief Get the int8 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return int8_t as value.
@@ -201,7 +201,7 @@ namespace robomaster {
         [[nodiscard]] int8_t get_value_int8(size_t index) const;
 
         /**
-         * @brief Get the uint16 value form the palyoad at given index.
+         * @brief Get the uint16 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return uint16_t as value.
@@ -209,7 +209,7 @@ namespace robomaster {
         [[nodiscard]] uint16_t get_value_uint16(size_t index) const;
 
         /**
-         * @brief Get the int16 value form the palyoad at given index.
+         * @brief Get the int16 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return uint16_t as value.
@@ -217,7 +217,7 @@ namespace robomaster {
         [[nodiscard]] int16_t get_value_int16(size_t index) const;
 
         /**
-         * @brief Get the uint32 value form the palyoad at given index.
+         * @brief Get the uint32 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return uint32_t as value.
@@ -225,7 +225,7 @@ namespace robomaster {
         [[nodiscard]] uint32_t get_value_uint32(size_t index) const;
 
         /**
-         * @brief Get the int32 value form the palyoad at given index.
+         * @brief Get the int32 value form the payload at given index.
          *
          * @param index The index for the payload position.
          * @return int32_t as value.

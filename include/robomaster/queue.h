@@ -49,7 +49,7 @@ namespace robomaster {
         void push(Message&& msg);
 
         /**
-         * @brief Pop and return the message of the queue. If the queue is empty a empty message is returned.
+         * @brief Pop and return the message of the queue. If the queue is empty an empty message is returned.
          *
          * @return RoboMaster message.
          */

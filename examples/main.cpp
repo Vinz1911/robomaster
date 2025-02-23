@@ -15,8 +15,7 @@
  */
 void state_data(const robomaster::RoboMaster& robomaster) {
     while (robomaster.is_running()) {
-        const auto state = robomaster.get_state();
-        if (state.is_active) {
+        if (const auto state = robomaster.get_state(); state.is_active) {
             std::printf("Battery: %u\n", state.battery.percent);
             std::printf("Pitch: %i, Yaw: %i\n", state.gimbal.pitch, state.gimbal.yaw);
         }
