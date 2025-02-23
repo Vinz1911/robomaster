@@ -42,24 +42,6 @@ namespace robomaster {
      */
     uint16_t calculate_crc16(const uint8_t *data, size_t length);
 
-
-    /**
-     * @brief Give the given uint8 data array in hex as string back.
-     *
-     * @param data Input data.
-     * @param length Length of the data.
-     * @return std::string Data as string visualization.
-     */
-    std::string string_to_hex(const uint8_t * data, size_t length);
-
-    /**
-     * @brief
-     *
-     * @param data
-     * @return std::string
-     */
-    std::string string_to_hex(const std::vector<uint8_t>& data);
-
     /**
      * @brief Put the two bytes from little endian in the right host platform order.
      *
@@ -67,5 +49,5 @@ namespace robomaster {
      * @param msb Most significant bit.
      * @return uint16_t The uint16_t value.
      */
-    uint16_t little_endian_to_uint16(uint8_t lsb, uint8_t msb);
+    uint16_t get_little_endian(uint8_t lsb, uint8_t msb);
 } // namespace robomaster

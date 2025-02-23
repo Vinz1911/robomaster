@@ -15,8 +15,8 @@
 namespace robomaster {
     Message::Message(const uint32_t device_id, const std::vector<uint8_t>& msg_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
         if (msg_data.size() <= 10) { return; }
-        this->type_ = little_endian_to_uint16(msg_data[4], msg_data[5]);
-        this->sequence_ = little_endian_to_uint16(msg_data[6], msg_data[7]);
+        this->type_ = get_little_endian(msg_data[4], msg_data[5]);
+        this->sequence_ = get_little_endian(msg_data[6], msg_data[7]);
         this->payload_.clear();
         this->payload_.insert(std::begin(this->payload_), std::cbegin(msg_data) + 8, std::cend(msg_data) - 2);
         this->is_valid_ = true;

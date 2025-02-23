@@ -105,7 +105,7 @@ namespace robomaster {
                     if(buffer.size() < 4) { break; } if(buffer[3] == calculate_crc8(buffer.data(), 3)) { length = buffer[1]; break; } ++iterator;
                 }
             } else if (length <= buffer.size()) {
-                if (const uint16_t crc16 = little_endian_to_uint16(buffer[length - 2], buffer[length - 1]); crc16 == calculate_crc16(buffer.data(), length - 2)) {
+                if (calculate_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
                     auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))); if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
