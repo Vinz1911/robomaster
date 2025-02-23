@@ -30,7 +30,7 @@ namespace robomaster {
         const auto max_time = std::max(seconds, 0.0);
         const auto seconds_t = static_cast<long>(std::floor(max_time)), microseconds_t = static_cast<long>((max_time - std::floor(max_time)) * 1e6);
 
-        timeval time{}; time.tv_sec = seconds_t; time.tv_usec = microseconds_t;
+        timeval time = {}; time.tv_sec = seconds_t; time.tv_usec = microseconds_t;
         setsockopt(this->socket_, SOL_SOCKET, SO_RCVTIMEO, &time, sizeof(time));
     }
 
