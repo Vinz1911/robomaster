@@ -1,9 +1,25 @@
 /*
+ * MIT License
+ *
  * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
  *
- * This project contains contributions from multiple authors.
- * The original code is licensed under the MIT License by Fraunhofer IML.
- * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #pragma once
@@ -62,8 +78,7 @@ namespace robomaster {
          * @brief Init the RoboMaster can socket to communicate with the motion controller.
          *
          * @param interface can interface name.
-         * @return true, on success.
-         * @return false, if initialization failed.
+         * @return true, on success, false, if initialization failed.
          */
         bool init(const std::string& interface="can0");
 
@@ -83,6 +98,7 @@ namespace robomaster {
 
         /**
          * @brief Set the work mode of the RoboMaster Chassis.
+         *
          * @param mode the chassis work mode.
          */
         void set_chassis_mode(ChassisMode mode);
@@ -117,12 +133,14 @@ namespace robomaster {
 
         /**
          * @brief Set the work mode of the RoboMaster Gimbal.
+         *
          * @param mode the gimbal's work mode.
          */
         void set_gimbal_mode(GimbalMode mode);
 
         /**
          * @brief Set the hibernate state of the RoboMaster Gimbal.
+         *
          * @param hibernate the gimbal's hibernate state (suspend or resume).
          */
         void set_gimbal_hibernate(GimbalHibernate hibernate);

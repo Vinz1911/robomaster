@@ -1,9 +1,25 @@
 /*
+ * MIT License
+ *
  * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
  *
- * This project contains contributions from multiple authors.
- * The original code is licensed under the MIT License by Fraunhofer IML.
- * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include <map>
@@ -19,15 +35,10 @@ namespace robomaster {
 
     Handler::Handler(): flag_initialised_(false), flag_stop_(false) { }
 
-    void Handler::join_all() {
-        if (this->thread_receiver_.joinable()) { this->thread_receiver_.join(); }
-        if (this->thread_sender_.joinable()) { this->thread_sender_.join(); }
-    }
-
     Handler::~Handler() {
         if (!this->flag_initialised_) { return; }
         this->flag_stop_.store(true, STD_MEMORY_ORDER);
-        this->cv_sender_.notify_all();
+        this->condition_sender_.notify_all();
         this->join_all();
     }
 
@@ -42,13 +53,18 @@ namespace robomaster {
         return true;
     }
 
+    void Handler::join_all() {
+        if (this->thread_receiver_.joinable()) { this->thread_receiver_.join(); }
+        if (this->thread_sender_.joinable()) { this->thread_sender_.join(); }
+    }
+
     bool Handler::is_running() const {
         return this->flag_initialised_ && !this->flag_stop_.load(STD_MEMORY_ORDER);
     }
 
     void Handler::push_message(const Message& msg) {
         this->queue_sender_.push(msg);
-        this->cv_sender_.notify_one();
+        this->condition_sender_.notify_one();
     }
 
     void Handler::set_callback(std::function<void(const Message&)> func) {
@@ -70,7 +86,7 @@ namespace robomaster {
         static const std::unordered_map<uint16_t, std::pair<uint16_t, std::vector<uint8_t>>> device_ids = { { DEVICE_ID_MOTION_CONTROLLER, { 0x0903, { 0x20, 0x48, 0x08, 0x00 } } }, { DEVICE_ID_GIMBAL, { 0x0904, { 0x00, 0x3f, 0x76 } } } };
 
         const auto ids = device_ids.find(device_id); if (ids == device_ids.end() || msg_type != ids->second.first) { return; }
-        const auto& expected_sequence = ids->second.second; if (payload.size() < expected_sequence.size() || !std::equal(expected_sequence.begin(), expected_sequence.end(), payload.begin())) { return; }
+        const auto& sequence = ids->second.second; if (payload.size() < sequence.size() || !std::equal(sequence.begin(), sequence.end(), payload.begin())) { return; }
         if (this->state_callback_) { this->state_callback_(msg); }
     }
 
@@ -83,7 +99,7 @@ namespace robomaster {
                 if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
-            } else { std::unique_lock lock(this->cv_sender_mutex_); this->cv_sender_.wait_until(lock, heartbeat_time_point); }
+            } else { std::unique_lock lock(this->condition_sender_mutex_); this->condition_sender_.wait_until(lock, heartbeat_time_point); }
         }
         if (error_counter != 0) { this->flag_stop_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
     }
@@ -106,7 +122,8 @@ namespace robomaster {
                 }
             } else if (length <= buffer.size()) {
                 if (calculate_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
-                    auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))); if (msg.is_valid()) { this->receive_message(msg); }
+                    auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)));
+                    if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }
         }

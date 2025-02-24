@@ -1,9 +1,25 @@
 /*
+ * MIT License
+ *
  * Copyright (c) 2023 Fraunhofer IML, 2024 Vinzenz Weist
  *
- * This project contains contributions from multiple authors.
- * The original code is licensed under the MIT License by Fraunhofer IML.
- * All modifications and additional code are licensed under the MIT License by Vinzenz Weist.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include <cassert>
@@ -39,6 +55,7 @@ namespace robomaster {
     uint16_t Message::get_sequence() const {
         return this->sequence_;
     }
+
     uint16_t Message::get_type() const {
         return this->type_;
     }
@@ -156,6 +173,7 @@ namespace robomaster {
     std::vector<uint8_t> Message::to_vector() const {
         std::vector<uint8_t> vector;
         if (!this->is_valid_) { return vector; }
+
         vector.resize(10 + this->payload_.size());
         vector[0] = 0x55;
         vector[1] = static_cast<uint8_t>(vector.size());
@@ -170,6 +188,7 @@ namespace robomaster {
         const uint16_t crc16 = calculate_crc16(vector.data(), vector.size() - 2);
 
         vector[vector.size() - 2] = static_cast<uint8_t>(crc16);
-        vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8); return vector;
+        vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8);
+        return vector;
     }
 } // namespace robomaster
