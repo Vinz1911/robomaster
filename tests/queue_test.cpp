@@ -58,7 +58,7 @@ namespace robomaster {
     TEST(QueueTest, Overflow) {
         Queue queue;
 
-        for (size_t i = 0; i < queue.max_queue_size() + 1; i++) { queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, i, std::vector{static_cast<uint8_t>(i)})); }
+        for (size_t i = 0; i < queue.max_size() + 1; i++) { queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, i, std::vector{static_cast<uint8_t>(i)})); }
 
         Message m = queue.pop();
 
@@ -66,12 +66,12 @@ namespace robomaster {
         ASSERT_EQ(m.get_payload()[0], 1);
         ASSERT_TRUE(m.is_valid());
 
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, queue.max_queue_size() + 1, std::vector{static_cast<uint8_t>(queue.max_queue_size() + 1)}));
+        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, queue.max_size() + 1, std::vector{static_cast<uint8_t>(queue.max_size() + 1)}));
 
         while (!queue.empty()) { m = queue.pop(); }
 
-        ASSERT_EQ(m.get_sequence(), queue.max_queue_size() + 1);
-        ASSERT_EQ(m.get_payload()[0], queue.max_queue_size() + 1);
+        ASSERT_EQ(m.get_sequence(), queue.max_size() + 1);
+        ASSERT_EQ(m.get_payload()[0], queue.max_size() + 1);
         ASSERT_TRUE(m.is_valid());   
     }
 

@@ -57,16 +57,9 @@ namespace robomaster {
         /**
          * @brief Push a Message into the queue. If the maximal queue size is reached the front message will be pop.
          *
-         * @param msg A RoboMaster message.
+         * @param message A RoboMaster message.
          */
-        void push(const Message& msg);
-
-        /**
-         * @brief Push a Message into the queue. If the maximal queue size is reached the front message will be pop.
-         *
-         * @param msg A RoboMaster message.
-         */
-        void push(Message&& msg);
+        void push(const Message& message);
 
         /**
          * @brief Pop and return the message of the queue. If the queue is empty an empty message is returned.
@@ -87,7 +80,7 @@ namespace robomaster {
          *
          * @return size_t as maximal queue size.
          */
-        static size_t max_queue_size() ;
+        static size_t max_size() ;
 
         /**
          * @brief True when the queue is empty.

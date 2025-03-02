@@ -62,9 +62,9 @@ namespace robomaster {
          * @brief Construct a new Message object from the given raw data.
          *
          * @param device_id The can device id.
-         * @param msg_data The raw data for example can bus to parse into a RoboMaster message.
+         * @param message_data The raw data for example can bus to parse into a RoboMaster message.
          */
-        Message(uint32_t device_id, const std::vector<uint8_t>& msg_data);
+        Message(uint32_t device_id, const std::vector<uint8_t>& message_data);
 
         /**
          * @brief Construct a new Message object.

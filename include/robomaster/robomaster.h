@@ -58,10 +58,10 @@ namespace robomaster {
         /**
          * @brief Decode the RoboMasterMotionState message
          *
-         * @param msg The RoboMasterMotionState message.
+         * @param message The RoboMasterMotionState message.
          * @return the current data state
          */
-        static RoboMasterState decode_state(const Message& msg);
+        static RoboMasterState decode_state(const Message& message);
 
     public:
         /**
@@ -182,7 +182,7 @@ namespace robomaster {
         /**
          * @brief Fire the blaster of the RoboMaster.
          *
-         * @param mode set the `BlasterMode`.
+         * @param mode set the BlasterMode.
          * @param count set the count (1-8).
          */
         void set_blaster(BlasterMode mode, uint8_t count = 1);
@@ -190,8 +190,8 @@ namespace robomaster {
         /**
          * @brief @brief Set the LED with a breath effect with given mask and timer.
          *
-         * @param mode the `LEDMode` (STATIC, BREATHE, FLASH).
-         * @param mask the `LEDMask` for selecting the LED. LED_MASK_ALL for all Leds or select specific led with LED_MASK_FRONT | LED_MASK_BACK etc.
+         * @param mode the LEDMode (STATIC, BREATHE, FLASH).
+         * @param mask the LEDMask for selecting the LED. LED_MASK_ALL for all Leds or select specific led with LED_MASK_FRONT | LED_MASK_BACK etc.
          * @param red colour between 0-255.
          * @param green colour between 0-255.
          * @param blue colour between 0-255.

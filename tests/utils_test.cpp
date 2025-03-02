@@ -23,7 +23,6 @@
  */
 
 #include <cstdint>
-#include <string>
 
 #include "robomaster/utils.h"
 #include "robomaster/message.h"

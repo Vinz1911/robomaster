@@ -23,47 +23,32 @@
  */
 
 #pragma once
-#include <vector>
 
 namespace robomaster {
     /**
-     * @brief Clip the value in the given range from min to max.
+     * @brief Calculated the CRC8 for the given data.
      *
-     * @tparam T Template for the specific data type.
-     * @param value Value to clip.
-     * @param min Min value.
-     * @param max Max value.
-     * @return T Clipped value.
+     * @param data Data for the CRC8 calculation.
+     * @param length Length of the data.
+     * @return uint8_t CRC8 value.
      */
-    template <typename T>
-    T clip(T value, T min, T max) {
-        return std::min(std::max(min, value), max);
-    }
+    uint8_t calculate_crc8(const uint8_t* data, size_t length);
 
     /**
-     * @brief Calculated the crc8 for the given data.
+     * @brief Calculated the CRC16 for the given data.
      *
-     * @param data Data for the crc8 calculation.
+     * @param data Data for the CRC16 calculation.
      * @param length Length of the data.
-     * @return uint8_t Crc8 value.
+     * @return uint8_t CRC16 value.
      */
-    uint8_t calculate_crc8(const uint8_t *data, size_t length);
-
-    /**
-     * @brief Calculated the crc16 for the given data.
-     *
-     * @param data Data for the crc8 calculation.
-     * @param length Length of the data.
-     * @return uint8_t Crc16 value.
-     */
-    uint16_t calculate_crc16(const uint8_t *data, size_t length);
+    uint16_t calculate_crc16(const uint8_t* data, size_t length);
 
     /**
      * @brief Put the two bytes from little endian in the right host platform order.
      *
-     * @param lsb Least significant bit.
-     * @param msb Most significant bit.
+     * @param ls_byte Least significant bit.
+     * @param ms_byte Most significant bit.
      * @return uint16_t The uint16_t value.
      */
-    uint16_t get_little_endian(uint8_t lsb, uint8_t msb);
+    uint16_t get_little_endian(uint8_t ls_byte, uint8_t ms_byte);
 } // namespace robomaster

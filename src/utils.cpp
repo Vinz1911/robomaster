@@ -93,7 +93,7 @@ namespace robomaster {
         return crc;
     }
 
-    uint16_t get_little_endian(const uint8_t lsb, const uint8_t msb) {
-        return static_cast<uint16_t>(msb) << 8 | static_cast<uint16_t>(lsb);
+    uint16_t get_little_endian(const uint8_t ls_byte, const uint8_t ms_byte) {
+        return static_cast<uint16_t>(ms_byte) << 8 | static_cast<uint16_t>(ls_byte);
     }
 } // namespace robomaster

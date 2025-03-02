@@ -41,7 +41,7 @@ namespace robomaster {
         /**
          * @brief CanSocket class for the can bus io.
          */
-        CANBus can_socket_;
+        CANBus can_bus_;
 
         /**
          * @brief Thread for reading on the can socket and put valid messages in the receiver queue.
@@ -74,14 +74,14 @@ namespace robomaster {
         std::function<void(const Message&)> state_callback_;
 
         /**
-         * @brief Flag of the initialisation of the handler class. True when the can socket was successfully initialised.
+         * @brief Status of the initialisation of the handler class. True when the can socket was successfully initialised.
          */
-        bool flag_initialised_;
+        bool is_initialised_;
 
         /**
-         * @brief Flag then the threads are running to prevent multiply starts.
+         * @brief Status if the threads are running to prevent multiply starts.
          */
-        std::atomic<bool> flag_stop_;
+        std::atomic<bool> is_stopped_;
 
         /**
          * @brief Run function of the sender thread.
@@ -101,18 +101,18 @@ namespace robomaster {
         /**
          * @brief Send the message to the can socket.
          *
-         * @param msg The RoboMaster message.
+         * @param message The RoboMaster message.
          * @return true, by success.
          * @return false, by failing to send the message.
          */
-        [[nodiscard]] bool send_message(const Message& msg) const;
+        [[nodiscard]] bool send_message(const Message& message) const;
 
         /**
          * @brief Process the received messages from the message queue and triggers callback functions.
          *
-         * @param msg RoboMaster message.
+         * @param message RoboMaster message.
          */
-        void receive_message(const Message& msg) const;
+        void receive_message(const Message& message) const;
 
     public:
         /**
@@ -129,11 +129,11 @@ namespace robomaster {
         /**
          * @brief Init the can socket and start the threads.
          *
-         * @param can_interface The can interface name.
+         * @param interface The can interface name.
          * @return true, when successful initialised.
          * @return false, by failing the initialisation.
          */
-        bool init(const std::string& can_interface="can0");
+        bool init(const std::string& interface="can0");
 
         /**
          * @brief State if the handler is running or not.
@@ -146,15 +146,15 @@ namespace robomaster {
         /**
          * @brief Push a message to the sender queue to send it over the can bus.
          *
-         * @param msg A RoboMaster message.
+         * @param message A RoboMaster message.
          */
-        void push_message(const Message& msg);
+        void push_message(const Message& message);
 
         /**
          * @brief Bind the given callback for triggering when the message for the RoboMasterState is received.
          *
-         * @param func The callback to trigger.
+         * @param completion The callback to trigger.
          */
-        void set_callback(std::function<void(const Message&)> func);
+        void set_callback(std::function<void(const Message&)> completion);
     };
 } // namespace robomaster

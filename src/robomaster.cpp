@@ -24,7 +24,6 @@
 
 #include "robomaster/robomaster.h"
 #include "robomaster/definitions.h"
-#include "robomaster/utils.h"
 
 namespace robomaster {
     static constexpr auto STD_MEMORY_ORDER = std::memory_order::relaxed;
@@ -54,120 +53,121 @@ namespace robomaster {
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, 0x00, { 0x40, 0x3f, 0x19, 0x00 });
-        msg.set_value_uint8(3, mode);
-        this->handler_.push_message(msg);
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, 0x00, { 0x40, 0x3f, 0x19, 0x00 });
+        message.set_value_uint8(3, mode);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_chassis_rpm(const int16_t front_right, const int16_t front_left, const int16_t rear_left, const int16_t rear_right) {
-        const auto w1 = clip<int16_t>(front_right, -1000, 1000), w2 = clip<int16_t>(front_left, -1000, 1000), w3 = clip<int16_t>(rear_left, -1000, 1000), w4 = clip<int16_t>(rear_right, -1000, 1000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x40, 0x3f, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_int16(3, w1);
-        msg.set_value_int16(5, static_cast<int16_t>(-w2));
-        msg.set_value_int16(7, static_cast<int16_t>(-w3));
-        msg.set_value_int16(9, w4);
-        this->handler_.push_message(msg);
+        const auto front_right_ = std::clamp(front_right, int16_t { -1000 }, int16_t { 1000 }), front_left_ = std::clamp(front_left, int16_t { -1000 }, int16_t { 1000 });
+        const auto rear_left_ = std::clamp(rear_left, int16_t { -1000 }, int16_t { 1000 }), rear_right_ = std::clamp(rear_right, int16_t { -1000 }, int16_t { 1000 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x40, 0x3f, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_int16(3, front_right_);
+        message.set_value_int16(5, static_cast<int16_t>(-front_left_));
+        message.set_value_int16(7, static_cast<int16_t>(-rear_left_));
+        message.set_value_int16(9, rear_right_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_chassis_velocity(const float linear_x, const float linear_y, const float angular_z) {
-        const auto linear_x_ = clip<float>(linear_x, -3.5f, 3.5f), linear_y_ = clip<float>(linear_y, -3.5f, 3.5f), angular_z_ = clip<float>(angular_z, -600.0f, 600.0f);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x00, 0x3f, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_float(3, linear_x_);
-        msg.set_value_float(7, linear_y_);
-        msg.set_value_float(11, angular_z_);
-        this->handler_.push_message(msg);
+        const auto linear_x_ = std::clamp(linear_x, -3.5f, 3.5f), linear_y_ = std::clamp(linear_y, -3.5f, 3.5f), angular_z_ = std::clamp(angular_z, -600.0f, 600.0f);
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x00, 0x3f, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_float(3, linear_x_);
+        message.set_value_float(7, linear_y_);
+        message.set_value_float(11, angular_z_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_chassis_position(const int16_t linear_x, const int16_t linear_y, const int16_t angular_z) {
-        const auto linear_x_ = clip<int16_t>(linear_x, -500, 500), linear_y_ = clip<int16_t>(linear_y, -500, 500), angular_z_ = clip<int16_t>(angular_z, -18000, 18000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x00, 0x3f, 0x25, 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00 });
-        msg.set_value_int16(7, linear_x_);
-        msg.set_value_int16(9, linear_y_);
-        msg.set_value_int16(11, angular_z_);
-        msg.set_value_int16(14, 0x12c);
-        this->handler_.push_message(msg);
+        const auto linear_x_ = std::clamp(linear_x, int16_t { -500 }, int16_t { 500 }), linear_y_ = std::clamp(linear_y, int16_t { -500 }, int16_t { 500 }), angular_z_ = std::clamp(angular_z, int16_t { -18000 }, int16_t { 18000 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0xc3c9, this->counter_++, { 0x00, 0x3f, 0x25, 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00 });
+        message.set_value_int16(7, linear_x_);
+        message.set_value_int16(9, linear_y_);
+        message.set_value_int16(11, angular_z_);
+        message.set_value_int16(14, 0x12c);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_mode(const GimbalMode mode) {
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x40, 0x04, 0x4c, 0x00 });
-        msg.set_value_uint8(3, mode);
-        this->handler_.push_message(msg);
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x40, 0x04, 0x4c, 0x00 });
+        message.set_value_uint8(3, mode);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_hibernate(const GimbalHibernate hibernate) {
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x20, 0x04, 0x0d, 0x00, 0x00 });
-        msg.set_value_uint16(3, hibernate);
-        this->handler_.push_message(msg);
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, 0x00, { 0x20, 0x04, 0x0d, 0x00, 0x00 });
+        message.set_value_uint16(3, hibernate);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_degree(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = clip<int16_t>(pitch, -1000, 1000), yaw_ = clip<int16_t>(yaw, -1000, 1000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x04, 0x69, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_int16(5, pitch_);
-        msg.set_value_int16(7, yaw_);
-        this->handler_.push_message(msg);
+        const auto pitch_ = std::clamp(pitch, int16_t { -1000 }, int16_t { 1000 }), yaw_ = std::clamp(yaw, int16_t { -1000 }, int16_t { 1000 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x04, 0x69, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_int16(5, pitch_);
+        message.set_value_int16(7, yaw_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_velocity(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = clip<int16_t>(pitch, -1000, 1000), yaw_ = clip<int16_t>(yaw, -1000, 1000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x04, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xcd });
-        msg.set_value_int16(3, yaw_);
-        msg.set_value_int16(7, pitch_);
-        this->handler_.push_message(msg);
+        const auto pitch_ = std::clamp(pitch, int16_t { -1000 }, int16_t { 1000 }), yaw_ = std::clamp(yaw, int16_t { -1000 }, int16_t { 1000 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x04, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xcd });
+        message.set_value_int16(3, yaw_);
+        message.set_value_int16(7, pitch_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_position(const int16_t pitch, const int16_t yaw, const uint16_t pitch_acceleration, const uint16_t yaw_acceleration) {
-        const auto pitch_ = clip<int16_t>(pitch, -500, 500), yaw_ = clip<int16_t>(yaw, -2500, 2500);
-        const auto pitch_acceleration_ = clip<uint16_t>(pitch_acceleration, 10, 500), yaw_acceleration_ = clip<uint16_t>(yaw_acceleration, 10, 500);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x3f, 0xb0, 0x03, 0x08, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_int16(6, yaw_);
-        msg.set_value_int16(10, pitch_);
-        msg.set_value_uint16(14, yaw_acceleration_);
-        msg.set_value_uint16(18, pitch_acceleration_);
-        this->handler_.push_message(msg);
+        const auto pitch_ = std::clamp(pitch, int16_t { -500 }, int16_t { 500 }), yaw_ = std::clamp(yaw, int16_t { -2500 }, int16_t { 2500 });
+        const auto pitch_acceleration_ = std::clamp(pitch_acceleration, uint16_t { 10 }, uint16_t { 500 }), yaw_acceleration_ = std::clamp(yaw_acceleration, uint16_t { 10 }, uint16_t { 500 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x3f, 0xb0, 0x03, 0x08, 0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_int16(6, yaw_);
+        message.set_value_int16(10, pitch_);
+        message.set_value_uint16(14, yaw_acceleration_);
+        message.set_value_uint16(18, pitch_acceleration_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_recenter(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = clip<int16_t>(pitch, 10, 500), yaw_ = clip<int16_t>(yaw, 10, 500);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x3f, 0xb2, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_int16(6, yaw_);
-        msg.set_value_int16(10, pitch_);
-        this->handler_.push_message(msg);
+        const auto pitch_ = std::clamp(pitch, int16_t { 10 }, int16_t { 500 }), yaw_ = std::clamp(yaw, int16_t { 10 }, int16_t { 500 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x04c9, this->counter_++, { 0x00, 0x3f, 0xb2, 0x01, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_int16(6, yaw_);
+        message.set_value_int16(10, pitch_);
+        this->handler_.push_message(message);
     }
 
     void RoboMaster::set_blaster(const BlasterMode mode, const uint8_t count) {
-        const auto count_ = clip<uint8_t>(count, 1, 8); auto msg = std::vector<Message>();
-        msg.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->counter_++, { 0x00, 0x3f, 0x51, 0x00 }));
-        msg.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->counter_++, { 0x00, 0x3f, 0x55, 0x73, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00 }));
-        msg[0].set_value_uint8(3, static_cast<uint8_t>((mode << 4 & 0xf0) + (count_ & 0x0f)));
-        msg[1].set_value_uint16(8, static_cast<uint16_t>(count_ * 100));
-        msg[1].set_value_uint16(10, static_cast<uint16_t>(count_ * 100));
-        for (const auto& msg_ : msg) { this->handler_.push_message(msg_); }
+        const auto count_ = std::clamp(count, uint8_t { 1 }, uint8_t { 8 }); auto message = std::vector<Message>();
+        message.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->counter_++, { 0x00, 0x3f, 0x51, 0x00 }));
+        message.push_back(Message(DEVICE_ID_INTELLI_CONTROLLER, 0x17c9, this->counter_++, { 0x00, 0x3f, 0x55, 0x73, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00 }));
+        message[0].set_value_uint8(3, static_cast<uint8_t>((mode << 4 & 0xf0) + (count_ & 0x0f)));
+        message[1].set_value_uint16(8, static_cast<uint16_t>(count_ * 100));
+        message[1].set_value_uint16(10, static_cast<uint16_t>(count_ * 100));
+        for (const auto& msg_ : message) { this->handler_.push_message(msg_); }
     }
 
     void RoboMaster::set_led(const LEDMode mode, const LEDMask mask, const uint8_t red, const uint8_t green, const uint8_t blue, const uint16_t up_time, const uint16_t down_time) {
-        const auto up_time_ = clip<uint16_t>(up_time, 0, 60000), down_time_ = clip<uint16_t>(down_time, 0, 60000);
-        auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->counter_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-        msg.set_value_uint8(3, mode);
-        msg.set_value_uint8(6, red);
-        msg.set_value_uint8(7, green);
-        msg.set_value_uint8(8, blue);
-        msg.set_value_uint16(10, mode == LED_MODE_STATIC ? 0x00 : up_time_);
-        msg.set_value_uint16(12, mode == LED_MODE_STATIC ? 0x00 : down_time_);
-        msg.set_value_uint16(14, mask);
-        this->handler_.push_message(msg);
+        const auto up_time_ = std::clamp(up_time, uint16_t { 0 }, uint16_t { 60000 }), down_time_ = std::clamp(down_time, uint16_t { 0 }, uint16_t { 60000 });
+        auto message = Message(DEVICE_ID_INTELLI_CONTROLLER, 0x18c9, this->counter_++, { 0x00, 0x3f, 0x32, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        message.set_value_uint8(3, mode);
+        message.set_value_uint8(6, red);
+        message.set_value_uint8(7, green);
+        message.set_value_uint8(8, blue);
+        message.set_value_uint16(10, mode == LED_MODE_STATIC ? 0x00 : up_time_);
+        message.set_value_uint16(12, mode == LED_MODE_STATIC ? 0x00 : down_time_);
+        message.set_value_uint16(14, mask);
+        this->handler_.push_message(message);
     }
 
-    RoboMasterState RoboMaster::decode_state(const Message& msg) {
+    RoboMasterState RoboMaster::decode_state(const Message& message) {
         static auto data = RoboMasterState();
-        if (msg.get_device_id() == DEVICE_ID_GIMBAL) { data.gimbal = decode_data_gimbal(5, msg); }
-        if (msg.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) {
-            data.velocity = decode_data_velocity(27, msg);
-            data.battery = decode_data_battery(51, msg);
-            data.esc = decode_data_esc(61, msg);
-            data.imu = decode_data_imu(97, msg);
-            data.attitude = decode_data_attitude(121, msg);
-            data.position = decode_data_position(133, msg);
+        if (message.get_device_id() == DEVICE_ID_GIMBAL) { data.gimbal = decode_data_gimbal(5, message); }
+        if (message.get_device_id() == DEVICE_ID_MOTION_CONTROLLER) {
+            data.velocity = decode_data_velocity(27, message);
+            data.battery = decode_data_battery(51, message);
+            data.esc = decode_data_esc(61, message);
+            data.imu = decode_data_imu(97, message);
+            data.attitude = decode_data_attitude(121, message);
+            data.position = decode_data_position(133, message);
         }
         data.is_active = true; return data;
     }

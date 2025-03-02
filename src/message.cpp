@@ -29,12 +29,12 @@
 #include "robomaster/utils.h"
 
 namespace robomaster {
-    Message::Message(const uint32_t device_id, const std::vector<uint8_t>& msg_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
-        if (msg_data.size() <= 10) { return; }
-        this->type_ = get_little_endian(msg_data[4], msg_data[5]);
-        this->sequence_ = get_little_endian(msg_data[6], msg_data[7]);
+    Message::Message(const uint32_t device_id, const std::vector<uint8_t>& message_data): is_valid_(false), device_id_(device_id), sequence_(), type_() {
+        if (message_data.size() <= 10) { return; }
+        this->type_ = get_little_endian(message_data[4], message_data[5]);
+        this->sequence_ = get_little_endian(message_data[6], message_data[7]);
         this->payload_.clear();
-        this->payload_.insert(std::begin(this->payload_), std::cbegin(msg_data) + 8, std::cend(msg_data) - 2);
+        this->payload_.insert(std::begin(this->payload_), std::cbegin(message_data) + 8, std::cend(message_data) - 2);
         this->is_valid_ = true;
     }
 
