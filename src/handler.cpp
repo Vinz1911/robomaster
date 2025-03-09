@@ -113,7 +113,7 @@ namespace robomaster {
         struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0; };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
         std::map<uint32_t, CANMessage> can_message {
-            { DEVICE_ID_INTELLI_CONTROLLER, CANMessage() }, { DEVICE_ID_GIMBAL, CANMessage() },
+            { DEVICE_ID_MOTION_CONTROLLER, CANMessage() }, { DEVICE_ID_GIMBAL, CANMessage() },
             { DEVICE_ID_HIT_DETECTOR_1, CANMessage() }, { DEVICE_ID_HIT_DETECTOR_2, CANMessage() },
             { DEVICE_ID_HIT_DETECTOR_3, CANMessage() }, { DEVICE_ID_HIT_DETECTOR_4, CANMessage() }
         };
