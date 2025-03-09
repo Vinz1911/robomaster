@@ -24,7 +24,7 @@
 
 #include "robomaster/robomaster.h"
 #include "robomaster/definitions.h"
-#include  "robomaster/payload.h"
+#include "robomaster/payload.h"
 
 namespace robomaster {
     static constexpr auto STD_MEMORY_ORDER = std::memory_order::relaxed;
