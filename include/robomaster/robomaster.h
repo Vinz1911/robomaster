@@ -185,7 +185,7 @@ namespace robomaster {
          * @param mode set the BlasterMode.
          * @param count set the count (1-8).
          */
-        void set_blaster(BlasterMode mode, uint8_t count = 1);
+        void set_blaster_mode(BlasterMode mode, uint8_t count = 1);
 
         /**
          * @brief @brief Set the LED with a breath effect with given mask and timer.
@@ -198,6 +198,6 @@ namespace robomaster {
          * @param up_time The rising time of the LED in seconds.
          * @param down_time The falling time of the LED in seconds.
          */
-        void set_led(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, uint16_t up_time = 1000, uint16_t down_time = 1000);
+        void set_led_mode(LEDMode mode, LEDMask mask, uint8_t red, uint8_t green, uint8_t blue, uint16_t up_time = 1000, uint16_t down_time = 1000);
     };
 } // namespace robomaster

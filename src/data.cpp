@@ -32,6 +32,13 @@ namespace robomaster {
         return data;
     }
 
+    StateDetector decode_data_detector(const size_t index, const Message& message) {
+        StateDetector data; if (index + 4 > message.get_payload().size()) { return data; }
+        data.intensity = message.get_value_uint16(index);
+        data.hit_time = std::chrono::high_resolution_clock::now();
+        return data;
+    }
+
     StateESC decode_data_esc(const size_t index, const Message& message) {
         StateESC data; if (index + 36 > message.get_payload().size()) { return data; }
         data.speed[0] = message.get_value_int16(index);
@@ -100,9 +107,9 @@ namespace robomaster {
 
     StatePosition decode_data_position(const size_t index, const Message& message) {
         StatePosition data; if (index + 12 > message.get_payload().size()) { return data; }
-        data.x = message.get_value_float(index);
-        data.y = message.get_value_float(index + 4);
-        data.z = message.get_value_float(index + 8);
+        data.pos_x = message.get_value_float(index);
+        data.pos_y = message.get_value_float(index + 4);
+        data.pos_z = message.get_value_float(index + 8);
         return data;
     }
 } // namespace robomaster

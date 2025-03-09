@@ -93,4 +93,14 @@ namespace robomaster {
         DEVICE_ID_HIT_DETECTOR_3 = 0x213,
         DEVICE_ID_HIT_DETECTOR_4 = 0x214
     };
+
+    /**
+     * @brief Enum contains the Message Type's
+     */
+    enum MessageType {
+        MESSAGE_TYPE_CHASSIS = 0xc3c9,
+        MESSAGE_TYPE_GIMBAL = 0x04c9,
+        MESSAGE_TYPE_BLASTER = 0x17c9,
+        MESSAGE_TYPE_LED = 0x18c9,
+    };
 } // namespace robomaster

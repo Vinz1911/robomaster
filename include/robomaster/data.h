@@ -24,6 +24,7 @@
 
 #pragma once
 #include <array>
+#include <chrono>
 
 #include "message.h"
 
@@ -41,6 +42,21 @@ namespace robomaster {
          * @brief Yaw in degree.
          */
         int16_t yaw = 0;
+    };
+
+    /**
+     * @brief Struct for the data of the Hit detector's from the RoboMaster.
+     */
+    struct StateDetector {
+        /**
+         * @brief The timestamp of the hit.
+         */
+        std::chrono::system_clock::time_point hit_time;
+
+        /**
+         * @brief The Intensity of the detected Hit.
+         */
+        uint16_t intensity = 0;
     };
 
     /**
@@ -195,17 +211,17 @@ namespace robomaster {
         /**
          * @brief X position on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
-        float x = 0.0f;
+        float pos_x = 0.0f;
 
         /**
          * @brief Y position on the x-axis in the global coordinate system where the RoboMaster is turned on.
          */
-        float y = 0.0f;
+        float pos_y = 0.0f;
 
         /**
          * @brief Rotation angle in the global coordinate system where the RoboMaster is turned on.
          */
-        float z = 0.0f;
+        float pos_z = 0.0f;
     };
 
     /**
@@ -216,6 +232,11 @@ namespace robomaster {
          * @brief check if data is applied.
          */
         bool is_active = false;
+
+        /**
+         * @brief Hit detector data.
+         */
+        StateDetector detector[4];
 
         /**
          * @brief Gimbal data.
@@ -252,6 +273,15 @@ namespace robomaster {
          */
         StateAttitude attitude;
     };
+
+    /**
+     * @brief Decode the message payload at the given index for hit detector data.
+     *
+     * @param index Index for the payload.
+     * @param message Message from the hit detector.
+     * @return struct StateHitDetector. by successful decoding.
+     */
+    StateDetector decode_data_detector(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for gimbal data.

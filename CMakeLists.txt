@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Source files
-set(SRC_LIST src/can.cpp src/handler.cpp src/utils.cpp src/queue.cpp src/robomaster.cpp src/data.cpp src/message.cpp)
+set(SRC_LIST src/can.cpp src/handler.cpp src/utils.cpp src/queue.cpp src/robomaster.cpp src/data.cpp src/message.cpp src/payload.cpp)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Build shared library and demo

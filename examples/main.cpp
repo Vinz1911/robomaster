@@ -10,7 +10,7 @@
 #include <robomaster/robomaster.h>
 #include <robomaster/definitions.h>
 
-/**
+/*
  * Example for the usage of the robomaster library.
  */
 void state_data(const robomaster::RoboMaster& robomaster) {
@@ -41,7 +41,7 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
     // Breath animation and recenter gimbal.
-    robomaster.set_led(LED_MODE_BREATHE, LED_MASK_ALL, 128, 0, 255, 500, 500);
+    robomaster.set_led_mode(LED_MODE_BREATHE, LED_MASK_ALL, 128, 0, 255, 500, 500);
     robomaster.set_gimbal_recenter(150, 150);
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
@@ -50,14 +50,14 @@ int main() {
 
     // Let the robomaster drive forward with increasing wheel speed and increase set led brightness.
     for (size_t i = 0; i < 50; i++) {
-        robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
+        robomaster.set_led_mode(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     // Slow the robomaster and decrease the LED light.
     for (size_t i = 50; i --> 0;) {
-        robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
+        robomaster.set_led_mode(LED_MODE_STATIC, LED_MASK_ALL, i * 2, i * 2, i * 2);
         robomaster.set_chassis_rpm(static_cast<int16_t>(i * 2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * -2), static_cast<int16_t>(i * 2));
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
@@ -70,10 +70,10 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     // Turn the LED back to static.
-    robomaster.set_led(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
+    robomaster.set_led_mode(LED_MODE_STATIC, LED_MASK_ALL, 128, 0, 255);
 
     // Fire Blaster
-    robomaster.set_blaster(BLASTER_MODE_GEL, 4);
+    robomaster.set_blaster_mode(BLASTER_MODE_GEL, 4);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Recenter the gimbal
