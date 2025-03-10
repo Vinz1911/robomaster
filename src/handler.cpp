@@ -34,7 +34,7 @@ namespace robomaster {
     static constexpr auto STD_HEARTBEAT_TIME = std::chrono::milliseconds(10);
     static constexpr auto STD_MEMORY_ORDER = std::memory_order::relaxed;
 
-    Handler::Handler(): is_initialised_(false), is_stopped_(false) { }
+    Handler::Handler(): is_initialised_{false}, is_stopped_{false} { }
 
     Handler::~Handler() {
         if (!this->is_initialised_) { return; }
@@ -49,8 +49,8 @@ namespace robomaster {
 
         this->can_bus_.set_timeout(0.1);
         this->is_initialised_ = true;
-        this->thread_receiver_ = std::thread(&Handler::receiver_thread, this);
-        this->thread_sender_ = std::thread(&Handler::sender_thread, this);
+        this->thread_receiver_ = std::thread{&Handler::receiver_thread, this};
+        this->thread_sender_ = std::thread{&Handler::sender_thread, this};
         return true;
     }
 
@@ -73,7 +73,7 @@ namespace robomaster {
     }
 
     bool Handler::send_message(const Message& message) const {
-        const auto id = message.get_device_id(); const auto data = message.to_vector(); uint8_t frame_data[8] = {};
+        const auto id = message.get_device_id(); const auto data = message.vector(); uint8_t frame_data[8] = {};
 
         for (size_t i = 0; i < data.size(); i += 8) {
             const size_t frame_length = std::min(static_cast<size_t>(8), data.size() - i);
@@ -100,11 +100,11 @@ namespace robomaster {
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
-                const auto msg = Message(DEVICE_ID_INTELLI_CONTROLLER, MESSAGE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEARTBEAT);
+                const auto msg = Message{DEVICE_ID_INTELLI_CONTROLLER, DEVICE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEARTBEAT};
                 if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
-            } else { std::unique_lock lock(this->condition_sender_mutex_); this->condition_sender_.wait_until(lock, heartbeat_time_point); }
+            } else { std::unique_lock lock{this->condition_sender_mutex_}; this->condition_sender_.wait_until(lock, heartbeat_time_point); }
         }
         if (error_counter != 0) { this->is_stopped_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
     }
@@ -113,9 +113,9 @@ namespace robomaster {
         struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0; };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
         std::map<uint32_t, CANMessage> can_message {
-            { DEVICE_ID_MOTION_CONTROLLER, CANMessage() }, { DEVICE_ID_GIMBAL, CANMessage() },
-            { DEVICE_ID_HIT_DETECTOR_1, CANMessage() }, { DEVICE_ID_HIT_DETECTOR_2, CANMessage() },
-            { DEVICE_ID_HIT_DETECTOR_3, CANMessage() }, { DEVICE_ID_HIT_DETECTOR_4, CANMessage() }
+            { DEVICE_ID_MOTION_CONTROLLER, CANMessage{} }, { DEVICE_ID_GIMBAL, CANMessage{} },
+            { DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
+            { DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { DEVICE_ID_HIT_DETECTOR_4, CANMessage{} }
         };
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
@@ -131,7 +131,7 @@ namespace robomaster {
                 }
             } else if (length <= buffer.size()) {
                 if (calculate_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
-                    auto const msg = Message(frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)));
+                    auto const msg = Message{frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))};
                     if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
             }

@@ -34,30 +34,30 @@ namespace robomaster {
     }
 
     void Queue::push(const Message& message) {
-        std::lock_guard lock(this->mutex_);
+        std::lock_guard lock{this->mutex_};
         if (STD_MAX_QUEUE_SIZE <= this->queue_.size()) { this->queue_.pop(); }
         this->queue_.push(message);
     }
 
     Message Queue::pop() {
-        std::lock_guard lock(this->mutex_);
+        std::lock_guard lock{this->mutex_};
         if (this->queue_.empty()) { const auto msg = Message(0, {}); return msg; }
         const Message msg = queue_.front();
         this->queue_.pop(); return msg;
     }
 
     size_t Queue::size() {
-        std::lock_guard lock(this->mutex_);
+        std::lock_guard lock{this->mutex_};
         return this->queue_.size();
     }
 
     bool Queue::empty() {
-        std::lock_guard lock(this->mutex_);
+        std::lock_guard lock{this->mutex_};
         return this->queue_.empty();
     }
 
     void Queue::clear() {
-        std::lock_guard lock(this->mutex_);
+        std::lock_guard lock{this->mutex_};
         while(!this->queue_.empty()) { this->queue_.pop(); }
     }
 } // namespace robomaster

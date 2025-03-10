@@ -29,11 +29,11 @@ namespace robomaster {
     TEST(MessageTest, ValueUint8) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{1,2});
 
-        ASSERT_EQ(msg.get_value_uint8(0), 1);
-        ASSERT_EQ(msg.get_value_uint8(1), 2);
+        ASSERT_EQ(msg.get_uint8(0), 1);
+        ASSERT_EQ(msg.get_uint8(1), 2);
 
-        msg.set_value_uint8(0, 10);
-        msg.set_value_uint8(1, 11);
+        msg.set_uint8(0, 10);
+        msg.set_uint8(1, 11);
 
         ASSERT_EQ(msg.get_payload()[0], 10);
         ASSERT_EQ(msg.get_payload()[1], 11);
@@ -42,11 +42,11 @@ namespace robomaster {
     TEST(MessageTest, ValueUint16) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
 
-        ASSERT_EQ(msg.get_value_uint16(0), 0xADDE);
-        ASSERT_EQ(msg.get_value_uint16(2), 0xEFBE);
+        ASSERT_EQ(msg.get_uint16(0), 0xADDE);
+        ASSERT_EQ(msg.get_uint16(2), 0xEFBE);
 
-        msg.set_value_uint16(0, 0xDEAD);
-        msg.set_value_uint16(2, 0xBEEF);
+        msg.set_uint16(0, 0xDEAD);
+        msg.set_uint16(2, 0xBEEF);
 
         ASSERT_EQ(msg.get_payload()[0], 0xAD);
         ASSERT_EQ(msg.get_payload()[1], 0xDE);
@@ -57,11 +57,11 @@ namespace robomaster {
     TEST(MessageTest, ValueUint32) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
 
-        ASSERT_EQ(msg.get_value_uint32(0), 0xEFBEADDE);
-        ASSERT_EQ(msg.get_value_uint32(4), 0xADFBCADE);
+        ASSERT_EQ(msg.get_uint32(0), 0xEFBEADDE);
+        ASSERT_EQ(msg.get_uint32(4), 0xADFBCADE);
 
-        msg.set_value_uint32(0, 0xDECAFBAD);
-        msg.set_value_uint32(4, 0xDEADBEEF);
+        msg.set_uint32(0, 0xDECAFBAD);
+        msg.set_uint32(4, 0xDEADBEEF);
 
         ASSERT_EQ(msg.get_payload()[0], 0xAD);
         ASSERT_EQ(msg.get_payload()[1], 0xFB);
@@ -77,11 +77,11 @@ namespace robomaster {
     TEST(MessageTest, ValueInt8) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{255,1});
 
-        ASSERT_EQ(msg.get_value_int8(0), -1);
-        ASSERT_EQ(msg.get_value_int8(1), 1);
+        ASSERT_EQ(msg.get_int8(0), -1);
+        ASSERT_EQ(msg.get_int8(1), 1);
 
-        msg.set_value_int8(0, -10);
-        msg.set_value_int8(1,  10);
+        msg.set_int8(0, -10);
+        msg.set_int8(1,  10);
 
         ASSERT_EQ(msg.get_payload()[0], 246);
         ASSERT_EQ(msg.get_payload()[1], 10);
@@ -90,11 +90,11 @@ namespace robomaster {
     TEST(MessageTest, ValueInt16) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF});
 
-        ASSERT_EQ(msg.get_value_int16(0), -21026);
-        ASSERT_EQ(msg.get_value_int16(2), -4162);
+        ASSERT_EQ(msg.get_int16(0), -21026);
+        ASSERT_EQ(msg.get_int16(2), -4162);
 
-        msg.set_value_int16(0, 0xDEAD);
-        msg.set_value_int16(2, 0xBEEF);
+        msg.set_int16(0, 0xDEAD);
+        msg.set_int16(2, 0xBEEF);
 
         ASSERT_EQ(msg.get_payload()[0], 0xAD);
         ASSERT_EQ(msg.get_payload()[1], 0xDE);
@@ -105,11 +105,11 @@ namespace robomaster {
     TEST(MessageTest, ValueInt32) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{0xDE, 0xAD, 0xBE, 0xEF, 0xDE, 0xCA, 0xFB, 0xAD});
 
-        ASSERT_EQ(msg.get_value_int32(0), 0xEFBEADDE);
-        ASSERT_EQ(msg.get_value_int32(4), 0xADFBCADE);
+        ASSERT_EQ(msg.get_int32(0), 0xEFBEADDE);
+        ASSERT_EQ(msg.get_int32(4), 0xADFBCADE);
 
-        msg.set_value_int32(0, 0xDECAFBAD);
-        msg.set_value_int32(4, 0xDEADBEEF);
+        msg.set_int32(0, 0xDECAFBAD);
+        msg.set_int32(4, 0xDEADBEEF);
 
         ASSERT_EQ(msg.get_payload()[0], 0xAD);
         ASSERT_EQ(msg.get_payload()[1], 0xFB);
@@ -124,13 +124,13 @@ namespace robomaster {
     TEST(MessageTest, ValueFloat32) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>{0x00, 0x00, 0x80, 0xBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3F});
 
-        ASSERT_FLOAT_EQ(msg.get_value_float(0), -1.0f);
-        ASSERT_FLOAT_EQ(msg.get_value_float(4),  0.0);
-        ASSERT_FLOAT_EQ(msg.get_value_float(8),  1.0f);
+        ASSERT_FLOAT_EQ(msg.get_float(0), -1.0f);
+        ASSERT_FLOAT_EQ(msg.get_float(4),  0.0);
+        ASSERT_FLOAT_EQ(msg.get_float(8),  1.0f);
 
-        msg.set_value_float(0, 1337.0f); // 0x44a72000
-        msg.set_value_float(4, 3.14f);   // 0x4048f5c3
-        msg.set_value_float(8, 0.0f);    // 0x00000000
+        msg.set_float(0, 1337.0f); // 0x44a72000
+        msg.set_float(4, 3.14f);   // 0x4048f5c3
+        msg.set_float(8, 0.0f);    // 0x00000000
 
         ASSERT_EQ(msg.get_payload()[0], 0x00);
         ASSERT_EQ(msg.get_payload()[1], 0x20);

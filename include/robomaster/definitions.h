@@ -53,8 +53,8 @@ namespace robomaster {
      * @brief Enum contains the GimbalHibernate's
      */
     enum GimbalHibernate: uint16_t {
-        GIMBAL_STATE_SUSPEND = 0x2ab5,
-        GIMBAL_STATE_RESUME = 0x7ef2
+        GIMBAL_HIBERNATE_SUSPEND = 0x2ab5,
+        GIMBAL_HIBERNATE_RESUME = 0x7ef2
     };
 
     /**
@@ -95,12 +95,23 @@ namespace robomaster {
     };
 
     /**
-     * @brief Enum contains the Message Type's
+     * @brief Enum contains the Device Type's
      */
-    enum MessageType {
-        MESSAGE_TYPE_CHASSIS = 0xc3c9,
-        MESSAGE_TYPE_GIMBAL = 0x04c9,
-        MESSAGE_TYPE_BLASTER = 0x17c9,
-        MESSAGE_TYPE_LED = 0x18c9,
+    enum DeviceType: uint16_t {
+        DEVICE_TYPE_CHASSIS = 0xc3c9,
+        DEVICE_TYPE_GIMBAL = 0x04c9,
+        DEVICE_TYPE_BLASTER = 0x17c9,
+        DEVICE_TYPE_LED = 0x18c9,
+    };
+
+    /**
+     * @brief Sequence numbers.
+     */
+    enum SequenceID: uint8_t {
+        SEQUENCE_ID_ZERO = 0x00,
+        SEQUENCE_ID_ONE = 0x01,
+        SEQUENCE_ID_TWO = 0x02,
+        SEQUENCE_ID_THREE = 0x03,
+        SEQUENCE_ID_FOUR = 0x04,
     };
 } // namespace robomaster

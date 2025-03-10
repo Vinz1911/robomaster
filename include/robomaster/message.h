@@ -69,22 +69,16 @@ namespace robomaster {
          * @brief Construct a new Message object.
          *
          * @param device_id The can device id.
-         * @param type The type of the message.
+         * @param device_type The device type.
          * @param sequence The current sequence.
          * @param payload The payload for the information.
          */
-        Message(uint32_t device_id, uint16_t type, uint16_t sequence, std::vector<uint8_t> payload=std::vector<uint8_t>());
+        Message(uint32_t device_id, uint16_t device_type, uint16_t sequence, std::vector<uint8_t> payload=std::vector<uint8_t>());
 
         /**
          * @brief Destructor of the Message class.
          */
-
         ~Message() = default;
-
-        /**
-         * @brief Increment the sequence by one.
-         */
-        void increment_sequence();
 
         /**
          * @brief Returns true for a valid message, when message length and crc is correct.
@@ -149,15 +143,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @param value The value to be set.
          */
-        void set_value_uint8(size_t index, uint8_t value);
-
-        /**
-         * @brief Set the int8 value into the payload at given index.
-         *
-         * @param index The index for the payload position.
-         * @param value The value to be set.
-         */
-        void set_value_int8(size_t index, int8_t value);
+        void set_uint8(size_t index, uint8_t value);
 
         /**
          * @brief Set the uint16 value into the payload at given index.
@@ -165,15 +151,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @param value The value to be set.
          */
-        void set_value_uint16(size_t index, uint16_t value);
-
-        /**
-         * @brief Set the int16 value into the payload at given index.
-         *
-         * @param index The index for the payload position.
-         * @param value The value to be set.
-         */
-        void set_value_int16(size_t index, int16_t value);
+        void set_uint16(size_t index, uint16_t value);
 
         /**
          * @brief Set the uint32 value into the payload at given index.
@@ -181,7 +159,23 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @param value The value to be set.
          */
-        void set_value_uint32(size_t index, uint32_t value);
+        void set_uint32(size_t index, uint32_t value);
+
+        /**
+         * @brief Set the int8 value into the payload at given index.
+         *
+         * @param index The index for the payload position.
+         * @param value The value to be set.
+         */
+        void set_int8(size_t index, int8_t value);
+
+        /**
+         * @brief Set the int16 value into the payload at given index.
+         *
+         * @param index The index for the payload position.
+         * @param value The value to be set.
+         */
+        void set_int16(size_t index, int16_t value);
 
         /**
          * @brief Set the int32 value into the payload at given index.
@@ -189,7 +183,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @param value The value to be set.
          */
-        void set_value_int32(size_t index, int32_t value);
+        void set_int32(size_t index, int32_t value);
 
         /**
          * @brief Set the float value into the payload at given index.
@@ -197,7 +191,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @param value The value to be set.
          */
-        void set_value_float(size_t index, float value);
+        void set_float(size_t index, float value);
 
         /**
          * @brief Get the uint8 value form the payload at given index.
@@ -205,15 +199,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint8_t as value.
          */
-        [[nodiscard]] uint8_t get_value_uint8(size_t index) const;
-
-        /**
-         * @brief Get the int8 value form the payload at given index.
-         *
-         * @param index The index for the payload position.
-         * @return int8_t as value.
-         */
-        [[nodiscard]] int8_t get_value_int8(size_t index) const;
+        [[nodiscard]] uint8_t get_uint8(size_t index) const;
 
         /**
          * @brief Get the uint16 value form the payload at given index.
@@ -221,15 +207,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint16_t as value.
          */
-        [[nodiscard]] uint16_t get_value_uint16(size_t index) const;
-
-        /**
-         * @brief Get the int16 value form the payload at given index.
-         *
-         * @param index The index for the payload position.
-         * @return uint16_t as value.
-         */
-        [[nodiscard]] int16_t get_value_int16(size_t index) const;
+        [[nodiscard]] uint16_t get_uint16(size_t index) const;
 
         /**
          * @brief Get the uint32 value form the payload at given index.
@@ -237,7 +215,23 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return uint32_t as value.
          */
-        [[nodiscard]] uint32_t get_value_uint32(size_t index) const;
+        [[nodiscard]] uint32_t get_uint32(size_t index) const;
+
+        /**
+         * @brief Get the int8 value form the payload at given index.
+         *
+         * @param index The index for the payload position.
+         * @return int8_t as value.
+         */
+        [[nodiscard]] int8_t get_int8(size_t index) const;
+
+        /**
+         * @brief Get the int16 value form the payload at given index.
+         *
+         * @param index The index for the payload position.
+         * @return uint16_t as value.
+         */
+        [[nodiscard]] int16_t get_int16(size_t index) const;
 
         /**
          * @brief Get the int32 value form the payload at given index.
@@ -245,7 +239,7 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return int32_t as value.
          */
-        [[nodiscard]] int32_t get_value_int32(size_t index) const;
+        [[nodiscard]] int32_t get_int32(size_t index) const;
 
         /**
          * @brief Get the float value form the payload at given index.
@@ -253,13 +247,13 @@ namespace robomaster {
          * @param index The index for the payload position.
          * @return float as value.
          */
-        [[nodiscard]] float get_value_float(size_t index) const;
+        [[nodiscard]] float get_float(size_t index) const;
 
         /**
          * @brief Create a vector as raw data from the message including header, crc and payload.
          *
          * @return std::vector<uint8_t> as raw data message.
          */
-        [[nodiscard]] std::vector<uint8_t> to_vector() const;
+        [[nodiscard]] std::vector<uint8_t> vector() const;
     };
 } // namespace robomaster

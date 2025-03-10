@@ -77,23 +77,23 @@ namespace robomaster {
         /**
          * @brief Send a can frame over the socket.
          *
-         * @param identifier The device id.
+         * @param device_id The device id.
          * @param data The data of the can frame.
          * @param length The length of the data.
          * @return true, by success.
          * @return false, when failed.
          */
-        bool send_frame(uint32_t identifier, const uint8_t data[8], size_t length) const;
+        bool send_frame(uint32_t device_id, const uint8_t data[8], size_t length) const;
 
         /**
          * @brief Read the next incoming can frame from the can socket. This function is blocking until the timeout is reached.
          *
-         * @param identifier The device id.
+         * @param device_id The device id.
          * @param data The data of the can frame.
          * @param length The length of the data. The length is zero, when the timeout is reached.
          * @return true, by success.
          * @return false  when failed.
          */
-        bool read_frame(uint32_t& identifier, uint8_t data[8], size_t& length) const;
+        bool read_frame(uint32_t& device_id, uint8_t data[8], size_t& length) const;
     };
 } // namespace robomaster

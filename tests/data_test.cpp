@@ -29,8 +29,8 @@ namespace robomaster {
     TEST(StateDataTest, StateGimbalAttitude) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
 
-        msg.set_value_int16(0, 1000);
-        msg.set_value_int16(2, 2000);
+        msg.set_int16(0, 1000);
+        msg.set_int16(2, 2000);
 
         StateGimbalAttitude attitude = decode_data_gimbal(0, msg);
 
@@ -41,25 +41,25 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisESC) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(36, 0));
 
-        msg.set_value_int16(0, 0);
-        msg.set_value_int16(2, 1);
-        msg.set_value_int16(4, 2);
-        msg.set_value_int16(6, 3);
+        msg.set_int16(0, 0);
+        msg.set_int16(2, 1);
+        msg.set_int16(4, 2);
+        msg.set_int16(6, 3);
 
-        msg.set_value_int16(8, 10);
-        msg.set_value_int16(10, 11);
-        msg.set_value_int16(12, 12);
-        msg.set_value_int16(14, 13);
+        msg.set_int16(8, 10);
+        msg.set_int16(10, 11);
+        msg.set_int16(12, 12);
+        msg.set_int16(14, 13);
 
-        msg.set_value_uint32(16, 20);
-        msg.set_value_uint32(20, 21);
-        msg.set_value_uint32(24, 22);
-        msg.set_value_uint32(28, 23);
+        msg.set_uint32(16, 20);
+        msg.set_uint32(20, 21);
+        msg.set_uint32(24, 22);
+        msg.set_uint32(28, 23);
 
-        msg.set_value_uint8(32, 30);
-        msg.set_value_uint8(33, 31);
-        msg.set_value_uint8(34, 32);
-        msg.set_value_uint8(35, 33);
+        msg.set_uint8(32, 30);
+        msg.set_uint8(33, 31);
+        msg.set_uint8(34, 32);
+        msg.set_uint8(35, 33);
 
         StateChassisESC esc = decode_data_esc(0, msg);
 
@@ -87,13 +87,13 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisIMU) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
 
-        msg.set_value_float(0, 0.0f);
-        msg.set_value_float(4, 1.0f);
-        msg.set_value_float(8, 2.0f);
+        msg.set_float(0, 0.0f);
+        msg.set_float(4, 1.0f);
+        msg.set_float(8, 2.0f);
 
-        msg.set_value_float(12, 10.0f);
-        msg.set_value_float(16, 11.0f);
-        msg.set_value_float(20, 12.0f);
+        msg.set_float(12, 10.0f);
+        msg.set_float(16, 11.0f);
+        msg.set_float(20, 12.0f);
 
         StateChassisIMU imu = decode_data_imu(0, msg);
 
@@ -109,9 +109,9 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisAttitude) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
 
-        msg.set_value_float(0, 0.0f);
-        msg.set_value_float(4, 1.0f);
-        msg.set_value_float(8, 2.0f);
+        msg.set_float(0, 0.0f);
+        msg.set_float(4, 1.0f);
+        msg.set_float(8, 2.0f);
 
         StateChassisAttitude attitude = decode_data_attitude(0, msg);
 
@@ -123,11 +123,11 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisBattery) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(10, 0));
 
-        msg.set_value_int16(0, 0);
-        msg.set_value_int16(2, 1);
-        msg.set_value_int32(4, 2);
-        msg.set_value_uint8(8, 3);
-        msg.set_value_uint8(9, 4);
+        msg.set_int16(0, 0);
+        msg.set_int16(2, 1);
+        msg.set_int32(4, 2);
+        msg.set_uint8(8, 3);
+        msg.set_uint8(9, 4);
 
         StateChassisBattery battery = decode_data_battery(0, msg);
 
@@ -141,9 +141,9 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisPosition) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(12, 0));
 
-        msg.set_value_float(0, 0.0f);
-        msg.set_value_float(4, 1.0f);
-        msg.set_value_float(8, 2.0f);
+        msg.set_float(0, 0.0f);
+        msg.set_float(4, 1.0f);
+        msg.set_float(8, 2.0f);
 
         StateChassisPosition position = decode_data_position(0, msg);
 
@@ -155,13 +155,13 @@ namespace robomaster {
     TEST(StateDataTest, StateChassisVelocity) {
         auto msg = Message(0, 0, 0, std::vector<uint8_t>(24, 0));
 
-        msg.set_value_float(0, 0.0f);
-        msg.set_value_float(4, 1.0f);
-        msg.set_value_float(8, 2.0f);
+        msg.set_float(0, 0.0f);
+        msg.set_float(4, 1.0f);
+        msg.set_float(8, 2.0f);
 
-        msg.set_value_float(12, 10.0f);
-        msg.set_value_float(16, 11.0f);
-        msg.set_value_float(20, 12.0f);
+        msg.set_float(12, 10.0f);
+        msg.set_float(16, 11.0f);
+        msg.set_float(20, 12.0f);
 
         StateChassisVelocity velocity = decode_data_velocity(0, msg);
 

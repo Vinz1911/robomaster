@@ -33,7 +33,7 @@
 #include "robomaster/can.h"
 
 namespace robomaster {
-    CANBus::CANBus(): socket_(), interface_{}, address_{} {
+    CANBus::CANBus(): socket_{}, interface_{}, address_{} {
         memset(&this->interface_, 0x0, sizeof(this->interface_));
         memset(&this->address_, 0x0, sizeof(this->address_));
     }
@@ -62,17 +62,17 @@ namespace robomaster {
         if (bind(this->socket_, reinterpret_cast<sockaddr*>(&this->address_), sizeof(this->address_)) < 0) { std::printf("[Robomaster]: failed to bind can address\n"); close(this->socket_); return false; } return true;
     }
 
-    bool CANBus::send_frame(const uint32_t identifier, const uint8_t data[8], const size_t length) const {
+    bool CANBus::send_frame(const uint32_t device_id, const uint8_t data[8], const size_t length) const {
         if (length > 8) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
-        frame.can_id = static_cast<int>(identifier); frame.can_dlc = length; std::memcpy(frame.data, data, length);
+        frame.can_id = static_cast<int>(device_id); frame.can_dlc = length; std::memcpy(frame.data, data, length);
         if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
     }
 
-    bool CANBus::read_frame(uint32_t& identifier, uint8_t data[8], size_t& length) const {
+    bool CANBus::read_frame(uint32_t& device_id, uint8_t data[8], size_t& length) const {
         can_frame frame = {}; memset(&frame, 0, sizeof(frame));
         if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to read can frame\n"); return false; }
-        identifier = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
+        device_id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
         length = frame.can_dlc; std::memcpy(data, frame.data, length); return true;
     }
 } // namespace robomaster
