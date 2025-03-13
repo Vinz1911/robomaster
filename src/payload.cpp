@@ -25,11 +25,11 @@
 #include "robomaster/payload.h"
 
 namespace robomaster {
-    const uint8_t Payload::SEQUENCE_ID_ZERO = 0x00;
-    const uint8_t Payload::SEQUENCE_ID_ONE = 0x01;
-    const uint8_t Payload::SEQUENCE_ID_TWO = 0x02;
-    const uint8_t Payload::SEQUENCE_ID_THREE = 0x03;
-    const uint8_t Payload::SEQUENCE_ID_FOUR = 0x04;
+    const uint8_t Payload::DEVICE_SEQUENCE_ZERO = 0x00;
+    const uint8_t Payload::DEVICE_SEQUENCE_ONE = 0x01;
+    const uint8_t Payload::DEVICE_SEQUENCE_TWO = 0x02;
+    const uint8_t Payload::DEVICE_SEQUENCE_THREE = 0x03;
+    const uint8_t Payload::DEVICE_SEQUENCE_FOUR = 0x04;
     
     const uint16_t Payload::DEVICE_TYPE_CHASSIS = 0xc3c9;
     const uint16_t Payload::DEVICE_TYPE_GIMBAL = 0x04c9;

@@ -31,11 +31,11 @@ namespace robomaster {
         /**
          * @brief The Sequence numbers.
          */
-        static const uint8_t SEQUENCE_ID_ZERO;
-        static const uint8_t SEQUENCE_ID_ONE;
-        static const uint8_t SEQUENCE_ID_TWO;
-        static const uint8_t SEQUENCE_ID_THREE;
-        static const uint8_t SEQUENCE_ID_FOUR;
+        static const uint8_t DEVICE_SEQUENCE_ZERO;
+        static const uint8_t DEVICE_SEQUENCE_ONE;
+        static const uint8_t DEVICE_SEQUENCE_TWO;
+        static const uint8_t DEVICE_SEQUENCE_THREE;
+        static const uint8_t DEVICE_SEQUENCE_FOUR;
 
         /**
          * @brief The Device Type's.

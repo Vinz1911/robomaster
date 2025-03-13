@@ -43,7 +43,7 @@ namespace robomaster {
         /**
          * @brief Counter for the message sequences.
          */
-        uint16_t counter_;
+        uint16_t sequence_;
 
         /**
          * @brief Store for the motion data state
