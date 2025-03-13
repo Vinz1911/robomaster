@@ -80,38 +80,4 @@ namespace robomaster {
         LED_MASK_TOP_RIGHT = 0x20,
         LED_MASK_TOP_ALL = 0x30
     };
-
-    /**
-     * @brief Enum contains the DeviceID's
-     */
-    enum DeviceID: uint16_t {
-        DEVICE_ID_INTELLI_CONTROLLER = 0x201,
-        DEVICE_ID_MOTION_CONTROLLER = 0x202,
-        DEVICE_ID_GIMBAL = 0x203,
-        DEVICE_ID_HIT_DETECTOR_1 = 0x211,
-        DEVICE_ID_HIT_DETECTOR_2 = 0x212,
-        DEVICE_ID_HIT_DETECTOR_3 = 0x213,
-        DEVICE_ID_HIT_DETECTOR_4 = 0x214
-    };
-
-    /**
-     * @brief Enum contains the Device Type's
-     */
-    enum DeviceType: uint16_t {
-        DEVICE_TYPE_CHASSIS = 0xc3c9,
-        DEVICE_TYPE_GIMBAL = 0x04c9,
-        DEVICE_TYPE_BLASTER = 0x17c9,
-        DEVICE_TYPE_LED = 0x18c9,
-    };
-
-    /**
-     * @brief Sequence numbers.
-     */
-    enum SequenceID: uint8_t {
-        SEQUENCE_ID_ZERO = 0x00,
-        SEQUENCE_ID_ONE = 0x01,
-        SEQUENCE_ID_TWO = 0x02,
-        SEQUENCE_ID_THREE = 0x03,
-        SEQUENCE_ID_FOUR = 0x04,
-    };
 } // namespace robomaster

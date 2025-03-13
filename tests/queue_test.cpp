@@ -23,16 +23,15 @@
  */
 
 #include "robomaster/queue.h"
-#include "robomaster/definitions.h"
 #include "gtest/gtest.h"
 
 namespace robomaster {
     TEST(QueueTest, PushAndPop) {
         Queue queue;
 
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 0, std::vector{static_cast<uint8_t>(10)}));
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 1, std::vector{static_cast<uint8_t>(11)}));
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 2, std::vector{static_cast<uint8_t>(12)}));
+        queue.push(Message(0x202, 1337, 0, std::vector{static_cast<uint8_t>(10)}));
+        queue.push(Message(0x202, 1337, 1, std::vector{static_cast<uint8_t>(11)}));
+        queue.push(Message(0x202, 1337, 2, std::vector{static_cast<uint8_t>(12)}));
 
         Message m = queue.pop();
         ASSERT_EQ(m.get_sequence(), 0);
@@ -58,7 +57,7 @@ namespace robomaster {
     TEST(QueueTest, Overflow) {
         Queue queue;
 
-        for (size_t i = 0; i < queue.max_size() + 1; i++) { queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, i, std::vector{static_cast<uint8_t>(i)})); }
+        for (size_t i = 0; i < queue.max_size() + 1; i++) { queue.push(Message(0x202, 1337, i, std::vector{static_cast<uint8_t>(i)})); }
 
         Message m = queue.pop();
 
@@ -66,7 +65,7 @@ namespace robomaster {
         ASSERT_EQ(m.get_payload()[0], 1);
         ASSERT_TRUE(m.is_valid());
 
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, queue.max_size() + 1, std::vector{static_cast<uint8_t>(queue.max_size() + 1)}));
+        queue.push(Message(0x202, 1337, queue.max_size() + 1, std::vector{static_cast<uint8_t>(queue.max_size() + 1)}));
 
         while (!queue.empty()) { m = queue.pop(); }
 
@@ -78,9 +77,9 @@ namespace robomaster {
     TEST(QueueTest, Clear) {
         Queue queue;
 
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 0, std::vector{static_cast<uint8_t>(10)}));
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 1, std::vector{static_cast<uint8_t>(11)}));
-        queue.push(Message(DEVICE_ID_MOTION_CONTROLLER, 1337, 2, std::vector{static_cast<uint8_t>(12)}));
+        queue.push(Message(0x202, 1337, 0, std::vector{static_cast<uint8_t>(10)}));
+        queue.push(Message(0x202, 1337, 1, std::vector{static_cast<uint8_t>(11)}));
+        queue.push(Message(0x202, 1337, 2, std::vector{static_cast<uint8_t>(12)}));
 
         ASSERT_EQ(queue.size(), 3);
         ASSERT_FALSE(queue.empty());

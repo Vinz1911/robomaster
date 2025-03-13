@@ -179,14 +179,14 @@ namespace robomaster {
         vector[0] = 0x55;
         vector[1] = static_cast<uint8_t>(vector.size());
         vector[2] = 0x04;
-        vector[3] = calculate_crc8(vector.data(), 3);
+        vector[3] = get_crc8(vector.data(), 3);
         vector[4] = static_cast<uint8_t>(this->type_);
         vector[5] = static_cast<uint8_t>(this->type_ >> 8);
         vector[6] = static_cast<uint8_t>(this->sequence_);
         vector[7] = static_cast<uint8_t>(this->sequence_ >> 8);
 
         for (size_t i = 0; i < this->payload_.size(); i++) { vector[8 + i] = this->payload_[i]; }
-        const uint16_t crc16 = calculate_crc16(vector.data(), vector.size() - 2);
+        const uint16_t crc16 = get_crc16(vector.data(), vector.size() - 2);
 
         vector[vector.size() - 2] = static_cast<uint8_t>(crc16);
         vector[vector.size() - 1] = static_cast<uint8_t>(crc16 >> 8);

@@ -28,16 +28,33 @@
 
 namespace robomaster {
     class Payload {
-    public:
         /**
-         * @brief Constructor of the Payload class.
+         * @brief The Sequence numbers.
          */
-        Payload(/* args */);
+        static const uint8_t SEQUENCE_ID_ZERO;
+        static const uint8_t SEQUENCE_ID_ONE;
+        static const uint8_t SEQUENCE_ID_TWO;
+        static const uint8_t SEQUENCE_ID_THREE;
+        static const uint8_t SEQUENCE_ID_FOUR;
 
         /**
-         * @brief Destructor of the Payload class.
+         * @brief The Device Type's.
          */
-        ~Payload() = default;
+        static const uint16_t DEVICE_TYPE_CHASSIS;
+        static const uint16_t DEVICE_TYPE_GIMBAL;
+        static const uint16_t DEVICE_TYPE_BLASTER;
+        static const uint16_t DEVICE_TYPE_LED;
+
+        /**
+         * @brief The Device ID's.
+         */
+        static const uint16_t DEVICE_ID_INTELLI_CONTROLLER;
+        static const uint16_t DEVICE_ID_MOTION_CONTROLLER;
+        static const uint16_t DEVICE_ID_GIMBAL;
+        static const uint16_t DEVICE_ID_HIT_DETECTOR_1;
+        static const uint16_t DEVICE_ID_HIT_DETECTOR_2;
+        static const uint16_t DEVICE_ID_HIT_DETECTOR_3;
+        static const uint16_t DEVICE_ID_HIT_DETECTOR_4;
 
         /**
          * @brief The boot payload data.
@@ -81,5 +98,26 @@ namespace robomaster {
          * @brief The heartbeat payload data.
          */
         static const std::vector<uint8_t> HEARTBEAT;
+
+    public:
+        /**
+         * @brief Constructor of the Payload class.
+         */
+        Payload(/* args */);
+
+        /**
+         * @brief Destructor of the Payload class.
+         */
+        ~Payload() = default;
+
+        /**
+         * @brief Friend class RoboMaster.
+         */
+        friend class RoboMaster;
+
+        /**
+         * @brief Friend class RoboMaster.
+         */
+        friend class Handler;
     };
 } // namespace robomaster

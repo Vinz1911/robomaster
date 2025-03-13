@@ -32,7 +32,7 @@ namespace robomaster {
      * @param length Length of the data.
      * @return uint8_t CRC8 value.
      */
-    uint8_t calculate_crc8(const uint8_t* data, size_t length);
+    uint8_t get_crc8(const uint8_t* data, size_t length);
 
     /**
      * @brief Calculated the CRC16 for the given data.
@@ -41,7 +41,7 @@ namespace robomaster {
      * @param length Length of the data.
      * @return uint8_t CRC16 value.
      */
-    uint16_t calculate_crc16(const uint8_t* data, size_t length);
+    uint16_t get_crc16(const uint8_t* data, size_t length);
 
     /**
      * @brief Put the two bytes from little endian in the right host platform order.

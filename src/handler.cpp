@@ -26,7 +26,6 @@
 
 #include "robomaster/handler.h"
 #include "robomaster/utils.h"
-#include "robomaster/definitions.h"
 #include "robomaster/payload.h"
 
 namespace robomaster {
@@ -85,9 +84,9 @@ namespace robomaster {
     void Handler::receive_message(const Message& message) const {
         const auto& payload = message.get_payload(); const auto msg_type = message.get_type(); const auto device_id = message.get_device_id();
         static const std::unordered_map<uint16_t, std::pair<uint16_t, std::vector<uint8_t>>> device_ids = {
-            { DEVICE_ID_MOTION_CONTROLLER, { 0x0903, { 0x20, 0x48, 0x08, 0x00 } } }, { DEVICE_ID_GIMBAL, { 0x0904, { 0x00, 0x3f, 0x76 } } },
-            { DEVICE_ID_HIT_DETECTOR_1, { 0x0938, { 0x00, 0x3f, 0x02, 0x10 } } }, { DEVICE_ID_HIT_DETECTOR_2, { 0x0958, { 0x00, 0x3f, 0x02, 0x20 } } },
-            { DEVICE_ID_HIT_DETECTOR_3, { 0x0978, { 0x00, 0x3f, 0x02, 0x30 } } }, { DEVICE_ID_HIT_DETECTOR_4, { 0x0998, { 0x00, 0x3f, 0x02, 0x40 } } }
+            { Payload::DEVICE_ID_MOTION_CONTROLLER, { 0x0903, { 0x20, 0x48, 0x08, 0x00 } } }, { Payload::DEVICE_ID_GIMBAL, { 0x0904, { 0x00, 0x3f, 0x76 } } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_1, { 0x0938, { 0x00, 0x3f, 0x02, 0x10 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_2, { 0x0958, { 0x00, 0x3f, 0x02, 0x20 } } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_3, { 0x0978, { 0x00, 0x3f, 0x02, 0x30 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_4, { 0x0998, { 0x00, 0x3f, 0x02, 0x40 } } }
         };
 
         const auto ids = device_ids.find(device_id); if (ids == device_ids.end() || msg_type != ids->second.first) { return; }
@@ -100,7 +99,7 @@ namespace robomaster {
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
-                const auto msg = Message{DEVICE_ID_INTELLI_CONTROLLER, DEVICE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEARTBEAT};
+                const auto msg = Message{Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEARTBEAT};
                 if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
                 if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
@@ -113,9 +112,9 @@ namespace robomaster {
         struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0; };
         uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
         std::map<uint32_t, CANMessage> can_message {
-            { DEVICE_ID_MOTION_CONTROLLER, CANMessage{} }, { DEVICE_ID_GIMBAL, CANMessage{} },
-            { DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
-            { DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { DEVICE_ID_HIT_DETECTOR_4, CANMessage{} }
+            { Payload::DEVICE_ID_MOTION_CONTROLLER, CANMessage{} }, { Payload::DEVICE_ID_GIMBAL, CANMessage{} },
+            { Payload::DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
+            { Payload::DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_4, CANMessage{} }
         };
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
@@ -127,10 +126,10 @@ namespace robomaster {
                 auto iterator = buffer.cbegin();
                 while (iterator != buffer.cend()) {
                     iterator = std::find(iterator, std::cend(buffer), 0x55); buffer.erase(std::cbegin(buffer), iterator);
-                    if(buffer.size() < 4) { break; } if(buffer[3] == calculate_crc8(buffer.data(), 3)) { length = buffer[1]; break; } ++iterator;
+                    if(buffer.size() < 4) { break; } if(buffer[3] == get_crc8(buffer.data(), 3)) { length = buffer[1]; break; } ++iterator;
                 }
             } else if (length <= buffer.size()) {
-                if (calculate_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
+                if (get_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
                     auto const msg = Message{frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))};
                     if (msg.is_valid()) { this->receive_message(msg); }
                 } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;

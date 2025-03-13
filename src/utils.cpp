@@ -81,13 +81,13 @@ namespace robomaster {
         0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78,
     };
 
-    uint8_t calculate_crc8(const uint8_t *data, const size_t length) {
+    uint8_t get_crc8(const uint8_t *data, const size_t length) {
         uint8_t crc = 0x77;
         for (size_t i = 0; i < length; i++) { crc = CRC8_CHECKSUM[crc ^ data[i]]; }
         return crc;
     }
 
-    uint16_t calculate_crc16(const uint8_t *data, const size_t length) {
+    uint16_t get_crc16(const uint8_t *data, const size_t length) {
         uint16_t crc = 0x3692;
         for (size_t i = 0; i < length; i++) { crc = crc >> 8 & 0xff ^ CRC16_CHECKSUM[(crc ^ data[i]) & 0xff]; }
         return crc;
