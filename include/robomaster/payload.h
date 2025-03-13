@@ -29,7 +29,7 @@
 namespace robomaster {
     class Payload {
         /**
-         * @brief The Sequence numbers.
+         * @brief The Device Sequence's.
          */
         static const uint8_t DEVICE_SEQUENCE_ZERO;
         static const uint8_t DEVICE_SEQUENCE_ONE;
