@@ -58,12 +58,13 @@ namespace robomaster {
 
         /**
          * @brief The boot payload data.
+         * [1, 2, 3] -> Chassis, [4] -> Gimbal, [5] -> LED's
          */
-        static const std::vector<uint8_t> BOOT_1_CHASSIS;
-        static const std::vector<uint8_t> BOOT_2_CHASSIS;
-        static const std::vector<uint8_t> BOOT_3_CHASSIS;
-        static const std::vector<uint8_t> BOOT_4_GIMBAL;
-        static const std::vector<uint8_t> BOOT_5_LED;
+        static const std::vector<uint8_t> BOOT_CHASSIS_PRIMARY;
+        static const std::vector<uint8_t> BOOT_CHASSIS_SECONDARY;
+        static const std::vector<uint8_t> BOOT_CHASSIS_SUB;
+        static const std::vector<uint8_t> BOOT_GIMBAL_SUB;
+        static const std::vector<uint8_t> BOOT_LED_RST;
 
         /**
          * @brief The chassis payload data.

@@ -32,11 +32,11 @@ namespace robomaster {
     RoboMaster::RoboMaster(): counter_{} { }
 
     void RoboMaster::boot_sequence() {
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_ZERO, Payload::BOOT_1_CHASSIS));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_ONE, Payload::BOOT_2_CHASSIS));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_TWO, Payload::BOOT_3_CHASSIS));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::SEQUENCE_ID_THREE, Payload::BOOT_4_GIMBAL));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_LED, Payload::SEQUENCE_ID_FOUR, Payload::BOOT_5_LED));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_ZERO, Payload::BOOT_CHASSIS_PRIMARY));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_ONE, Payload::BOOT_CHASSIS_SECONDARY));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::SEQUENCE_ID_TWO, Payload::BOOT_CHASSIS_SUB));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::SEQUENCE_ID_THREE, Payload::BOOT_GIMBAL_SUB));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_LED, Payload::SEQUENCE_ID_FOUR, Payload::BOOT_LED_RST));
     }
 
     bool RoboMaster::init(const std::string& interface) {
