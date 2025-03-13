@@ -155,8 +155,8 @@ namespace robomaster {
         message.set_uint8(6, red);
         message.set_uint8(7, green);
         message.set_uint8(8, blue);
-        message.set_uint16(10, mode == LED_MODE_STATIC ? 0x00 : up_time_);
-        message.set_uint16(12, mode == LED_MODE_STATIC ? 0x00 : down_time_);
+        message.set_uint16(10, mode == LED_MODE_STATIC ? 0x0 : up_time_);
+        message.set_uint16(12, mode == LED_MODE_STATIC ? 0x0 : down_time_);
         message.set_uint16(14, mask);
         this->handler_.push_message(message);
     }

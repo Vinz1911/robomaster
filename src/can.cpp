@@ -55,7 +55,7 @@ namespace robomaster {
         if (this->socket_ < 0) { std::printf("[Robomaster]: failed to open can interface\n"); return false; }
         std::memcpy(this->interface_.ifr_name, interface.c_str(), interface.size());
 
-        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->interface_) < 0) { std::printf("[Robomaster]: failed to request can interface %s\n", interface.c_str()); close(this->socket_); return false; }
+        if (ioctl(this->socket_, SIOCGIFFLAGS, &this->interface_) < 0x0) { std::printf("[Robomaster]: failed to request can interface %s\n", interface.c_str()); close(this->socket_); return false; }
         if (!(this->interface_.ifr_flags & IFF_UP)) { std::printf("[Robomaster]: interface %s is down\n", interface.c_str()); close(this->socket_); return false; }
 
         ioctl(this->socket_, SIOGIFINDEX, &this->interface_); this->address_.can_ifindex = this->interface_.ifr_ifindex; this->address_.can_family = PF_CAN;
@@ -64,14 +64,14 @@ namespace robomaster {
 
     bool CANBus::send_frame(const uint32_t device_id, const uint8_t data[8], const size_t length) const {
         if (length > 8) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
-        can_frame frame = {}; memset(&frame, 0, sizeof(frame));
+        can_frame frame = {}; memset(&frame, 0x0, sizeof(frame));
         frame.can_id = static_cast<int>(device_id); frame.can_dlc = length; std::memcpy(frame.data, data, length);
-        if (write(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
+        if (write(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
     }
 
     bool CANBus::read_frame(uint32_t& device_id, uint8_t data[8], size_t& length) const {
-        can_frame frame = {}; memset(&frame, 0, sizeof(frame));
-        if(read(this->socket_, &frame, sizeof(frame)) < 0) { std::printf("[Robomaster]: failed to read can frame\n"); return false; }
+        can_frame frame = {}; memset(&frame, 0x0, sizeof(frame));
+        if(read(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to read can frame\n"); return false; }
         device_id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
         length = frame.can_dlc; std::memcpy(data, frame.data, length); return true;
     }

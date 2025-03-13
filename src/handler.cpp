@@ -95,22 +95,22 @@ namespace robomaster {
     }
 
     void Handler::sender_thread() {
-        uint16_t heartbeat_counter = 0; size_t error_counter = 0; auto heartbeat_time_point = std::chrono::high_resolution_clock::now();
+        uint16_t heartbeat_counter = 0x0; size_t error_counter = 0x0; auto heartbeat_time_point = std::chrono::high_resolution_clock::now();
 
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
                 const auto msg = Message{Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEARTBEAT};
-                if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0; } else { error_counter++; }
+                if (this->send_message(msg)) { heartbeat_time_point += STD_HEARTBEAT_TIME; error_counter = 0x0; } else { error_counter++; }
             } else if (!this->queue_sender_.empty()) {
-                if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0; } else { error_counter++; } }
+                if (Message msg = queue_sender_.pop(); msg.is_valid()) { if (this->send_message(msg)) { error_counter = 0x0; } else { error_counter++; } }
             } else { std::unique_lock lock{this->condition_sender_mutex_}; this->condition_sender_.wait_until(lock, heartbeat_time_point); }
         }
-        if (error_counter != 0) { this->is_stopped_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
+        if (error_counter != 0x0) { this->is_stopped_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: sender frame failure\n"); }
     }
 
     void Handler::receiver_thread() {
-        struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0; };
-        uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0;
+        struct CANMessage { std::vector<uint8_t> buffer; size_t length = 0x0; };
+        uint32_t frame_id; uint8_t frame_buffer[8] = {}; size_t frame_length; size_t error_counter = 0x0;
         std::map<uint32_t, CANMessage> can_message {
             { Payload::DEVICE_ID_MOTION_CONTROLLER, CANMessage{} }, { Payload::DEVICE_ID_GIMBAL, CANMessage{} },
             { Payload::DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
@@ -132,9 +132,9 @@ namespace robomaster {
                 if (get_crc16(buffer.data(), length - 2) == get_little_endian(buffer[length - 2], buffer[length - 1])) {
                     auto const msg = Message{frame_id, std::vector(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length))};
                     if (msg.is_valid()) { this->receive_message(msg); }
-                } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0;
+                } buffer.erase(std::cbegin(buffer), std::cbegin(buffer) + static_cast<long>(length)); length = 0x0;
             }
         }
-        if (error_counter != 0) { this->is_stopped_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: receiver frame failure\n"); }
+        if (error_counter != 0x0) { this->is_stopped_.store(true, STD_MEMORY_ORDER); std::printf("[Robomaster]: receiver frame failure\n"); }
     }
 } // namespace robomaster
