@@ -113,9 +113,9 @@ namespace robomaster {
 
     float Message::get_float(const size_t index) const {
         assert(index + 3 < this->payload_.size());
-        union { uint32_t u; float f; } float_uint32_t_union{};
-        float_uint32_t_union.u = this->get_uint32(index);
-        return float_uint32_t_union.f;
+        union { uint32_t input; float output; } store_{};
+        store_.input = this->get_uint32(index);
+        return store_.output;
     }
 
     void Message::set_type(const uint16_t type) {
@@ -166,9 +166,9 @@ namespace robomaster {
 
     void Message::set_float(const size_t index, const float value) {
         assert(index + 3 < this->payload_.size());
-        union { uint32_t u; float f; } float_uint32_t_union{};
-        float_uint32_t_union.f = value;
-        this->set_uint32(index, float_uint32_t_union.u);
+        union { float input; uint32_t output; } store_{};
+        store_.input = value;
+        this->set_uint32(index, store_.output);
     }
 
     std::vector<uint8_t> Message::vector() const {

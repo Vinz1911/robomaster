@@ -32,7 +32,7 @@ namespace robomaster {
         msg.set_int16(0, 1000);
         msg.set_int16(2, 2000);
 
-        auto [pitch, yaw] = decode_data_gimbal(0, msg);
+        auto [pitch, yaw] = decode_gimbal(0, msg);
 
         ASSERT_EQ(pitch, 1000);
         ASSERT_EQ(yaw, 2000);
@@ -61,7 +61,7 @@ namespace robomaster {
         msg.set_uint8(34, 32);
         msg.set_uint8(35, 33);
 
-        auto [speed, angle, time_stamp, state] = decode_data_esc(0, msg);
+        auto [speed, angle, time_stamp, state] = decode_esc(0, msg);
 
         ASSERT_EQ(speed[0], 0);
         ASSERT_EQ(speed[1], 1);
@@ -95,7 +95,7 @@ namespace robomaster {
         msg.set_float(16, 11.0f);
         msg.set_float(20, 12.0f);
 
-        auto [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z] = decode_data_imu(0, msg);
+        auto [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z] = decode_imu(0, msg);
 
         ASSERT_FLOAT_EQ(acc_x, 0.0f);
         ASSERT_FLOAT_EQ(acc_y, 1.0f);
@@ -113,7 +113,7 @@ namespace robomaster {
         msg.set_float(4, 1.0f);
         msg.set_float(8, 2.0f);
 
-        auto [roll, pitch, yaw] = decode_data_attitude(0, msg);
+        auto [roll, pitch, yaw] = decode_attitude(0, msg);
 
         ASSERT_FLOAT_EQ(yaw, 0.0f);
         ASSERT_FLOAT_EQ(pitch, 1.0f);
@@ -129,7 +129,7 @@ namespace robomaster {
         msg.set_uint8(8, 3);
         msg.set_uint8(9, 4);
 
-        auto [adc, temperature, current, percent, recv] = decode_data_battery(0, msg);
+        auto [adc, temperature, current, percent, recv] = decode_battery(0, msg);
 
         ASSERT_EQ(adc, 0);
         ASSERT_EQ(temperature, 1);
@@ -145,7 +145,7 @@ namespace robomaster {
         msg.set_float(4, 1.0f);
         msg.set_float(8, 2.0f);
 
-        auto [pos_x, pos_y, pos_z] = decode_data_position(0, msg);
+        auto [pos_x, pos_y, pos_z] = decode_position(0, msg);
 
         ASSERT_FLOAT_EQ(pos_x, 0.0f);
         ASSERT_FLOAT_EQ(pos_y, 1.0f);
@@ -163,7 +163,7 @@ namespace robomaster {
         msg.set_float(16, 11.0f);
         msg.set_float(20, 12.0f);
 
-        auto [vg_x, vg_y, vg_z, vb_x, vb_y, vb_z] = decode_data_velocity(0, msg);
+        auto [vg_x, vg_y, vg_z, vb_x, vb_y, vb_z] = decode_velocity(0, msg);
 
         ASSERT_FLOAT_EQ(vg_x, 0.0f);
         ASSERT_FLOAT_EQ(vg_y, 1.0f);

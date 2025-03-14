@@ -281,7 +281,7 @@ namespace robomaster {
      * @param message Message from the hit detector.
      * @return struct StateHitDetector. by successful decoding.
      */
-    StateDetector decode_data_detector(size_t index, const Message& message);
+    StateDetector decode_detector(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for gimbal data.
@@ -290,7 +290,7 @@ namespace robomaster {
      * @param message Message from the gimbal.
      * @return struct StateGimbal. by successful decoding.
      */
-    StateGimbal decode_data_gimbal(size_t index, const Message& message);
+    StateGimbal decode_gimbal(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for esc data.
@@ -299,7 +299,7 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StateESC. by successful decoding.
      */
-    StateESC decode_data_esc(size_t index, const Message& message);
+    StateESC decode_esc(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -308,7 +308,7 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StateIMU. by successful decoding.
      */
-    StateIMU decode_data_imu(size_t index, const Message& message);
+    StateIMU decode_imu(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for imu data.
@@ -317,7 +317,7 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StateAttitude. by successful decoding.
      */
-    StateAttitude decode_data_attitude(size_t index, const Message& message);
+    StateAttitude decode_attitude(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for battery data.
@@ -326,7 +326,7 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StateBattery. by successful decoding.
      */
-    StateBattery decode_data_battery(size_t index, const Message& message);
+    StateBattery decode_battery(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for velocity data.
@@ -335,7 +335,7 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StateVelocity. by successful decoding.
      */
-    StateVelocity decode_data_velocity(size_t index, const Message& message);
+    StateVelocity decode_velocity(size_t index, const Message& message);
 
     /**
      * @brief Decode the message payload at the given index for position data.
@@ -344,5 +344,5 @@ namespace robomaster {
      * @param message Message from the motion controller.
      * @return struct StatePosition. by successful decoding.
      */
-    StatePosition decode_data_position(size_t index, const Message& message);
+    StatePosition decode_position(size_t index, const Message& message);
 } // namespace robomaster

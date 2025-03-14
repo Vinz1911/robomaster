@@ -25,21 +25,21 @@
 #include "robomaster/data.h"
 
 namespace robomaster {
-    StateGimbal decode_data_gimbal(const size_t index, const Message& message) {
+    StateGimbal decode_gimbal(const size_t index, const Message& message) {
         StateGimbal data; if (index + 4 > message.get_payload().size()) { return data; }
         data.pitch = message.get_int16(index);
         data.yaw = message.get_int16(index + 2);
         return data;
     }
 
-    StateDetector decode_data_detector(const size_t index, const Message& message) {
+    StateDetector decode_detector(const size_t index, const Message& message) {
         StateDetector data; if (index + 4 > message.get_payload().size()) { return data; }
         data.intensity = message.get_uint16(index);
         data.hit_time = std::chrono::high_resolution_clock::now();
         return data;
     }
 
-    StateESC decode_data_esc(const size_t index, const Message& message) {
+    StateESC decode_esc(const size_t index, const Message& message) {
         StateESC data; if (index + 36 > message.get_payload().size()) { return data; }
         data.speed[0] = message.get_int16(index);
         data.speed[1] = message.get_int16(index + 2);
@@ -63,7 +63,7 @@ namespace robomaster {
         return data;
     }
 
-    StateIMU decode_data_imu(const size_t index, const Message& message) {
+    StateIMU decode_imu(const size_t index, const Message& message) {
         StateIMU data; if (index + 24 > message.get_payload().size()) { return data; }
         data.acc_x = message.get_float(index);
         data.acc_y = message.get_float(index + 4);
@@ -75,7 +75,7 @@ namespace robomaster {
         return data;
     }
 
-    StateAttitude decode_data_attitude(const size_t index, const Message& message) {
+    StateAttitude decode_attitude(const size_t index, const Message& message) {
         StateAttitude data; if (index + 12 > message.get_payload().size()) { return data; }
         data.yaw = message.get_float(index);
         data.pitch = message.get_float(index + 4);
@@ -83,7 +83,7 @@ namespace robomaster {
         return data;
     }
 
-    StateBattery decode_data_battery(const size_t index, const Message& message) {
+    StateBattery decode_battery(const size_t index, const Message& message) {
         StateBattery data; if (index + 10 > message.get_payload().size()) { return data; }
         data.adc = message.get_uint16(index);
         data.temperature = message.get_uint16(index + 2);
@@ -93,7 +93,7 @@ namespace robomaster {
         return data;
     }
 
-    StateVelocity decode_data_velocity(const size_t index, const Message& message) {
+    StateVelocity decode_velocity(const size_t index, const Message& message) {
         StateVelocity data; if (index + 24 > message.get_payload().size()) { return data; }
         data.vg_x = message.get_float(index);
         data.vg_y = message.get_float(index + 4);
@@ -105,7 +105,7 @@ namespace robomaster {
         return data;
     }
 
-    StatePosition decode_data_position(const size_t index, const Message& message) {
+    StatePosition decode_position(const size_t index, const Message& message) {
         StatePosition data; if (index + 12 > message.get_payload().size()) { return data; }
         data.pos_x = message.get_float(index);
         data.pos_y = message.get_float(index + 4);

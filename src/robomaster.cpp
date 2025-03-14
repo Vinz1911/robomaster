@@ -32,11 +32,11 @@ namespace robomaster {
     RoboMaster::RoboMaster(): sequence_{} { }
 
     void RoboMaster::boot_sequence() {
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQUENCE_ZERO, Payload::BOOT_CHASSIS_PRIMARY));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQUENCE_ONE, Payload::BOOT_CHASSIS_SECONDARY));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQUENCE_TWO, Payload::BOOT_CHASSIS_SUB));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQUENCE_THREE, Payload::BOOT_GIMBAL_SUB));
-        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_LED, Payload::DEVICE_SEQUENCE_FOUR, Payload::BOOT_LED_RST));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQ_ZERO, Payload::BOOT_CHASSIS_SPECIAL));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQ_ONE, Payload::BOOT_CHASSIS_CONFIRM));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQ_TWO, Payload::BOOT_CHASSIS_INFO));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQ_THREE, Payload::BOOT_GIMBAL_INFO));
+        this->handler_.push_message(Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_LED, Payload::DEVICE_SEQ_FOUR, Payload::BOOT_LED_RESET));
     }
 
     bool RoboMaster::init(const std::string& interface) {
@@ -54,7 +54,7 @@ namespace robomaster {
     }
 
     void RoboMaster::set_chassis_mode(const ChassisMode mode) {
-        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQUENCE_ZERO, Payload::CHASSIS_MODE);
+        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, Payload::DEVICE_SEQ_ZERO, Payload::CHASSIS_MODE);
         message.set_uint8(3, mode);
         this->handler_.push_message(message);
     }
@@ -80,9 +80,7 @@ namespace robomaster {
     }
 
     void RoboMaster::set_chassis_position(const int16_t linear_x, const int16_t linear_y, const int16_t angular_z) {
-        const auto linear_x_ = std::clamp(linear_x, int16_t { -500 }, int16_t { 500 });
-        const auto linear_y_ = std::clamp(linear_y, int16_t { -500 }, int16_t { 500 });
-        const auto angular_z_ = std::clamp(angular_z, int16_t { -18000 }, int16_t { 18000 });
+        const auto linear_x_ = std::clamp(linear_x, int16_t { -500 }, int16_t { 500 }), linear_y_ = std::clamp(linear_y, int16_t { -500 }, int16_t { 500 }), angular_z_ = std::clamp(angular_z, int16_t { -18000 }, int16_t { 18000 });
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, this->sequence_++, Payload::CHASSIS_POSITION);
         message.set_int16(7, linear_x_);
         message.set_int16(9, linear_y_);
@@ -92,13 +90,13 @@ namespace robomaster {
     }
 
     void RoboMaster::set_gimbal_mode(const GimbalMode mode) {
-        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQUENCE_ZERO, Payload::GIMBAL_MODE);
+        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQ_ZERO, Payload::GIMBAL_MODE);
         message.set_uint8(3, mode);
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_hibernate(const GimbalHibernate hibernate) {
-        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQUENCE_ZERO, Payload::GIMBAL_HIBERNATE);
+        auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, Payload::DEVICE_SEQ_ZERO, Payload::GIMBAL_HIBERNATE);
         message.set_uint16(3, hibernate);
         this->handler_.push_message(message);
     }
@@ -163,15 +161,12 @@ namespace robomaster {
 
     RoboMasterState RoboMaster::decode_state(const Message& message) {
         static auto data = RoboMasterState{};
-        if (message.get_device_id() == Payload::DEVICE_ID_MOTION_CONTROLLER) {
-            data.velocity = decode_data_velocity(27, message); data.battery = decode_data_battery(51, message); data.esc = decode_data_esc(61, message);
-            data.imu = decode_data_imu(97, message); data.attitude = decode_data_attitude(121, message); data.position = decode_data_position(133, message);
-        }
-        if (message.get_device_id() == Payload::DEVICE_ID_GIMBAL) { data.gimbal = decode_data_gimbal(5, message); }
-        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_1) { data.detector[0] = decode_data_detector(4, message); }
-        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_2) { data.detector[1] = decode_data_detector(4, message); }
-        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_3) { data.detector[2] = decode_data_detector(4, message); }
-        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_4) { data.detector[3] = decode_data_detector(4, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_MOTION_CONTROLLER) { data.velocity = decode_velocity(27, message); data.battery = decode_battery(51, message); data.esc = decode_esc(61, message); data.imu = decode_imu(97, message); data.attitude = decode_attitude(121, message); data.position = decode_position(133, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_GIMBAL) { data.gimbal = decode_gimbal(5, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_1) { data.detector[0] = decode_detector(4, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_2) { data.detector[1] = decode_detector(4, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_3) { data.detector[2] = decode_detector(4, message); }
+        if (message.get_device_id() == Payload::DEVICE_ID_HIT_DETECTOR_4) { data.detector[3] = decode_detector(4, message); }
 
         data.is_active = true; return data;
     }

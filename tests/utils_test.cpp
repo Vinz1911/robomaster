@@ -41,7 +41,7 @@ namespace robomaster {
 
     TEST(UtilTest, calculate_crc16) {
         std::vector<uint8_t> vector_enable = MSG_ENABLE.vector();
-        std::vector<uint8_t> vector_disable = MSG_DISABLE.vector();
+        const std::vector<uint8_t> vector_disable = MSG_DISABLE.vector();
 
         ASSERT_EQ(get_crc16(vector_enable.data(), vector_enable.size() -2), get_crc16(vector_enable.data(), vector_enable.size() - 2));
         ASSERT_NE(get_crc16(vector_enable.data(), vector_enable.size() -2), get_crc16(vector_disable.data(), vector_disable.size() - 2));
@@ -54,7 +54,7 @@ namespace robomaster {
 
     TEST(UtilTest, calculate_crc8) {
         std::vector<uint8_t> vector_enable = MSG_ENABLE.vector();
-        std::vector<uint8_t> vector_disable = MSG_DISABLE.vector();
+        const std::vector<uint8_t> vector_disable = MSG_DISABLE.vector();
 
         ASSERT_EQ(get_crc8(vector_enable.data(), vector_enable.size() -2), get_crc8(vector_enable.data(), vector_enable.size() - 2));
         ASSERT_NE(get_crc8(vector_enable.data(), vector_enable.size() -2), get_crc8(vector_disable.data(), vector_disable.size() - 2));

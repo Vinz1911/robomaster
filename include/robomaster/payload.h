@@ -31,11 +31,11 @@ namespace robomaster {
         /**
          * @brief The Device Sequence's.
          */
-        static const uint8_t DEVICE_SEQUENCE_ZERO;
-        static const uint8_t DEVICE_SEQUENCE_ONE;
-        static const uint8_t DEVICE_SEQUENCE_TWO;
-        static const uint8_t DEVICE_SEQUENCE_THREE;
-        static const uint8_t DEVICE_SEQUENCE_FOUR;
+        static const uint8_t DEVICE_SEQ_ZERO;
+        static const uint8_t DEVICE_SEQ_ONE;
+        static const uint8_t DEVICE_SEQ_TWO;
+        static const uint8_t DEVICE_SEQ_THREE;
+        static const uint8_t DEVICE_SEQ_FOUR;
 
         /**
          * @brief The Device Type's.
@@ -60,11 +60,11 @@ namespace robomaster {
          * @brief The boot payload data.
          * [1, 2, 3] -> Chassis, [4] -> Gimbal, [5] -> LED's
          */
-        static const std::vector<uint8_t> BOOT_CHASSIS_PRIMARY;
-        static const std::vector<uint8_t> BOOT_CHASSIS_SECONDARY;
-        static const std::vector<uint8_t> BOOT_CHASSIS_SUB;
-        static const std::vector<uint8_t> BOOT_GIMBAL_SUB;
-        static const std::vector<uint8_t> BOOT_LED_RST;
+        static const std::vector<uint8_t> BOOT_CHASSIS_SPECIAL;
+        static const std::vector<uint8_t> BOOT_CHASSIS_CONFIRM;
+        static const std::vector<uint8_t> BOOT_CHASSIS_INFO;
+        static const std::vector<uint8_t> BOOT_GIMBAL_INFO;
+        static const std::vector<uint8_t> BOOT_LED_RESET;
 
         /**
          * @brief The chassis payload data.
@@ -98,7 +98,7 @@ namespace robomaster {
         /**
          * @brief The heartbeat payload data.
          */
-        static const std::vector<uint8_t> HEARTBEAT;
+        static const std::vector<uint8_t> HEART_BEAT;
 
     public:
         /**

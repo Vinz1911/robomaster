@@ -54,26 +54,6 @@ namespace robomaster {
         ASSERT_FALSE(m.is_valid());
     }
 
-    TEST(QueueTest, Overflow) {
-        Queue queue;
-
-        for (size_t i = 0; i < queue.max_size() + 1; i++) { queue.push(Message(0x202, 1337, i, std::vector{static_cast<uint8_t>(i)})); }
-
-        Message m = queue.pop();
-
-        ASSERT_EQ(m.get_sequence(), 1);
-        ASSERT_EQ(m.get_payload()[0], 1);
-        ASSERT_TRUE(m.is_valid());
-
-        queue.push(Message(0x202, 1337, queue.max_size() + 1, std::vector{static_cast<uint8_t>(queue.max_size() + 1)}));
-
-        while (!queue.empty()) { m = queue.pop(); }
-
-        ASSERT_EQ(m.get_sequence(), queue.max_size() + 1);
-        ASSERT_EQ(m.get_payload()[0], queue.max_size() + 1);
-        ASSERT_TRUE(m.is_valid());   
-    }
-
     TEST(QueueTest, Clear) {
         Queue queue;
 
