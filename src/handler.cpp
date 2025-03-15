@@ -83,9 +83,12 @@ namespace robomaster {
     void Handler::receive_message(const Message& message) const {
         const auto& payload = message.get_payload(); const auto msg_type = message.get_type(); const auto device_id = message.get_device_id();
         static const std::unordered_map<uint16_t, std::pair<uint16_t, std::vector<uint8_t>>> device_ids = {
-            { Payload::DEVICE_ID_MOTION_CONTROLLER, { 0x0903, { 0x20, 0x48, 0x08, 0x00 } } }, { Payload::DEVICE_ID_GIMBAL, { 0x0904, { 0x00, 0x3f, 0x76 } } },
-            { Payload::DEVICE_ID_HIT_DETECTOR_1, { 0x0938, { 0x00, 0x3f, 0x02, 0x10 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_2, { 0x0958, { 0x00, 0x3f, 0x02, 0x20 } } },
-            { Payload::DEVICE_ID_HIT_DETECTOR_3, { 0x0978, { 0x00, 0x3f, 0x02, 0x30 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_4, { 0x0998, { 0x00, 0x3f, 0x02, 0x40 } } }
+            { Payload::DEVICE_ID_MOTION_CONTROLLER, { Payload::DEVICE_RC_TYPE_MOTION_CONTROLLER, Payload::MESSAGE_MOTION_CONTROLLER } },
+            { Payload::DEVICE_ID_GIMBAL, { Payload::DEVICE_RC_TYPE_GIMBAL, Payload::MESSAGE_GIMBAL } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_1, { Payload::DEVICE_RC_TYPE_HIT_DETECTOR_1, Payload::MESSAGE_HIT_DETECTOR_1 } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_2, { Payload::DEVICE_RC_TYPE_HIT_DETECTOR_2, Payload::MESSAGE_HIT_DETECTOR_2 } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_3, { Payload::DEVICE_RC_TYPE_HIT_DETECTOR_3, Payload::MESSAGE_HIT_DETECTOR_3 } },
+            { Payload::DEVICE_ID_HIT_DETECTOR_4, { Payload::DEVICE_RC_TYPE_HIT_DETECTOR_4, Payload::MESSAGE_HIT_DETECTOR_4 } },
         };
         const auto ids = device_ids.find(device_id); if (ids == device_ids.end() || msg_type != ids->second.first) { return; }
         const auto& sequence = ids->second.second; if (payload.size() < sequence.size() || !std::equal(sequence.begin(), sequence.end(), payload.begin())) { return; }
@@ -111,7 +114,7 @@ namespace robomaster {
         std::map<uint32_t, CANMessage> can_message {
             { Payload::DEVICE_ID_MOTION_CONTROLLER, CANMessage{} }, { Payload::DEVICE_ID_GIMBAL, CANMessage{} },
             { Payload::DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
-            { Payload::DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_4, CANMessage{} }
+            { Payload::DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_4, CANMessage{} },
         };
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (!can_bus_.read_frame(frame_id, frame_buffer, frame_length)) { error_counter++; continue; }

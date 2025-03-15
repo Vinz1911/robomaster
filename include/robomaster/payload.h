@@ -57,6 +57,16 @@ namespace robomaster {
         static const uint16_t DEVICE_ID_HIT_DETECTOR_4;
 
         /**
+         * @brief The Message Type's.
+         */
+        static const uint16_t DEVICE_RC_TYPE_MOTION_CONTROLLER;
+        static const uint16_t DEVICE_RC_TYPE_GIMBAL;
+        static const uint16_t DEVICE_RC_TYPE_HIT_DETECTOR_1;
+        static const uint16_t DEVICE_RC_TYPE_HIT_DETECTOR_2;
+        static const uint16_t DEVICE_RC_TYPE_HIT_DETECTOR_3;
+        static const uint16_t DEVICE_RC_TYPE_HIT_DETECTOR_4;
+
+        /**
          * @brief The boot payload data.
          * [1, 2, 3] -> Chassis, [4] -> Gimbal, [5] -> LED's
          */
@@ -99,6 +109,16 @@ namespace robomaster {
          * @brief The heartbeat payload data.
          */
         static const std::vector<uint8_t> HEART_BEAT;
+
+        /**
+         * @brief The message payload data.
+         */
+        static const std::vector<uint8_t> MESSAGE_MOTION_CONTROLLER;
+        static const std::vector<uint8_t> MESSAGE_GIMBAL;
+        static const std::vector<uint8_t> MESSAGE_HIT_DETECTOR_1;
+        static const std::vector<uint8_t> MESSAGE_HIT_DETECTOR_2;
+        static const std::vector<uint8_t> MESSAGE_HIT_DETECTOR_3;
+        static const std::vector<uint8_t> MESSAGE_HIT_DETECTOR_4;
 
     public:
         /**
