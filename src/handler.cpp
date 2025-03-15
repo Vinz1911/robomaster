@@ -73,7 +73,6 @@ namespace robomaster {
 
     bool Handler::send_message(const Message& message) const {
         const auto id = message.get_device_id(); const auto data = message.vector(); uint8_t frame_data[8] = {};
-
         for (size_t i = 0; i < data.size(); i += 8) {
             const size_t frame_length = std::min(static_cast<size_t>(8), data.size() - i);
             std::copy_n(data.begin() + static_cast<long>(i), frame_length, frame_data);
@@ -96,7 +95,6 @@ namespace robomaster {
 
     void Handler::sender_thread() {
         uint16_t heartbeat_counter = 0x0; size_t error_counter = 0x0; auto heartbeat_time_point = std::chrono::high_resolution_clock::now();
-
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (heartbeat_time_point < std::chrono::high_resolution_clock::now()) {
                 const auto msg = Message{Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, heartbeat_counter++, Payload::HEART_BEAT};
