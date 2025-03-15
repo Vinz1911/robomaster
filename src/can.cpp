@@ -67,13 +67,15 @@ namespace robomaster {
         if (length > 8) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
         can_frame frame{}; memset(&frame, 0x0, sizeof(frame));
         frame.can_id = static_cast<int>(device_id); frame.can_dlc = length; std::memcpy(frame.data, data, length);
-        if (write(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
+        if (write(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
+        return true;
     }
 
     bool CANBus::read_frame(uint32_t& device_id, uint8_t data[8], size_t& length) const {
         can_frame frame{}; memset(&frame, 0x0, sizeof(frame));
         if(read(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to read can frame\n"); return false; }
         device_id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
-        length = frame.can_dlc; std::memcpy(data, frame.data, length); return true;
+        length = frame.can_dlc; std::memcpy(data, frame.data, length);
+        return true;
     }
 } // namespace robomaster
