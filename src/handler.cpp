@@ -87,7 +87,6 @@ namespace robomaster {
             { Payload::DEVICE_ID_HIT_DETECTOR_1, { 0x0938, { 0x00, 0x3f, 0x02, 0x10 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_2, { 0x0958, { 0x00, 0x3f, 0x02, 0x20 } } },
             { Payload::DEVICE_ID_HIT_DETECTOR_3, { 0x0978, { 0x00, 0x3f, 0x02, 0x30 } } }, { Payload::DEVICE_ID_HIT_DETECTOR_4, { 0x0998, { 0x00, 0x3f, 0x02, 0x40 } } }
         };
-
         const auto ids = device_ids.find(device_id); if (ids == device_ids.end() || msg_type != ids->second.first) { return; }
         const auto& sequence = ids->second.second; if (payload.size() < sequence.size() || !std::equal(sequence.begin(), sequence.end(), payload.begin())) { return; }
         if (this->state_callback_) { this->state_callback_(message); }
@@ -114,7 +113,6 @@ namespace robomaster {
             { Payload::DEVICE_ID_HIT_DETECTOR_1, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_2, CANMessage{} },
             { Payload::DEVICE_ID_HIT_DETECTOR_3, CANMessage{} }, { Payload::DEVICE_ID_HIT_DETECTOR_4, CANMessage{} }
         };
-
         while (error_counter <= STD_MAX_ERROR_COUNT && !this->is_stopped_.load(STD_MEMORY_ORDER)) {
             if (!can_bus_.read_frame(frame_id, frame_buffer, frame_length)) { error_counter++; continue; }
             auto slice = can_message.find(frame_id); if (slice == can_message.end()) { continue; }
