@@ -46,7 +46,7 @@ namespace robomaster {
         const auto limit = std::max(seconds, 0.0);
         const auto seconds_ = static_cast<long>(std::floor(limit)), microseconds_ = static_cast<long>((limit - std::floor(limit)) * 1e6);
 
-        timeval time = {}; time.tv_sec = seconds_; time.tv_usec = microseconds_;
+        timeval time{}; time.tv_sec = seconds_; time.tv_usec = microseconds_;
         setsockopt(this->socket_, SOL_SOCKET, SO_RCVTIMEO, &time, sizeof(time));
     }
 
@@ -64,13 +64,13 @@ namespace robomaster {
 
     bool CANBus::send_frame(const uint32_t device_id, const uint8_t data[8], const size_t length) const {
         if (length > 8) { std::printf("[Robomaster]: failed to send can frame\n"); return false; }
-        can_frame frame = {}; memset(&frame, 0x0, sizeof(frame));
+        can_frame frame{}; memset(&frame, 0x0, sizeof(frame));
         frame.can_id = static_cast<int>(device_id); frame.can_dlc = length; std::memcpy(frame.data, data, length);
         if (write(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to send can frame\n"); return false; } return true;
     }
 
     bool CANBus::read_frame(uint32_t& device_id, uint8_t data[8], size_t& length) const {
-        can_frame frame = {}; memset(&frame, 0x0, sizeof(frame));
+        can_frame frame{}; memset(&frame, 0x0, sizeof(frame));
         if(read(this->socket_, &frame, sizeof(frame)) < 0x0) { std::printf("[Robomaster]: failed to read can frame\n"); return false; }
         device_id = frame.can_id & CAN_EFF_FLAG ? frame.can_id & CAN_EFF_MASK: frame.can_id & CAN_SFF_MASK;
         length = frame.can_dlc; std::memcpy(data, frame.data, length); return true;
