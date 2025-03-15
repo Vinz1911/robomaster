@@ -60,31 +60,30 @@ namespace robomaster {
     }
 
     void RoboMaster::set_chassis_rpm(const int16_t front_right, const int16_t front_left, const int16_t rear_left, const int16_t rear_right) {
-        const auto front_right_ = std::clamp(front_right, int16_t{-1000}, int16_t{1000}), front_left_ = std::clamp(front_left, int16_t{-1000}, int16_t{1000});
-        const auto rear_left_ = std::clamp(rear_left, int16_t{-1000}, int16_t {1000}), rear_right_ = std::clamp(rear_right, int16_t{-1000}, int16_t{1000});
+        constexpr int16_t rpm_min = -1000, rpm_max = 1000;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER,Payload::DEVICE_TYPE_CHASSIS, this->sequence_++, Payload::CHASSIS_RPM);
-        message.set_int16(3, front_right_);
-        message.set_int16(5, static_cast<int16_t>(-front_left_));
-        message.set_int16(7, static_cast<int16_t>(-rear_left_));
-        message.set_int16(9, rear_right_);
+        message.set_int16(3, std::clamp(front_right, rpm_min, rpm_max));
+        message.set_int16(5, std::clamp(static_cast<int16_t>(-front_left), rpm_min, rpm_max));
+        message.set_int16(7, std::clamp(static_cast<int16_t>(-rear_left), rpm_min, rpm_max));
+        message.set_int16(9, std::clamp(rear_right, rpm_min, rpm_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_chassis_velocity(const float linear_x, const float linear_y, const float angular_z) {
-        const auto linear_x_ = std::clamp(linear_x, -3.5f, 3.5f), linear_y_ = std::clamp(linear_y, -3.5f, 3.5f), angular_z_ = std::clamp(angular_z, -600.0f, 600.0f);
+        constexpr float linear_min = -3.5f, linear_max = 3.5f, angular_min = -600.0f, angular_max = 600.0f;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, this->sequence_++, Payload::CHASSIS_VELOCITY);
-        message.set_float(3, linear_x_);
-        message.set_float(7, linear_y_);
-        message.set_float(11, angular_z_);
+        message.set_float(3, std::clamp(linear_x, linear_min, linear_max));
+        message.set_float(7, std::clamp(linear_y, linear_min, linear_max));
+        message.set_float(11, std::clamp(angular_z, angular_min, angular_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_chassis_position(const int16_t linear_x, const int16_t linear_y, const int16_t angular_z) {
-        const auto linear_x_ = std::clamp(linear_x, int16_t{-500}, int16_t{500}), linear_y_ = std::clamp(linear_y, int16_t{-500}, int16_t{500}), angular_z_ = std::clamp(angular_z, int16_t{-18000}, int16_t{18000});
+        constexpr int16_t linear_min = -500, linear_max = 500, angular_min = -18000, angular_max = 18000;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_CHASSIS, this->sequence_++, Payload::CHASSIS_POSITION);
-        message.set_int16(7, linear_x_);
-        message.set_int16(9, linear_y_);
-        message.set_int16(11, angular_z_);
+        message.set_int16(7, std::clamp(linear_x, linear_min, linear_max));
+        message.set_int16(9, std::clamp(linear_y, linear_min, linear_max));
+        message.set_int16(11, std::clamp(angular_z, angular_min, angular_max));
         message.set_int16(14, 0x12c);
         this->handler_.push_message(message);
     }
@@ -101,60 +100,59 @@ namespace robomaster {
         this->handler_.push_message(message);
     }
 
-    void RoboMaster::set_gimbal_degree(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = std::clamp(pitch, int16_t{-1000}, int16_t{1000}), yaw_ = std::clamp(yaw, int16_t{-1000}, int16_t{1000});
+    void RoboMaster::set_gimbal_motion(const int16_t pitch, const int16_t yaw) {
+        constexpr int16_t pitch_yaw_min = -1000, pitch_yaw_max = 1000;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, this->sequence_++, Payload::GIMBAL_DEGREE);
-        message.set_int16(5, pitch_);
-        message.set_int16(7, yaw_);
+        message.set_int16(5, std::clamp(pitch, pitch_yaw_min, pitch_yaw_max));
+        message.set_int16(7, std::clamp(yaw, pitch_yaw_min, pitch_yaw_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_velocity(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = std::clamp(pitch, int16_t{-1000}, int16_t{1000}), yaw_ = std::clamp(yaw, int16_t{-1000}, int16_t{1000});
+        constexpr int16_t pitch_yaw_min = -1000, pitch_yaw_max = 1000;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, this->sequence_++, Payload::GIMBAL_VELOCITY);
-        message.set_int16(3, yaw_);
-        message.set_int16(7, pitch_);
+        message.set_int16(3, std::clamp(yaw, pitch_yaw_min, pitch_yaw_max));
+        message.set_int16(7, std::clamp(pitch, pitch_yaw_min, pitch_yaw_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_position(const int16_t pitch, const int16_t yaw, const uint16_t pitch_acceleration, const uint16_t yaw_acceleration) {
-        const auto pitch_ = std::clamp(pitch, int16_t{-500}, int16_t{500}), yaw_ = std::clamp(yaw, int16_t{-2500}, int16_t{2500});
-        const auto pitch_acceleration_ = std::clamp(pitch_acceleration, uint16_t{10}, uint16_t{500}), yaw_acceleration_ = std::clamp(yaw_acceleration, uint16_t{10}, uint16_t{500});
+        constexpr int16_t yaw_min = -2500, yaw_max = 2500, pitch_min = -500, pitch_max = 500; constexpr uint16_t acceleration_min = 10, acceleration_max = 500;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, this->sequence_++, Payload::GIMBAL_POSITION);
-        message.set_int16(6, yaw_);
-        message.set_int16(10, pitch_);
-        message.set_uint16(14, yaw_acceleration_);
-        message.set_uint16(18, pitch_acceleration_);
+        message.set_int16(6, std::clamp(yaw, yaw_min, yaw_max));
+        message.set_int16(10, std::clamp(pitch, pitch_min, pitch_max));
+        message.set_uint16(14, std::clamp(yaw_acceleration, acceleration_min, acceleration_max));
+        message.set_uint16(18, std::clamp(pitch_acceleration, acceleration_min, acceleration_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_gimbal_recenter(const int16_t pitch, const int16_t yaw) {
-        const auto pitch_ = std::clamp(pitch, int16_t{10}, int16_t{500}), yaw_ = std::clamp(yaw, int16_t{10}, int16_t{500});
+        constexpr int16_t pitch_yaw_min = 10, pitch_yaw_max = 500;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_GIMBAL, this->sequence_++, Payload::GIMBAL_RECENTER);
-        message.set_int16(6, yaw_);
-        message.set_int16(10, pitch_);
+        message.set_int16(6, std::clamp(yaw, pitch_yaw_min, pitch_yaw_max));
+        message.set_int16(10, std::clamp(pitch, pitch_yaw_min, pitch_yaw_max));
         this->handler_.push_message(message);
     }
 
     void RoboMaster::set_blaster_mode(const BlasterMode mode, const uint8_t count) {
-        const auto count_ = std::clamp(count, uint8_t{1}, uint8_t{8}); auto message = std::vector<Message>();
+        constexpr uint8_t count_min = 1, count_max = 8; auto message = std::vector<Message>();
         message.emplace_back(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_BLASTER, this->sequence_++, Payload::BLASTER_MODE_GEL);
         message.emplace_back(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_BLASTER, this->sequence_++, Payload::BLASTER_MODE_LED);
-        message[0].set_uint8(3, static_cast<uint8_t>((mode << 4 & 0xf0) + (count_ & 0x0f)));
-        message[1].set_uint16(8, static_cast<uint16_t>(count_ * 100));
-        message[1].set_uint16(10, static_cast<uint16_t>(count_ * 100));
+        message[0].set_uint8(3, static_cast<uint8_t>((mode << 4 & 0xf0) + (std::clamp(count, count_min, count_max) & 0x0f)));
+        message[1].set_uint16(8, static_cast<uint16_t>(std::clamp(count, count_min, count_max) * 100));
+        message[1].set_uint16(10, static_cast<uint16_t>(std::clamp(count, count_min, count_max) * 100));
         for (const auto& msg_ : message) { this->handler_.push_message(msg_); }
     }
 
     void RoboMaster::set_led_mode(const LEDMode mode, const LEDMask mask, const uint8_t red, const uint8_t green, const uint8_t blue, const uint16_t up_time, const uint16_t down_time) {
-        const auto up_time_ = std::clamp(up_time, uint16_t{0}, uint16_t{60000}), down_time_ = std::clamp(down_time, uint16_t{0}, uint16_t{60000});
+        constexpr uint16_t time_min = 0, time_max = 60000;
         auto message = Message(Payload::DEVICE_ID_INTELLI_CONTROLLER, Payload::DEVICE_TYPE_LED, this->sequence_++, Payload::LED_MODE);
         message.set_uint8(3, mode);
         message.set_uint8(6, red);
         message.set_uint8(7, green);
         message.set_uint8(8, blue);
-        message.set_uint16(10, mode == LED_MODE_STATIC ? 0x0 : up_time_);
-        message.set_uint16(12, mode == LED_MODE_STATIC ? 0x0 : down_time_);
+        message.set_uint16(10, mode == LED_MODE_STATIC ? 0x0 : std::clamp(up_time, time_min, time_max));
+        message.set_uint16(12, mode == LED_MODE_STATIC ? 0x0 : std::clamp(down_time, time_min, time_max));
         message.set_uint16(14, mask);
         this->handler_.push_message(message);
     }

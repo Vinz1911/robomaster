@@ -146,12 +146,12 @@ namespace robomaster {
         void set_gimbal_hibernate(GimbalHibernate hibernate);
 
         /**
-         * @brief Set the gimbal movement of the RoboMaster.
+         * @brief Set the gimbal motion of the RoboMaster.
          *
          * @param pitch Angular x movement in radiant/s.
          * @param yaw Angular y movement in radiant/s.
          */
-        void set_gimbal_degree(int16_t pitch, int16_t yaw);
+        void set_gimbal_motion(int16_t pitch, int16_t yaw);
 
         /**
          * @brief Set the gimbal velocity of the RoboMaster.
@@ -169,7 +169,7 @@ namespace robomaster {
          * @param pitch_acceleration the acceleration in m/s^2.
          * @param yaw_acceleration the acceleration in m/s^2.
          */
-        void set_gimbal_position(int16_t pitch, int16_t yaw, uint16_t pitch_acceleration = 250, uint16_t yaw_acceleration = 250);
+        void set_gimbal_position(int16_t pitch, int16_t yaw, uint16_t pitch_acceleration = 150, uint16_t yaw_acceleration = 150);
 
         /**
          * @brief Recenter the gimbal of the RoboMaster.
@@ -177,7 +177,7 @@ namespace robomaster {
          * @param pitch Angular x velocity in radiant/s.
          * @param yaw Angular y velocity in radiant/s.
          */
-        void set_gimbal_recenter(int16_t pitch = 100, int16_t yaw = 100);
+        void set_gimbal_recenter(int16_t pitch = 150, int16_t yaw = 150);
 
         /**
          * @brief Fire the blaster of the RoboMaster.
