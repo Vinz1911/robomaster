@@ -59,7 +59,8 @@ namespace robomaster {
         if (!(this->interface_.ifr_flags & IFF_UP)) { std::printf("[Robomaster]: interface %s is down\n", interface.c_str()); close(this->socket_); return false; }
 
         ioctl(this->socket_, SIOGIFINDEX, &this->interface_); this->address_.can_ifindex = this->interface_.ifr_ifindex; this->address_.can_family = PF_CAN;
-        if (bind(this->socket_, reinterpret_cast<sockaddr*>(&this->address_), sizeof(this->address_)) < 0) { std::printf("[Robomaster]: failed to bind can address\n"); close(this->socket_); return false; } return true;
+        if (bind(this->socket_, reinterpret_cast<sockaddr*>(&this->address_), sizeof(this->address_)) < 0) { std::printf("[Robomaster]: failed to bind can address\n"); close(this->socket_); return false; }
+        return true;
     }
 
     bool CANBus::send_frame(const uint32_t device_id, const uint8_t data[8], const size_t length) const {
